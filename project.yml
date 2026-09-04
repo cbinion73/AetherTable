@@ -1,0 +1,68 @@
+name: AetherTable
+options:
+  minimumXcodeGenVersion: 2.44.0
+  deploymentTarget:
+    iOS: "26.0"
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    GENERATE_INFOPLIST_FILE: YES
+    PRODUCT_BUNDLE_IDENTIFIER: "com.chrisbinion.aethertable.$(PRODUCT_NAME:rfc1034identifier)"
+targets:
+  AetherTable:
+    type: application
+    platform: iOS
+    sources: [AetherTableApp/Sources]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.chrisbinion.aethertable
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - target: AetherTableCore
+      - target: AIGM
+      - target: DiceEngine
+      - target: RulesEngine
+      - target: Persistence
+      - target: Multiplayer
+      - target: RulesPacks
+  AetherTableCore:
+    type: framework
+    platform: iOS
+    sources: [AetherTableCore/Sources]
+  DiceEngine:
+    type: framework
+    platform: iOS
+    sources: [DiceEngine/Sources]
+    dependencies: [{target: AetherTableCore}]
+  RulesEngine:
+    type: framework
+    platform: iOS
+    sources: [RulesEngine/Sources]
+    dependencies: [{target: AetherTableCore}, {target: DiceEngine}]
+  AIGM:
+    type: framework
+    platform: iOS
+    sources: [AIGM/Sources]
+    dependencies: [{target: AetherTableCore}, {target: RulesEngine}]
+  Persistence:
+    type: framework
+    platform: iOS
+    sources: [Persistence/Sources]
+    dependencies: [{target: AetherTableCore}]
+  Multiplayer:
+    type: framework
+    platform: iOS
+    sources: [Multiplayer/Sources]
+    dependencies: [{target: AetherTableCore}]
+  RulesPacks:
+    type: framework
+    platform: iOS
+    sources: [RulesPacks/Sources]
+    dependencies: [{target: AetherTableCore}, {target: RulesEngine}]
+  AetherTableTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [AetherTableTests/Sources]
+    dependencies: [{target: DiceEngine}, {target: RulesEngine}, {target: RulesPacks}]

@@ -1,0 +1,1406 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		13063DDAF1672D91BAF94F6A /* DiceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1026CE731153F14BE439BC5 /* DiceEngine.swift */; };
+		173918AC64BD6637C65490E5 /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
+		1A1D878EC5C27D5AD95A78E4 /* RulesPacks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B390AFE6D1EA54727752FFFD /* RulesPacks.framework */; };
+		1CE31CA992DE2ACF08A89BD8 /* RulesPacks.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B390AFE6D1EA54727752FFFD /* RulesPacks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		22FCDFD91FE6BFC8D7876BB1 /* RulesPacks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B390AFE6D1EA54727752FFFD /* RulesPacks.framework */; };
+		241662FE4FFC9B47380DF366 /* RulesEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45B31AF3828ED24E93DDA24 /* RulesEngine.swift */; };
+		254360AF72CC1964B8AB3F1C /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
+		2CB4FDA90D11AEF2D402B3D0 /* DiceEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; };
+		2FC1597F886AF7C18972AB81 /* AIGM.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C9AE12E5501D0FF6727FFA3A /* AIGM.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3ABFEAF86C2F573377898CBE /* DiceEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD52EB3EEAAD783282440F12 /* DiceEngineTests.swift */; };
+		3DC0CA78B7C45C1E311CB42C /* AIGM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AE12E5501D0FF6727FFA3A /* AIGM.framework */; };
+		4A9FB0AAF9D0500C3E2A450C /* Sync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECD545DCF4FF0741A08BF77 /* Sync.swift */; };
+		56A79B6FC1FFFF23B99A00B4 /* DiceEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; };
+		67F2E6891233E23D731E92B4 /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
+		6835436203A7AAC6AE11ECFD /* AIGM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184F6C6CEDB51EAE72C4C165 /* AIGM.swift */; };
+		68C9AF1EA3D40B3E5B0505E2 /* RulesEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; };
+		7344A828EEF6EEAA645C2D33 /* RulesEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; };
+		76C06EE6B2B68CFEAC04D202 /* Domain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA6F82EF172B8D8F2863444 /* Domain.swift */; };
+		8E6BABDB28FEB181DBF01CCF /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		94455743C360D96AA9EF6268 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; };
+		9F26C2348B609BE067E6165A /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
+		A32CE61B760AB46F4C9FB85C /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
+		A98BE176FA355D41DB4743A6 /* Multiplayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D6DC8478EAC3C46C0C5E7670 /* Multiplayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AC7C74DC8E8B9CDD601D2EA0 /* DiceEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AD900BD5B14CE7D0A5421969 /* DiceEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B387F7B75C80B398B2841881 /* DiceEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; };
+		B6DC10EEA1A187A1E11729D3 /* CampaignStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC553D23E52A4774FEAA4D6 /* CampaignStore.swift */; };
+		C0B6BE2B75C309ADDC949459 /* RulesEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; };
+		C0C6CDA2C394F00ED8E66DA5 /* AetherTableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EDB530CEDC843874C6558F /* AetherTableApp.swift */; };
+		C145D936E07CD5461778552E /* RulesPacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C44DB3695D5584B8139C380 /* RulesPacks.swift */; };
+		C3670CFF965E41B120890921 /* RulesPacks.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B390AFE6D1EA54727752FFFD /* RulesPacks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CAE224DD89EC363D31E017B8 /* Multiplayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6DC8478EAC3C46C0C5E7670 /* Multiplayer.framework */; };
+		D3421417365AA54E8F2D9D18 /* RulesEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; };
+		DF1EA34B8536BB726579F39A /* AetherTableCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E2C487D9CB59AF3CD02C5C39 /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
+		E854D2733F2142BA8237926F /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
+		F15D58E720573BC2E3AB6C52 /* RulesEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F3E7E9C72F0A2C9FCFDD267D /* RulesEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1F21269CCA32D22771BD74B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FEF53BD8368C4D81C6255BE2;
+			remoteInfo = Persistence;
+		};
+		5563579D74B16B94AEF9B596 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 996B9621C5054CAF33861987;
+			remoteInfo = AetherTableCore;
+		};
+		64E7F1255B13102C3F335ADF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 996B9621C5054CAF33861987;
+			remoteInfo = AetherTableCore;
+		};
+		6BB3941790055F69D9E1B499 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDF9B132C6C5D53DA1209B7C;
+			remoteInfo = RulesPacks;
+		};
+		6BBFEFB567DD143034397BB5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CAD00816D739FEDE4EB5FBA5;
+			remoteInfo = RulesEngine;
+		};
+		6DCD79834BBC5B1F33A5CEFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4A97BCB02EB473376A980C38;
+			remoteInfo = DiceEngine;
+		};
+		78CA5C6D421CD4A1DABD3831 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CAD00816D739FEDE4EB5FBA5;
+			remoteInfo = RulesEngine;
+		};
+		7A62D64F4F3CB02D669DD997 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 996B9621C5054CAF33861987;
+			remoteInfo = AetherTableCore;
+		};
+		894485B9D8640A229B04E522 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4A97BCB02EB473376A980C38;
+			remoteInfo = DiceEngine;
+		};
+		8FD8E6B94C037504B26F7F6D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4A97BCB02EB473376A980C38;
+			remoteInfo = DiceEngine;
+		};
+		96B6407C745DD2724817207C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A110ACB14A60DED7D3EEFB2;
+			remoteInfo = Multiplayer;
+		};
+		9FC02C4A2056E69BEF678E5D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCD767AEA34FA534EA038995;
+			remoteInfo = AIGM;
+		};
+		A0E805073224353D1583962E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 996B9621C5054CAF33861987;
+			remoteInfo = AetherTableCore;
+		};
+		A64DF029630FBE5D15E1056E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 996B9621C5054CAF33861987;
+			remoteInfo = AetherTableCore;
+		};
+		ACD5B29AE6A472274D449194 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 996B9621C5054CAF33861987;
+			remoteInfo = AetherTableCore;
+		};
+		B1C03D8C46BEF93E0B142C16 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 996B9621C5054CAF33861987;
+			remoteInfo = AetherTableCore;
+		};
+		BEE51705950FCCA2470D8317 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDF9B132C6C5D53DA1209B7C;
+			remoteInfo = RulesPacks;
+		};
+		FB6A2FB3DA8133074E116A03 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CAD00816D739FEDE4EB5FBA5;
+			remoteInfo = RulesEngine;
+		};
+		FBED806F8FBAF978C42587AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CAD00816D739FEDE4EB5FBA5;
+			remoteInfo = RulesEngine;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		36950E8214700983D854CA3B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				AD900BD5B14CE7D0A5421969 /* DiceEngine.framework in Embed Frameworks */,
+				F3E7E9C72F0A2C9FCFDD267D /* RulesEngine.framework in Embed Frameworks */,
+				C3670CFF965E41B120890921 /* RulesPacks.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AE900D8DD6A14A3122B74231 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				DF1EA34B8536BB726579F39A /* AetherTableCore.framework in Embed Frameworks */,
+				2FC1597F886AF7C18972AB81 /* AIGM.framework in Embed Frameworks */,
+				AC7C74DC8E8B9CDD601D2EA0 /* DiceEngine.framework in Embed Frameworks */,
+				F15D58E720573BC2E3AB6C52 /* RulesEngine.framework in Embed Frameworks */,
+				8E6BABDB28FEB181DBF01CCF /* Persistence.framework in Embed Frameworks */,
+				A98BE176FA355D41DB4743A6 /* Multiplayer.framework in Embed Frameworks */,
+				1CE31CA992DE2ACF08A89BD8 /* RulesPacks.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		184F6C6CEDB51EAE72C4C165 /* AIGM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIGM.swift; sourceTree = "<group>"; };
+		25EDB530CEDC843874C6558F /* AetherTableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AetherTableApp.swift; sourceTree = "<group>"; };
+		38FEA55027F02101F9035B23 /* AetherTableCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AetherTableCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3ECD545DCF4FF0741A08BF77 /* Sync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sync.swift; sourceTree = "<group>"; };
+		5CDE643BAC394DF45B3B10D4 /* AetherTableTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AetherTableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		66536B383FC649FBA913E2CC /* RulesEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RulesEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7CE0433A3F73148B823FCE96 /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9BA6F82EF172B8D8F2863444 /* Domain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain.swift; sourceTree = "<group>"; };
+		9C44DB3695D5584B8139C380 /* RulesPacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesPacks.swift; sourceTree = "<group>"; };
+		A877D0B22B698F5E367C32BB /* DiceEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DiceEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B390AFE6D1EA54727752FFFD /* RulesPacks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RulesPacks.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B45B31AF3828ED24E93DDA24 /* RulesEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesEngine.swift; sourceTree = "<group>"; };
+		C9AE12E5501D0FF6727FFA3A /* AIGM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AIGM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEC553D23E52A4774FEAA4D6 /* CampaignStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignStore.swift; sourceTree = "<group>"; };
+		D1026CE731153F14BE439BC5 /* DiceEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceEngine.swift; sourceTree = "<group>"; };
+		D6DC8478EAC3C46C0C5E7670 /* Multiplayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Multiplayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F56842A0DDD821FCABC92D57 /* AetherTable.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AetherTable.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD52EB3EEAAD783282440F12 /* DiceEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceEngineTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0BE4A9D4F841F1943C80A4C4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2C487D9CB59AF3CD02C5C39 /* AetherTableCore.framework in Frameworks */,
+				D3421417365AA54E8F2D9D18 /* RulesEngine.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4B68DE4DD661586999196EED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9F26C2348B609BE067E6165A /* AetherTableCore.framework in Frameworks */,
+				C0B6BE2B75C309ADDC949459 /* RulesEngine.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5CA2B6148F9F44548C78214B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A32CE61B760AB46F4C9FB85C /* AetherTableCore.framework in Frameworks */,
+				2CB4FDA90D11AEF2D402B3D0 /* DiceEngine.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D1148B4F894F758DDFA7D16 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E854D2733F2142BA8237926F /* AetherTableCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BE846855FEA369711381450E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				173918AC64BD6637C65490E5 /* AetherTableCore.framework in Frameworks */,
+				3DC0CA78B7C45C1E311CB42C /* AIGM.framework in Frameworks */,
+				B387F7B75C80B398B2841881 /* DiceEngine.framework in Frameworks */,
+				7344A828EEF6EEAA645C2D33 /* RulesEngine.framework in Frameworks */,
+				94455743C360D96AA9EF6268 /* Persistence.framework in Frameworks */,
+				CAE224DD89EC363D31E017B8 /* Multiplayer.framework in Frameworks */,
+				22FCDFD91FE6BFC8D7876BB1 /* RulesPacks.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE0405188A92EFFE2B69DB81 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				67F2E6891233E23D731E92B4 /* AetherTableCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D7DDDE2690E43B189F0F7998 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				56A79B6FC1FFFF23B99A00B4 /* DiceEngine.framework in Frameworks */,
+				68C9AF1EA3D40B3E5B0505E2 /* RulesEngine.framework in Frameworks */,
+				1A1D878EC5C27D5AD95A78E4 /* RulesPacks.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DE3023978F13712B33725E35 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				254360AF72CC1964B8AB3F1C /* AetherTableCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		073FDA239BAF3C4840EAB597 = {
+			isa = PBXGroup;
+			children = (
+				1126C782460FDA5F2CE4EAD0 /* Sources */,
+				7D0829A1122BDA55B1C24DDF /* Sources */,
+				6D5B46C969418A89734C591A /* Sources */,
+				1223F0AFA84EC418B4DC393C /* Sources */,
+				DE170DE23AB415445C59FA05 /* Sources */,
+				AE5D3884A8D2C3392FDC8A79 /* Sources */,
+				326FB0F7CC89E46C11C1E644 /* Sources */,
+				9BA10EB5C391368E546B5E0F /* Sources */,
+				9098C4401B3C971AD1E9A036 /* Sources */,
+				C2537B3895972367922F5D82 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1126C782460FDA5F2CE4EAD0 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				25EDB530CEDC843874C6558F /* AetherTableApp.swift */,
+			);
+			name = Sources;
+			path = AetherTableApp/Sources;
+			sourceTree = "<group>";
+		};
+		1223F0AFA84EC418B4DC393C /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				184F6C6CEDB51EAE72C4C165 /* AIGM.swift */,
+			);
+			name = Sources;
+			path = AIGM/Sources;
+			sourceTree = "<group>";
+		};
+		326FB0F7CC89E46C11C1E644 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				CEC553D23E52A4774FEAA4D6 /* CampaignStore.swift */,
+			);
+			name = Sources;
+			path = Persistence/Sources;
+			sourceTree = "<group>";
+		};
+		6D5B46C969418A89734C591A /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				FD52EB3EEAAD783282440F12 /* DiceEngineTests.swift */,
+			);
+			name = Sources;
+			path = AetherTableTests/Sources;
+			sourceTree = "<group>";
+		};
+		7D0829A1122BDA55B1C24DDF /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				9BA6F82EF172B8D8F2863444 /* Domain.swift */,
+			);
+			name = Sources;
+			path = AetherTableCore/Sources;
+			sourceTree = "<group>";
+		};
+		9098C4401B3C971AD1E9A036 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				9C44DB3695D5584B8139C380 /* RulesPacks.swift */,
+			);
+			name = Sources;
+			path = RulesPacks/Sources;
+			sourceTree = "<group>";
+		};
+		9BA10EB5C391368E546B5E0F /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				B45B31AF3828ED24E93DDA24 /* RulesEngine.swift */,
+			);
+			name = Sources;
+			path = RulesEngine/Sources;
+			sourceTree = "<group>";
+		};
+		AE5D3884A8D2C3392FDC8A79 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				3ECD545DCF4FF0741A08BF77 /* Sync.swift */,
+			);
+			name = Sources;
+			path = Multiplayer/Sources;
+			sourceTree = "<group>";
+		};
+		C2537B3895972367922F5D82 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F56842A0DDD821FCABC92D57 /* AetherTable.app */,
+				38FEA55027F02101F9035B23 /* AetherTableCore.framework */,
+				5CDE643BAC394DF45B3B10D4 /* AetherTableTests.xctest */,
+				C9AE12E5501D0FF6727FFA3A /* AIGM.framework */,
+				A877D0B22B698F5E367C32BB /* DiceEngine.framework */,
+				D6DC8478EAC3C46C0C5E7670 /* Multiplayer.framework */,
+				7CE0433A3F73148B823FCE96 /* Persistence.framework */,
+				66536B383FC649FBA913E2CC /* RulesEngine.framework */,
+				B390AFE6D1EA54727752FFFD /* RulesPacks.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DE170DE23AB415445C59FA05 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				D1026CE731153F14BE439BC5 /* DiceEngine.swift */,
+			);
+			name = Sources;
+			path = DiceEngine/Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3A110ACB14A60DED7D3EEFB2 /* Multiplayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F420D52F9AD404029F154F9A /* Build configuration list for PBXNativeTarget "Multiplayer" */;
+			buildPhases = (
+				136ED70C1F37FEA238CE5CDF /* Sources */,
+				6D1148B4F894F758DDFA7D16 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				17CE0532A9E074EB33ACA7F8 /* PBXTargetDependency */,
+			);
+			name = Multiplayer;
+			packageProductDependencies = (
+			);
+			productName = Multiplayer;
+			productReference = D6DC8478EAC3C46C0C5E7670 /* Multiplayer.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		4A97BCB02EB473376A980C38 /* DiceEngine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7E66245C6389BE3ED9E951F0 /* Build configuration list for PBXNativeTarget "DiceEngine" */;
+			buildPhases = (
+				39D9055CC7E0CBAE606FE6BF /* Sources */,
+				CE0405188A92EFFE2B69DB81 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DE29B2279B23A8F54BC771A3 /* PBXTargetDependency */,
+			);
+			name = DiceEngine;
+			packageProductDependencies = (
+			);
+			productName = DiceEngine;
+			productReference = A877D0B22B698F5E367C32BB /* DiceEngine.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		996B9621C5054CAF33861987 /* AetherTableCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A0A13066703A92D184BCE0EE /* Build configuration list for PBXNativeTarget "AetherTableCore" */;
+			buildPhases = (
+				B9311C0D3F8183F2E3183441 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AetherTableCore;
+			packageProductDependencies = (
+			);
+			productName = AetherTableCore;
+			productReference = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		B8938CAB1C27B6A734DB56D2 /* AetherTableTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 858F555D0CC2057057139EEB /* Build configuration list for PBXNativeTarget "AetherTableTests" */;
+			buildPhases = (
+				A84ECEC4072E9E1E424AEC04 /* Sources */,
+				D7DDDE2690E43B189F0F7998 /* Frameworks */,
+				36950E8214700983D854CA3B /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				19C04223E1C4D24A2920B2AC /* PBXTargetDependency */,
+				29E35FC2EDDD24F4325493A9 /* PBXTargetDependency */,
+				18910F1A81158D8EE103BE2D /* PBXTargetDependency */,
+			);
+			name = AetherTableTests;
+			packageProductDependencies = (
+			);
+			productName = AetherTableTests;
+			productReference = 5CDE643BAC394DF45B3B10D4 /* AetherTableTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		CAD00816D739FEDE4EB5FBA5 /* RulesEngine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A8542F7E2131F3EF6F27BC1 /* Build configuration list for PBXNativeTarget "RulesEngine" */;
+			buildPhases = (
+				FFABF99B5096BA47575AEC58 /* Sources */,
+				5CA2B6148F9F44548C78214B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5E2F141D3375352341738269 /* PBXTargetDependency */,
+				75EB7E955CCEC1C704EFCDE3 /* PBXTargetDependency */,
+			);
+			name = RulesEngine;
+			packageProductDependencies = (
+			);
+			productName = RulesEngine;
+			productReference = 66536B383FC649FBA913E2CC /* RulesEngine.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D1EDC2A780611DF5ED0340F6 /* AetherTable */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6D08F8ACBAF726009BCEF58C /* Build configuration list for PBXNativeTarget "AetherTable" */;
+			buildPhases = (
+				D6A55A86A625588A4825BA5E /* Sources */,
+				BE846855FEA369711381450E /* Frameworks */,
+				AE900D8DD6A14A3122B74231 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B5C7BBA06EA03A1DA700EBBD /* PBXTargetDependency */,
+				79A08568E6AAFEADAED466E7 /* PBXTargetDependency */,
+				2498D4B0EEC372BB93444781 /* PBXTargetDependency */,
+				24FEEF96DE4DECD6575C7903 /* PBXTargetDependency */,
+				4777CDF07835E05A2F35CDBE /* PBXTargetDependency */,
+				CAE2A12D9FFB33C31E9AFC17 /* PBXTargetDependency */,
+				4AA196AB4EE16F3455A670C6 /* PBXTargetDependency */,
+			);
+			name = AetherTable;
+			packageProductDependencies = (
+			);
+			productName = AetherTable;
+			productReference = F56842A0DDD821FCABC92D57 /* AetherTable.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DCD767AEA34FA534EA038995 /* AIGM */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CBC641DDD094C96A04904112 /* Build configuration list for PBXNativeTarget "AIGM" */;
+			buildPhases = (
+				677CA1D7419A9708C41F3FD1 /* Sources */,
+				0BE4A9D4F841F1943C80A4C4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DEE5E859FB0ABCBDA2190D35 /* PBXTargetDependency */,
+				37941A047161E45CD3F82595 /* PBXTargetDependency */,
+			);
+			name = AIGM;
+			packageProductDependencies = (
+			);
+			productName = AIGM;
+			productReference = C9AE12E5501D0FF6727FFA3A /* AIGM.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		DDF9B132C6C5D53DA1209B7C /* RulesPacks */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 479A71FC220CAA42CE11494D /* Build configuration list for PBXNativeTarget "RulesPacks" */;
+			buildPhases = (
+				00EF4BD6EFD1DB6527C9B998 /* Sources */,
+				4B68DE4DD661586999196EED /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				716DAD089C5180BCB0355083 /* PBXTargetDependency */,
+				01EDE73E26AA466892D459F8 /* PBXTargetDependency */,
+			);
+			name = RulesPacks;
+			packageProductDependencies = (
+			);
+			productName = RulesPacks;
+			productReference = B390AFE6D1EA54727752FFFD /* RulesPacks.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		FEF53BD8368C4D81C6255BE2 /* Persistence */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 72469BDCF995AE4A744B03DF /* Build configuration list for PBXNativeTarget "Persistence" */;
+			buildPhases = (
+				E84B8F4D23F502852F5781FE /* Sources */,
+				DE3023978F13712B33725E35 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				729C9F62C197433A83E14428 /* PBXTargetDependency */,
+			);
+			name = Persistence;
+			packageProductDependencies = (
+			);
+			productName = Persistence;
+			productReference = 7CE0433A3F73148B823FCE96 /* Persistence.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		31504572D5921C5E7A843ABC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 0CCE978E1161CFE35D67DCA3 /* Build configuration list for PBXProject "AetherTable" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 073FDA239BAF3C4840EAB597;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = C2537B3895972367922F5D82 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DCD767AEA34FA534EA038995 /* AIGM */,
+				D1EDC2A780611DF5ED0340F6 /* AetherTable */,
+				996B9621C5054CAF33861987 /* AetherTableCore */,
+				B8938CAB1C27B6A734DB56D2 /* AetherTableTests */,
+				4A97BCB02EB473376A980C38 /* DiceEngine */,
+				3A110ACB14A60DED7D3EEFB2 /* Multiplayer */,
+				FEF53BD8368C4D81C6255BE2 /* Persistence */,
+				CAD00816D739FEDE4EB5FBA5 /* RulesEngine */,
+				DDF9B132C6C5D53DA1209B7C /* RulesPacks */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		00EF4BD6EFD1DB6527C9B998 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C145D936E07CD5461778552E /* RulesPacks.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		136ED70C1F37FEA238CE5CDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A9FB0AAF9D0500C3E2A450C /* Sync.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		39D9055CC7E0CBAE606FE6BF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				13063DDAF1672D91BAF94F6A /* DiceEngine.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		677CA1D7419A9708C41F3FD1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6835436203A7AAC6AE11ECFD /* AIGM.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A84ECEC4072E9E1E424AEC04 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3ABFEAF86C2F573377898CBE /* DiceEngineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B9311C0D3F8183F2E3183441 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				76C06EE6B2B68CFEAC04D202 /* Domain.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D6A55A86A625588A4825BA5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0C6CDA2C394F00ED8E66DA5 /* AetherTableApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E84B8F4D23F502852F5781FE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B6DC10EEA1A187A1E11729D3 /* CampaignStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FFABF99B5096BA47575AEC58 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				241662FE4FFC9B47380DF366 /* RulesEngine.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		01EDE73E26AA466892D459F8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CAD00816D739FEDE4EB5FBA5 /* RulesEngine */;
+			targetProxy = 6BBFEFB567DD143034397BB5 /* PBXContainerItemProxy */;
+		};
+		17CE0532A9E074EB33ACA7F8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 996B9621C5054CAF33861987 /* AetherTableCore */;
+			targetProxy = A64DF029630FBE5D15E1056E /* PBXContainerItemProxy */;
+		};
+		18910F1A81158D8EE103BE2D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDF9B132C6C5D53DA1209B7C /* RulesPacks */;
+			targetProxy = BEE51705950FCCA2470D8317 /* PBXContainerItemProxy */;
+		};
+		19C04223E1C4D24A2920B2AC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4A97BCB02EB473376A980C38 /* DiceEngine */;
+			targetProxy = 8FD8E6B94C037504B26F7F6D /* PBXContainerItemProxy */;
+		};
+		2498D4B0EEC372BB93444781 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4A97BCB02EB473376A980C38 /* DiceEngine */;
+			targetProxy = 894485B9D8640A229B04E522 /* PBXContainerItemProxy */;
+		};
+		24FEEF96DE4DECD6575C7903 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CAD00816D739FEDE4EB5FBA5 /* RulesEngine */;
+			targetProxy = 78CA5C6D421CD4A1DABD3831 /* PBXContainerItemProxy */;
+		};
+		29E35FC2EDDD24F4325493A9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CAD00816D739FEDE4EB5FBA5 /* RulesEngine */;
+			targetProxy = FB6A2FB3DA8133074E116A03 /* PBXContainerItemProxy */;
+		};
+		37941A047161E45CD3F82595 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CAD00816D739FEDE4EB5FBA5 /* RulesEngine */;
+			targetProxy = FBED806F8FBAF978C42587AA /* PBXContainerItemProxy */;
+		};
+		4777CDF07835E05A2F35CDBE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FEF53BD8368C4D81C6255BE2 /* Persistence */;
+			targetProxy = 1F21269CCA32D22771BD74B5 /* PBXContainerItemProxy */;
+		};
+		4AA196AB4EE16F3455A670C6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDF9B132C6C5D53DA1209B7C /* RulesPacks */;
+			targetProxy = 6BB3941790055F69D9E1B499 /* PBXContainerItemProxy */;
+		};
+		5E2F141D3375352341738269 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 996B9621C5054CAF33861987 /* AetherTableCore */;
+			targetProxy = 5563579D74B16B94AEF9B596 /* PBXContainerItemProxy */;
+		};
+		716DAD089C5180BCB0355083 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 996B9621C5054CAF33861987 /* AetherTableCore */;
+			targetProxy = ACD5B29AE6A472274D449194 /* PBXContainerItemProxy */;
+		};
+		729C9F62C197433A83E14428 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 996B9621C5054CAF33861987 /* AetherTableCore */;
+			targetProxy = B1C03D8C46BEF93E0B142C16 /* PBXContainerItemProxy */;
+		};
+		75EB7E955CCEC1C704EFCDE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4A97BCB02EB473376A980C38 /* DiceEngine */;
+			targetProxy = 6DCD79834BBC5B1F33A5CEFB /* PBXContainerItemProxy */;
+		};
+		79A08568E6AAFEADAED466E7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCD767AEA34FA534EA038995 /* AIGM */;
+			targetProxy = 9FC02C4A2056E69BEF678E5D /* PBXContainerItemProxy */;
+		};
+		B5C7BBA06EA03A1DA700EBBD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 996B9621C5054CAF33861987 /* AetherTableCore */;
+			targetProxy = 64E7F1255B13102C3F335ADF /* PBXContainerItemProxy */;
+		};
+		CAE2A12D9FFB33C31E9AFC17 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3A110ACB14A60DED7D3EEFB2 /* Multiplayer */;
+			targetProxy = 96B6407C745DD2724817207C /* PBXContainerItemProxy */;
+		};
+		DE29B2279B23A8F54BC771A3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 996B9621C5054CAF33861987 /* AetherTableCore */;
+			targetProxy = 7A62D64F4F3CB02D669DD997 /* PBXContainerItemProxy */;
+		};
+		DEE5E859FB0ABCBDA2190D35 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 996B9621C5054CAF33861987 /* AetherTableCore */;
+			targetProxy = A0E805073224353D1583962E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		116217CDE7212EC7C6643954 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chrisbinion.aethertable;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2C5995C890A649127CE7D9B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		2FD3EF562C9084E9097DB28B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		35347D8A5790A72CA59CCC20 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		61CCE1F916B84E2ACA5BC709 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		670E793BA8DD95F911BC0DC9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		6B05A19D73A949B7BB0127F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		724C68F75007B54028C1B677 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		8C45E2B5D55C64BAE053B9C7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisbinion.aethertable.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		9494FF4F4A1EE0EA968F064A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		A6DC971D84A88A4B5502876A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		AB1E2C991E73A258F03FD329 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		B30F00D74466497CD0EB3A07 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BDAFFA2FE1879D31C9C5F9C9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		C039D4A8896767D06B80E3C0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		C099740D2D4849BD0F9BC7D6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisbinion.aethertable.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		E6CEDF87C702343C90E86731 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chrisbinion.aethertable;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E7E9815BABE5BA4D8020D4B2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		F1EA6FFFF57C452F43CE08E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		F1F5459A66DC303AE7B5B3A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0CCE978E1161CFE35D67DCA3 /* Build configuration list for PBXProject "AetherTable" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C099740D2D4849BD0F9BC7D6 /* Debug */,
+				8C45E2B5D55C64BAE053B9C7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		479A71FC220CAA42CE11494D /* Build configuration list for PBXNativeTarget "RulesPacks" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2FD3EF562C9084E9097DB28B /* Debug */,
+				F1F5459A66DC303AE7B5B3A1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4A8542F7E2131F3EF6F27BC1 /* Build configuration list for PBXNativeTarget "RulesEngine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1EA6FFFF57C452F43CE08E8 /* Debug */,
+				6B05A19D73A949B7BB0127F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		6D08F8ACBAF726009BCEF58C /* Build configuration list for PBXNativeTarget "AetherTable" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6CEDF87C702343C90E86731 /* Debug */,
+				116217CDE7212EC7C6643954 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		72469BDCF995AE4A744B03DF /* Build configuration list for PBXNativeTarget "Persistence" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6DC971D84A88A4B5502876A /* Debug */,
+				670E793BA8DD95F911BC0DC9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7E66245C6389BE3ED9E951F0 /* Build configuration list for PBXNativeTarget "DiceEngine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C039D4A8896767D06B80E3C0 /* Debug */,
+				724C68F75007B54028C1B677 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		858F555D0CC2057057139EEB /* Build configuration list for PBXNativeTarget "AetherTableTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B30F00D74466497CD0EB3A07 /* Debug */,
+				35347D8A5790A72CA59CCC20 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A0A13066703A92D184BCE0EE /* Build configuration list for PBXNativeTarget "AetherTableCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BDAFFA2FE1879D31C9C5F9C9 /* Debug */,
+				9494FF4F4A1EE0EA968F064A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CBC641DDD094C96A04904112 /* Build configuration list for PBXNativeTarget "AIGM" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AB1E2C991E73A258F03FD329 /* Debug */,
+				E7E9815BABE5BA4D8020D4B2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F420D52F9AD404029F154F9A /* Build configuration list for PBXNativeTarget "Multiplayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				61CCE1F916B84E2ACA5BC709 /* Debug */,
+				2C5995C890A649127CE7D9B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 31504572D5921C5E7A843ABC /* Project object */;
+}
