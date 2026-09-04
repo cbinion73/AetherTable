@@ -37,6 +37,8 @@ They are **not** implementations of, or content for, Dungeons & Dragons, Star Tr
 
 More detail: [Docs/Architecture.md](Docs/Architecture.md).
 
+The product decision record and gate-based delivery plan: [Docs/PRD.md](Docs/PRD.md).
+
 ## Open in Xcode 27
 
 ```sh
