@@ -49,6 +49,7 @@
 		E854D2733F2142BA8237926F /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		F15D58E720573BC2E3AB6C52 /* RulesEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F3E7E9C72F0A2C9FCFDD267D /* RulesEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FDD9D31241AF747715CF06A4 /* LanternBelowSceneOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5047E2653ED1144CB9EF722 /* LanternBelowSceneOne.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -243,6 +244,7 @@
 		A877D0B22B698F5E367C32BB /* DiceEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DiceEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B390AFE6D1EA54727752FFFD /* RulesPacks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RulesPacks.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B45B31AF3828ED24E93DDA24 /* RulesEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesEngine.swift; sourceTree = "<group>"; };
+		B5047E2653ED1144CB9EF722 /* LanternBelowSceneOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanternBelowSceneOne.swift; sourceTree = "<group>"; };
 		C9AE12E5501D0FF6727FFA3A /* AIGM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AIGM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEC553D23E52A4774FEAA4D6 /* CampaignStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignStore.swift; sourceTree = "<group>"; };
 		D1026CE731153F14BE439BC5 /* DiceEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceEngine.swift; sourceTree = "<group>"; };
@@ -398,6 +400,7 @@
 		9098C4401B3C971AD1E9A036 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				B5047E2653ED1144CB9EF722 /* LanternBelowSceneOne.swift */,
 				9C44DB3695D5584B8139C380 /* RulesPacks.swift */,
 			);
 			name = Sources;
@@ -684,6 +687,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FDD9D31241AF747715CF06A4 /* LanternBelowSceneOne.swift in Sources */,
 				C145D936E07CD5461778552E /* RulesPacks.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

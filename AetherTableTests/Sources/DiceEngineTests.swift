@@ -62,6 +62,19 @@ import Testing
     #expect(throws: CampaignReducerError.wrongCampaign) { try campaign.apply(foreign) }
 }
 
+@Test func lanternBelowFailureStillCreatesAClueAndAdvancesTheStory() throws {
+    var campaign = CampaignState(title: "The Lantern Below", rulesPackID: "d20-fantasy")
+    try campaign.apply(CampaignEvent(campaignID: campaign.id, kind: .characterCreated, payload: ["name": "Arden", "archetype": "Wayfinder", "favoredTrait": "wits"]))
+    for event in LanternBelowSceneOne.enterEvents(for: campaign.id) { try campaign.apply(event) }
+    let resolved = CampaignEvent(campaignID: campaign.id, kind: .actionResolved, payload: ["verb": "attempt", "detail": "I study the current.", "total": "4", "band": "miss"])
+    try campaign.apply(resolved)
+    for event in try LanternBelowSceneOne.consequenceEvents(choiceID: "study", resolved: resolved) { try campaign.apply(event) }
+    #expect(campaign.world.facts["clue.archiveCurrent"] == "true")
+    #expect(campaign.world.threatClock.current == 1)
+    #expect(campaign.world.player?.conditions.contains(.marked) == true)
+    #expect(campaign.world.sceneProgress[LanternBelowSceneOne.id] == .completed)
+}
+
 @Test func diceStayWithinBounds() throws {
     let roll = try DiceEngine.roll(DiceExpression(count: 3, sides: 6, modifier: 0), seed: 9)
     #expect(roll.values.allSatisfy { (1...6).contains($0) })

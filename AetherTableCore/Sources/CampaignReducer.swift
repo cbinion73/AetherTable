@@ -16,6 +16,10 @@ public enum CampaignReducer {
             let sceneID = try required("sceneID", in: event)
             campaign.world.sceneProgress[sceneID] = .active
             if let locationID = event.payload["locationID"] { campaign.world.locationID = locationID }
+        case .sceneStatusChanged:
+            let sceneID = try required("sceneID", in: event)
+            guard let status = SceneStatus(rawValue: try required("status", in: event)) else { throw CampaignReducerError.malformedPayload("status") }
+            campaign.world.sceneProgress[sceneID] = status
         case .actionResolved:
             let detail = try required("detail", in: event)
             let total = try required("total", in: event)
@@ -31,6 +35,9 @@ public enum CampaignReducer {
             let delta = try integer("delta", in: event)
             let oldValue = campaign.world.relationships[npcID, default: 0]
             campaign.world.relationships[npcID] = min(2, max(-2, oldValue + delta))
+        case .threatChanged:
+            let delta = try integer("delta", in: event)
+            campaign.world.threatClock.current = min(campaign.world.threatClock.maximum, max(0, campaign.world.threatClock.current + delta))
         case .questUpdated:
             campaign.world.quest.stage = try required("stage", in: event)
             campaign.world.quest.objective = try required("objective", in: event)
