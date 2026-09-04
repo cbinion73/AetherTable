@@ -39,6 +39,8 @@ More detail: [Docs/Architecture.md](Docs/Architecture.md).
 
 The product decision record and gate-based delivery plan: [Docs/PRD.md](Docs/PRD.md).
 
+The owned starter adventure and its small rules reference: [Docs/ReferenceCampaign.md](Docs/ReferenceCampaign.md).
+
 ## Open in Xcode 27
 
 ```sh
