@@ -18,7 +18,10 @@ public struct CampaignEvent: Identifiable, Codable, Hashable, Sendable {
     public let kind: Kind
     public let payload: [String: String]
 
-    public enum Kind: String, Codable, Sendable { case campaignCreated, actionResolved, noteAdded }
+    public enum Kind: String, Codable, Sendable {
+        case campaignCreated, characterCreated, sceneEntered, intentProposed, actionResolved, worldFactSet
+        case resourceChanged, conditionChanged, relationshipChanged, questUpdated, choiceCommitted, noteAdded
+    }
 
     public init(id: UUID = UUID(), campaignID: CampaignID, createdAt: Date = .now, kind: Kind, payload: [String: String]) {
         self.id = id; self.campaignID = campaignID; self.createdAt = createdAt; self.kind = kind; self.payload = payload
@@ -31,9 +34,72 @@ public struct CampaignState: Codable, Hashable, Sendable {
     public var rulesPackID: RulesPackID
     public var recap: String
     public var events: [CampaignEvent]
+    public var world: WorldState
 
-    public init(id: CampaignID = CampaignID(), title: String, rulesPackID: RulesPackID, recap: String = "A new story waits.", events: [CampaignEvent] = []) {
-        self.id = id; self.title = title; self.rulesPackID = rulesPackID; self.recap = recap; self.events = events
+    public init(id: CampaignID = CampaignID(), title: String, rulesPackID: RulesPackID, recap: String = "A new story waits.", events: [CampaignEvent] = [], world: WorldState = .init()) {
+        self.id = id; self.title = title; self.rulesPackID = rulesPackID; self.recap = recap; self.events = events; self.world = world
+    }
+}
+
+public struct WorldState: Codable, Hashable, Sendable {
+    public var locationID: String
+    public var quest: QuestState
+    public var facts: [String: String]
+    public var relationships: [String: Int]
+    public var sceneProgress: [String: SceneStatus]
+    public var threatClock: ThreatClock
+    public var player: CharacterSheet?
+
+    public init(
+        locationID: String = "emberwake.square",
+        quest: QuestState = .init(id: "lantern-below", stage: "opening", objective: "Learn why the Lantern Below was extinguished."),
+        facts: [String: String] = ["lantern.status": "extinguished", "river.direction": "upstream", "vault.status": "sealed", "town.truth": "unknown"],
+        relationships: [String: Int] = ["npc.sera": 0, "npc.oren": 0, "npc.nym": 0],
+        sceneProgress: [String: SceneStatus] = [:],
+        threatClock: ThreatClock = .init(current: 0, maximum: 4),
+        player: CharacterSheet? = nil
+    ) {
+        self.locationID = locationID; self.quest = quest; self.facts = facts; self.relationships = relationships; self.sceneProgress = sceneProgress; self.threatClock = threatClock; self.player = player
+    }
+}
+
+public struct QuestState: Codable, Hashable, Sendable {
+    public var id: String
+    public var stage: String
+    public var objective: String
+    public init(id: String, stage: String, objective: String) { self.id = id; self.stage = stage; self.objective = objective }
+}
+
+public enum SceneStatus: String, Codable, Hashable, Sendable { case locked, available, active, completed }
+
+public struct ThreatClock: Codable, Hashable, Sendable {
+    public var current: Int
+    public var maximum: Int
+    public init(current: Int, maximum: Int) { self.current = current; self.maximum = maximum }
+}
+
+public enum CharacterTrait: String, CaseIterable, Codable, Hashable, Sendable { case might, wits, presence }
+
+public enum CharacterCondition: String, CaseIterable, Codable, Hashable, Sendable { case shaken, exposed, winded, marked, down }
+
+public struct CharacterSheet: Codable, Hashable, Sendable {
+    public var name: String
+    public var archetype: String
+    public var definingDetail: String
+    public var traits: [CharacterTrait: Int]
+    public var health: Int
+    public var maximumHealth: Int
+    public var resolve: Int
+    public var maximumResolve: Int
+    public var inventory: [String]
+    public var conditions: Set<CharacterCondition>
+
+    public init(name: String, archetype: String, definingDetail: String, favoredTrait: CharacterTrait) {
+        self.name = name; self.archetype = archetype; self.definingDetail = definingDetail
+        self.traits = Dictionary(uniqueKeysWithValues: CharacterTrait.allCases.map { ($0, $0 == favoredTrait ? 2 : 0) })
+        self.health = 6; self.maximumHealth = 6; self.resolve = 3; self.maximumResolve = 3
+        self.inventory = ["Personal token", "Travel pack", "10 silver marks"]
+        self.conditions = []
     }
 }
 

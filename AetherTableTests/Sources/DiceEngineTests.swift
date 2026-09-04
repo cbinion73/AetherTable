@@ -34,6 +34,16 @@ import Testing
     #expect(event.payload["total"] != nil)
 }
 
+@Test func starterWorldStateBeginsWithAPlayableCharacter() {
+    let hero = CharacterSheet(name: "Arden", archetype: "Wayfinder", definingDetail: "Hears the river speak.", favoredTrait: .wits)
+    let world = WorldState(player: hero)
+    #expect(world.locationID == "emberwake.square")
+    #expect(world.quest.id == "lantern-below")
+    #expect(world.player?.traits[.wits] == 2)
+    #expect(world.player?.health == 6)
+    #expect(world.facts["lantern.status"] == "extinguished")
+}
+
 @Test func diceStayWithinBounds() throws {
     let roll = try DiceEngine.roll(DiceExpression(count: 3, sides: 6, modifier: 0), seed: 9)
     #expect(roll.values.allSatisfy { (1...6).contains($0) })
