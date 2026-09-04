@@ -42,13 +42,32 @@ public struct RulesPackDescriptor: Identifiable, Codable, Hashable, Sendable {
     public var version: String
     public var displayName: String
     public var mechanicFamily: String
+    public var standardCheck: DiceSpecification
     public var actionVerbs: [String]
 
-    public init(id: RulesPackID, version: String, displayName: String, mechanicFamily: String, actionVerbs: [String]) {
-        self.id = id; self.version = version; self.displayName = displayName; self.mechanicFamily = mechanicFamily; self.actionVerbs = actionVerbs
+    public init(id: RulesPackID, version: String, displayName: String, mechanicFamily: String, standardCheck: DiceSpecification, actionVerbs: [String]) {
+        self.id = id; self.version = version; self.displayName = displayName; self.mechanicFamily = mechanicFamily; self.standardCheck = standardCheck; self.actionVerbs = actionVerbs
     }
+}
+
+public struct DiceSpecification: Codable, Hashable, Sendable {
+    public let count: Int
+    public let sides: Int
+    public let modifier: Int
+    public init(count: Int, sides: Int, modifier: Int = 0) { self.count = count; self.sides = sides; self.modifier = modifier }
 }
 
 public protocol RulesPack: Sendable {
     var descriptor: RulesPackDescriptor { get }
+}
+
+public extension CampaignState {
+    mutating func apply(_ event: CampaignEvent) {
+        precondition(event.campaignID == id, "An event may only be applied to its own campaign.")
+        guard !events.contains(where: { $0.id == event.id }) else { return }
+        events.append(event)
+        if event.kind == .actionResolved, let detail = event.payload["detail"], let total = event.payload["total"] {
+            recap = "You last \(event.payload["verb"] ?? "acted") to \(detail). The authoritative roll was \(total)."
+        }
+    }
 }

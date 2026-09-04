@@ -45,7 +45,7 @@ targets:
     type: framework
     platform: iOS
     sources: [AIGM/Sources]
-    dependencies: [{target: AetherTableCore}, {target: RulesEngine}]
+    dependencies: [{target: AetherTableCore}, {target: RulesEngine}, {sdk: FoundationModels.framework}]
   Persistence:
     type: framework
     platform: iOS
@@ -65,4 +65,4 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources: [AetherTableTests/Sources]
-    dependencies: [{target: DiceEngine}, {target: RulesEngine}, {target: RulesPacks}]
+    dependencies: [{target: DiceEngine}, {target: RulesEngine}, {target: RulesPacks}, {target: Persistence}]

@@ -1,4 +1,9 @@
 import DiceEngine
+import AetherTableCore
+import Foundation
+import RulesEngine
+import RulesPacks
+import Persistence
 import Testing
 
 @Test func seededRollsAreRepeatable() throws {
@@ -6,6 +11,27 @@ import Testing
     let first = try DiceEngine.roll(expression, seed: 42)
     let second = try DiceEngine.roll(expression, seed: 42)
     #expect(first == second)
+}
+
+@Test func campaignEventsPersistAndRestore() async throws {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let store = try FileCampaignStore(directory: directory)
+    var campaign = CampaignState(title: "The First Thread", rulesPackID: "d20-fantasy")
+    campaign.apply(CampaignEvent(campaignID: campaign.id, kind: .actionResolved, payload: ["verb": "attempt", "detail": "open the sealed door", "total": "16"]))
+    try await store.save(campaign)
+    let restored = try await store.load(id: campaign.id)
+    #expect(restored?.id == campaign.id)
+    #expect(restored?.events.first?.payload == campaign.events.first?.payload)
+    #expect(restored?.recap.contains("16") == true)
+}
+
+@Test func rulesPacksControlTheCheckShape() {
+    let campaign = CampaignState(title: "Test", rulesPackID: "momentum-2d20")
+    let pack = BuiltInRulesPacks.all[1]
+    let outcome = RulesEngine().resolve(intent: .init(verb: "scan", detail: "the nebula"), in: campaign, using: pack, seed: 42)
+    guard case .accepted(let event) = outcome else { Issue.record("Expected accepted action"); return }
+    #expect(event.payload["total"] != nil)
 }
 
 @Test func diceStayWithinBounds() throws {

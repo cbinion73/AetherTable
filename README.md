@@ -55,4 +55,4 @@ The project was generated and validated with Xcode 27. Set an iOS 26 simulator d
 
 ## Status
 
-Scaffolded platform architecture. The screen demonstrates pack selection, deterministic rolling, and the separation between narrative AI and authoritative rules. It is deliberately not yet a game release.
+First vertical slice built: create a local solo campaign, submit an action, resolve a pack-defined seeded roll, append it to the campaign event log, and persist the campaign as JSON in Application Support. On an Apple Intelligence-ready device, Foundation Models supplies a guided, structured intent proposal; on other devices, the player’s direct intent remains usable.

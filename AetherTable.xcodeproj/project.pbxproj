@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00FD247D51A0D4283FC901B2 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		13063DDAF1672D91BAF94F6A /* DiceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1026CE731153F14BE439BC5 /* DiceEngine.swift */; };
 		173918AC64BD6637C65490E5 /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		1A1D878EC5C27D5AD95A78E4 /* RulesPacks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B390AFE6D1EA54727752FFFD /* RulesPacks.framework */; };
@@ -15,9 +16,11 @@
 		241662FE4FFC9B47380DF366 /* RulesEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45B31AF3828ED24E93DDA24 /* RulesEngine.swift */; };
 		254360AF72CC1964B8AB3F1C /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		2CB4FDA90D11AEF2D402B3D0 /* DiceEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; };
+		2CF3C5095443978B8731EB0C /* FoundationModels.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B696C0D640B3561E9AB304C /* FoundationModels.framework */; };
 		2FC1597F886AF7C18972AB81 /* AIGM.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C9AE12E5501D0FF6727FFA3A /* AIGM.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3ABFEAF86C2F573377898CBE /* DiceEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD52EB3EEAAD783282440F12 /* DiceEngineTests.swift */; };
 		3DC0CA78B7C45C1E311CB42C /* AIGM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AE12E5501D0FF6727FFA3A /* AIGM.framework */; };
+		3E20C2C4DD3E6F8D943D9D67 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; };
 		4A9FB0AAF9D0500C3E2A450C /* Sync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECD545DCF4FF0741A08BF77 /* Sync.swift */; };
 		56A79B6FC1FFFF23B99A00B4 /* DiceEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; };
 		67F2E6891233E23D731E92B4 /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
@@ -167,6 +170,13 @@
 			remoteGlobalIDString = DDF9B132C6C5D53DA1209B7C;
 			remoteInfo = RulesPacks;
 		};
+		D2D50CB94BF8AD6996C0664E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FEF53BD8368C4D81C6255BE2;
+			remoteInfo = Persistence;
+		};
 		FB6A2FB3DA8133074E116A03 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
@@ -193,6 +203,7 @@
 				AD900BD5B14CE7D0A5421969 /* DiceEngine.framework in Embed Frameworks */,
 				F3E7E9C72F0A2C9FCFDD267D /* RulesEngine.framework in Embed Frameworks */,
 				C3670CFF965E41B120890921 /* RulesPacks.framework in Embed Frameworks */,
+				00FD247D51A0D4283FC901B2 /* Persistence.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -221,6 +232,7 @@
 		25EDB530CEDC843874C6558F /* AetherTableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AetherTableApp.swift; sourceTree = "<group>"; };
 		38FEA55027F02101F9035B23 /* AetherTableCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AetherTableCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3ECD545DCF4FF0741A08BF77 /* Sync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sync.swift; sourceTree = "<group>"; };
+		4B696C0D640B3561E9AB304C /* FoundationModels.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FoundationModels.framework; path = System/Library/Frameworks/FoundationModels.framework; sourceTree = SDKROOT; };
 		5CDE643BAC394DF45B3B10D4 /* AetherTableTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AetherTableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		66536B383FC649FBA913E2CC /* RulesEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RulesEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CE0433A3F73148B823FCE96 /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -244,6 +256,7 @@
 			files = (
 				E2C487D9CB59AF3CD02C5C39 /* AetherTableCore.framework in Frameworks */,
 				D3421417365AA54E8F2D9D18 /* RulesEngine.framework in Frameworks */,
+				2CF3C5095443978B8731EB0C /* FoundationModels.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,6 +315,7 @@
 				56A79B6FC1FFFF23B99A00B4 /* DiceEngine.framework in Frameworks */,
 				68C9AF1EA3D40B3E5B0505E2 /* RulesEngine.framework in Frameworks */,
 				1A1D878EC5C27D5AD95A78E4 /* RulesPacks.framework in Frameworks */,
+				3E20C2C4DD3E6F8D943D9D67 /* Persistence.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,6 +342,7 @@
 				326FB0F7CC89E46C11C1E644 /* Sources */,
 				9BA10EB5C391368E546B5E0F /* Sources */,
 				9098C4401B3C971AD1E9A036 /* Sources */,
+				9E17AF784F948344D8CF8AD0 /* Frameworks */,
 				C2537B3895972367922F5D82 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -393,6 +408,14 @@
 			);
 			name = Sources;
 			path = RulesEngine/Sources;
+			sourceTree = "<group>";
+		};
+		9E17AF784F948344D8CF8AD0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4B696C0D640B3561E9AB304C /* FoundationModels.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		AE5D3884A8D2C3392FDC8A79 /* Sources */ = {
@@ -501,6 +524,7 @@
 				19C04223E1C4D24A2920B2AC /* PBXTargetDependency */,
 				29E35FC2EDDD24F4325493A9 /* PBXTargetDependency */,
 				18910F1A81158D8EE103BE2D /* PBXTargetDependency */,
+				FB2D4F6619F2086851DFB9FF /* PBXTargetDependency */,
 			);
 			name = AetherTableTests;
 			packageProductDependencies = (
@@ -822,6 +846,11 @@
 			isa = PBXTargetDependency;
 			target = 996B9621C5054CAF33861987 /* AetherTableCore */;
 			targetProxy = A0E805073224353D1583962E /* PBXContainerItemProxy */;
+		};
+		FB2D4F6619F2086851DFB9FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FEF53BD8368C4D81C6255BE2 /* Persistence */;
+			targetProxy = D2D50CB94BF8AD6996C0664E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
