@@ -81,11 +81,13 @@ final class CampaignViewModel {
         let seed = UInt64.random(in: .min ... .max)
         switch rules.resolve(intent: .init(verb: proposal.verb, detail: proposal.detail), in: campaign, using: pack, seed: seed) {
         case .accepted(let event):
-            campaign.apply(event)
-            self.campaign = campaign
-            recap = campaign.recap
-            resultText = "\(pack.descriptor.mechanicFamily): \(event.payload["total"] ?? "?") • audit seed \(seed)"
-            try? await store.save(campaign)
+            do {
+                try campaign.apply(event)
+                self.campaign = campaign
+                recap = campaign.recap
+                resultText = "\(pack.descriptor.mechanicFamily): \(event.payload["total"] ?? "?") • audit seed \(seed)"
+                try? await store.save(campaign)
+            } catch { resultText = "The campaign state rejected that event: \(error.localizedDescription)" }
         case .rejected(let reason): resultText = reason
         }
     }

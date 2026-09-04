@@ -30,6 +30,7 @@
 		76C06EE6B2B68CFEAC04D202 /* Domain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA6F82EF172B8D8F2863444 /* Domain.swift */; };
 		8E6BABDB28FEB181DBF01CCF /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		94455743C360D96AA9EF6268 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; };
+		9BCAA510D6DD3833F10DAD4C /* CampaignReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3739AFFC1CC9EBCE52DD7A5B /* CampaignReducer.swift */; };
 		9F26C2348B609BE067E6165A /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		A32CE61B760AB46F4C9FB85C /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		A98BE176FA355D41DB4743A6 /* Multiplayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D6DC8478EAC3C46C0C5E7670 /* Multiplayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -230,6 +231,7 @@
 /* Begin PBXFileReference section */
 		184F6C6CEDB51EAE72C4C165 /* AIGM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIGM.swift; sourceTree = "<group>"; };
 		25EDB530CEDC843874C6558F /* AetherTableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AetherTableApp.swift; sourceTree = "<group>"; };
+		3739AFFC1CC9EBCE52DD7A5B /* CampaignReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignReducer.swift; sourceTree = "<group>"; };
 		38FEA55027F02101F9035B23 /* AetherTableCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AetherTableCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3ECD545DCF4FF0741A08BF77 /* Sync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sync.swift; sourceTree = "<group>"; };
 		4B696C0D640B3561E9AB304C /* FoundationModels.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FoundationModels.framework; path = System/Library/Frameworks/FoundationModels.framework; sourceTree = SDKROOT; };
@@ -386,6 +388,7 @@
 		7D0829A1122BDA55B1C24DDF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				3739AFFC1CC9EBCE52DD7A5B /* CampaignReducer.swift */,
 				9BA6F82EF172B8D8F2863444 /* Domain.swift */,
 			);
 			name = Sources;
@@ -721,6 +724,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BCAA510D6DD3833F10DAD4C /* CampaignReducer.swift in Sources */,
 				76C06EE6B2B68CFEAC04D202 /* Domain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

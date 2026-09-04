@@ -18,7 +18,7 @@ import Testing
     defer { try? FileManager.default.removeItem(at: directory) }
     let store = try FileCampaignStore(directory: directory)
     var campaign = CampaignState(title: "The First Thread", rulesPackID: "d20-fantasy")
-    campaign.apply(CampaignEvent(campaignID: campaign.id, kind: .actionResolved, payload: ["verb": "attempt", "detail": "open the sealed door", "total": "16"]))
+    try campaign.apply(CampaignEvent(campaignID: campaign.id, kind: .actionResolved, payload: ["verb": "attempt", "detail": "open the sealed door", "total": "16"]))
     try await store.save(campaign)
     let restored = try await store.load(id: campaign.id)
     #expect(restored?.id == campaign.id)
@@ -42,6 +42,24 @@ import Testing
     #expect(world.player?.traits[.wits] == 2)
     #expect(world.player?.health == 6)
     #expect(world.facts["lantern.status"] == "extinguished")
+}
+
+@Test func reducerAppliesStarterCampaignFactsAndCapsResources() throws {
+    var campaign = CampaignState(title: "The Lantern Below", rulesPackID: "d20-fantasy")
+    try campaign.apply(CampaignEvent(campaignID: campaign.id, kind: .characterCreated, payload: ["name": "Arden", "archetype": "Wayfinder", "definingDetail": "Hears the river.", "favoredTrait": "wits"]))
+    try campaign.apply(CampaignEvent(campaignID: campaign.id, kind: .worldFactSet, payload: ["key": "clue.brassShard", "value": "true"]))
+    try campaign.apply(CampaignEvent(campaignID: campaign.id, kind: .resourceChanged, payload: ["resource": "health", "delta": "-8"]))
+    try campaign.apply(CampaignEvent(campaignID: campaign.id, kind: .relationshipChanged, payload: ["npcID": "npc.sera", "delta": "7"]))
+    #expect(campaign.world.player?.health == 0)
+    #expect(campaign.world.player?.conditions.contains(.down) == true)
+    #expect(campaign.world.facts["clue.brassShard"] == "true")
+    #expect(campaign.world.relationships["npc.sera"] == 2)
+}
+
+@Test func reducerRejectsAnEventForAnotherCampaign() throws {
+    var campaign = CampaignState(title: "One", rulesPackID: "d20-fantasy")
+    let foreign = CampaignEvent(campaignID: CampaignID(), kind: .noteAdded, payload: [:])
+    #expect(throws: CampaignReducerError.wrongCampaign) { try campaign.apply(foreign) }
 }
 
 @Test func diceStayWithinBounds() throws {

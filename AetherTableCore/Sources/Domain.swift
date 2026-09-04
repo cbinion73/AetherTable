@@ -128,12 +128,7 @@ public protocol RulesPack: Sendable {
 }
 
 public extension CampaignState {
-    mutating func apply(_ event: CampaignEvent) {
-        precondition(event.campaignID == id, "An event may only be applied to its own campaign.")
-        guard !events.contains(where: { $0.id == event.id }) else { return }
-        events.append(event)
-        if event.kind == .actionResolved, let detail = event.payload["detail"], let total = event.payload["total"] {
-            recap = "You last \(event.payload["verb"] ?? "acted") to \(detail). The authoritative roll was \(total)."
-        }
+    mutating func apply(_ event: CampaignEvent) throws {
+        try CampaignReducer.apply(event, to: &self)
     }
 }
