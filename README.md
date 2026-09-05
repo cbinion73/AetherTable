@@ -57,12 +57,40 @@ The project was generated and validated with Xcode 27. Set an iOS 26 simulator d
 
 ## First playable slice
 
-1. Create one local solo campaign from the `d20-fantasy` prototype pack.
-2. Load a persisted campaign state and show a recap.
-3. Enter intent; AI produces a structured proposal.
-4. Rules Engine validates it, Dice Engine rolls it, then the event log updates.
-5. Add a second device through the multiplayer event feed—without changing game rules.
+1. Begin The Lantern Below with the fixed SRD Guardian quickstart character.
+2. Resolve the River Shade encounter through the deterministic encounter engine.
+3. Make choices in the Flooded Archive and Lantern Vault.
+4. Save the resulting campaign state and resume it when reopening the app.
+
+This is an SRD-based adaptation of the reference campaign's three locations. The reference packet's selectable archetypes and four investigative opening approaches are not implemented in the current phone flow. Free-text play and adding a second device remain later work.
 
 ## Status
 
-First vertical slice built: create a local solo campaign, submit an action, resolve a pack-defined seeded roll, append it to the campaign event log, and persist the campaign as JSON in Application Support. On an Apple Intelligence-ready device, Foundation Models supplies a guided, structured intent proposal; on other devices, the player’s direct intent remains usable.
+The initial scaffold milestone is complete. The repository was initialized in commit `bea798b` and already contains the eight modules above, a native iOS application, architecture notes, and automated engine tests. Continue this repository at `/Users/chris/Documents/Codex/AetherTable`; AetherTable remains a working name.
+
+The current phone UI opens the original **The Lantern Below** solo adventure, resumes a saved campaign, and presents scene choices, combat, Archive branches, and a Vault ending. Campaign state is saved as JSON in Application Support. Foundation Models supplies outcome narration when available. The AI layer also contains structured intent proposal support; that does not imply that every scene supports unrestricted free-text play.
+
+| User requirement | Current implementation | Still required for the full game |
+|---|---|---|
+| Native iOS app | SwiftUI app and separate framework targets | Broader device and player testing |
+| Apple Intelligence GM | Foundation Models proposals and outcome narration boundary | Full scene generation, NPC dialogue, and grounded ongoing campaign behavior |
+| Persistent world | Structured state, event reducer, atomic JSON saves, resume flow | Save migration and interruption/recovery verification |
+| Deterministic dice and rules | Audited dice, rules engine, SRD 5.2.1 core mechanics and encounter subset | Complete supported rules coverage and conformance checks |
+| Solo and multiplayer | Solo adventure; multiplayer transport protocol only | Actual shared sessions, player authority, synchronization, reconnect/conflict handling, and two-device verification |
+| Multiple RPG systems | Versioned pack interface; d20, 2d20, and dice-pool descriptors | Distinct playable systems and genre experiences; descriptors alone do not implement those systems |
+| Published rules and IP boundaries | Separately attributed SRD sources and scoped mechanics | Rights and exact edition selection before implementing additional published systems/settings |
+
+Multiplayer and multiple playable systems remain requirements for the full product. Solo-first is an implementation sequence, not removal of those requirements. The scaffold and current adventure are not the completed platform.
+
+## Build and test
+
+Open `AetherTable.xcodeproj` in Xcode 27 and choose an installed iOS simulator. To regenerate the project after changing `project.yml`, run `xcodegen generate` (XcodeGen 2.44 or newer).
+
+```sh
+xcodebuild -project AetherTable.xcodeproj -scheme AetherTable -destination 'generic/platform=iOS Simulator' build CODE_SIGNING_ALLOWED=NO
+xcodebuild -project AetherTable.xcodeproj -scheme AetherTableTests -destination 'platform=iOS Simulator,name=iPhone 17' test CODE_SIGNING_ALLOWED=NO
+```
+
+Use a simulator name available on your Mac. If Xcode 27 is not the active developer directory, set `DEVELOPER_DIR` to its `Contents/Developer` directory. Physical-device builds require your own development team and provisioning; simulator builds do not.
+
+GDS workflow configuration lives in `_bmad/gds/config.yaml`. Existing product and architecture documents remain the planning sources; this configuration does not imply that every GDS design or acceptance gate has passed.

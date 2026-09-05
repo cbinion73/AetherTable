@@ -17,7 +17,7 @@ Player intent
 
 ## Campaign truth
 
-`CampaignState` is a compact materialized view. `CampaignEvent` is the durable audit trail. Each event carries a stable identifier and date so a future sync transport can merge and order events without making the AI authoritative.
+`CampaignState` is a compact materialized view. `CampaignEvent` is the durable audit trail. Each event carries a stable identifier and date. A future sync transport will also need explicit ordering, deduplication, and authority semantics before it can safely merge events without making the AI authoritative.
 
 The first persistence adapter is local and replaceable. CloudKit sharing is the expected Apple-native multiplayer candidate, but it is an implementation choice for the next milestone, not an unearned claim in this scaffold.
 
@@ -44,3 +44,11 @@ Persistence / Multiplayer / Rules Packs -> Core
 ```
 
 No engine module imports the UI. No rules pack imports a publisher SDK. No AI module writes storage or sync state.
+
+## Scaffold versus delivered behavior
+
+`project.yml` is the source for the eight product targets plus the test target. `Multiplayer/Sources/Sync.swift` currently defines `CampaignEventTransport` and `SyncMode` only; there is no network transport or shared-session UI yet. Event identifiers and timestamps alone do not provide ordering, authorization, idempotency, or conflict resolution. Those must be specified and tested before claiming multiplayer support.
+
+The generic 2d20 and dice-pool entries in `RulesPacks/Sources/RulesPacks.swift` are descriptors, not implementations of published Star Trek or Marvel mechanics. Published-system support requires an explicit edition, permitted source material, a rules adapter, and conformance tests. Warcraft-like fantasy can use the common engine with original world content; the scaffold does not grant rights to Warcraft settings or assets.
+
+The scaffold preserves these extension boundaries while delivering the first solo slice. Completion of the full platform requires both actual multiplayer and additional playable systems.

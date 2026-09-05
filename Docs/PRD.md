@@ -4,6 +4,8 @@
 
 **Decision:** Build one excellent persistent solo campaign experience first. The architecture supports multiple systems; the product earns that complexity only after players return to the first one.
 
+**Full-product scope clarification (2026-09-04):** Chris's requirements include solo **and multiplayer**, Apple Intelligence, persistent campaign/world data, deterministic dice/rules, and support for multiple RPG systems with appropriate content rights. The V1 exclusions and later gates below describe incremental delivery only. They do not authorize dropping multiplayer or multiple playable systems from the finished platform. A prototype rules-pack descriptor is not a playable published rules implementation.
+
 ## 1. Product outcome
 
 ### The outcome Chris wants
@@ -257,6 +259,6 @@ Deliverables:
 | Solo play feels lonely | Prioritize recurring NPC relationships, consequences, and recap quality over map or content volume. |
 | Multiplayer corrupts state | Event-sourced sync semantics are designed first; shared play waits until solo is stable. |
 
-## 11. Immediate next artifact
+## 11. Current delivery state
 
-Create the **reference campaign packet** for the original fantasy V1: a three-scene opening adventure and its small owned rules reference. That is the exact design input required to turn the current technical scaffold into a playable product.
+The reference campaign packet exists in `ReferenceCampaign.md`. The app implements an SRD-based adaptation of its three locations and a resume flow, with Foundation Models outcome narration. The phone flow currently creates a fixed SRD Guardian and opens with a River Shade encounter; the packet's selectable archetypes, owned d20 rules, and four investigative opening approaches are not implemented as that specified flow. The requested initial project, Git repository, eight-module scaffold, README, and architecture record exist. See the README requirement matrix for the implementation boundary. These artifacts do not establish that every acceptance gate above has passed: full GM behavior, multiplayer, additional playable systems, and observed return-session quality remain unfinished.

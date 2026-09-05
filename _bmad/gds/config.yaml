@@ -1,0 +1,8 @@
+project_name: AetherTable
+user_name: Chris
+communication_language: English
+document_output_language: English
+output_folder: "{project-root}/Docs"
+game_dev_experience: experienced tabletop player
+planning_artifacts: "{project-root}/Docs"
+implementation_artifacts: "{project-root}/Docs/Implementation"
