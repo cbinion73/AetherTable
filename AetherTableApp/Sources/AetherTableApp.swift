@@ -35,6 +35,9 @@ struct CampaignHomeView: View {
                         .disabled(model.playerText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || model.isResolving)
                 }
                 Section("Campaign Journal") { Text(model.recap) }
+                Section("Apple Intelligence GM") {
+                    Text(model.gmNarration).foregroundStyle(.secondary)
+                }
                 Section("SRD 5.2.1 Encounter Preview") {
                     Text(model.srdSummary).foregroundStyle(.secondary)
                     Button("Create level-one guardian") { Task { await model.startSRDQuickstart() } }
@@ -73,6 +76,7 @@ final class CampaignViewModel {
     var playerText = "I investigate the strange signal."
     var resultText = "Awaiting an action"
     var recap = "Loading campaign…"
+    var gmNarration = "Apple Intelligence will narrate resolved outcomes when it is available on this device."
     var statusText = "Local solo campaign"
     var isResolving = false
     var srdSummary = "Create a source-cited level-one character and enter a persistent encounter."
@@ -116,6 +120,7 @@ final class CampaignViewModel {
                 recap = campaign.recap
                 resultText = "\(pack.descriptor.mechanicFamily): \(event.payload["total"] ?? "?") • audit seed \(seed)"
                 try? await store.save(campaign)
+                await refreshGMNarration(for: event, in: campaign)
             } catch { resultText = "The campaign state rejected that event: \(error.localizedDescription)" }
         case .rejected(let reason): resultText = reason
         }
@@ -141,6 +146,7 @@ final class CampaignViewModel {
             canResolveVaultChoice = false
             srdSummary = profile.name + ", level 1 " + profile.characterClass + " • HP " + String(profile.maximumHitPoints) + " • AC " + String(profile.armorClass) + " • Your turn against the River Shade."
             statusText = "SRD 5.2.1 character and encounter saved locally."
+            gmNarration = "The rules engine has set the scene. Apple Intelligence will narrate the first resolved action."
             try await store.save(newCampaign)
         } catch {
             statusText = "Could not start the SRD encounter: " + error.localizedDescription
@@ -169,6 +175,7 @@ final class CampaignViewModel {
             canResolveArchiveChoice = campaign.world.locationID == "emberwake.flooded-archive"
             canResolveVaultChoice = campaign.world.quest.stage == "vault" && campaign.world.sceneProgress[LanternBelowFloodedArchive.sceneID] == .completed
             try await store.save(campaign)
+            if let event = resolution.events.first(where: { $0.kind == .actionResolved }) { await refreshGMNarration(for: event, in: campaign) }
         } catch {
             statusText = "The SRD engine rejected that attack: " + error.localizedDescription
         }
@@ -194,6 +201,7 @@ final class CampaignViewModel {
             canResolveArchiveChoice = campaign.world.locationID == "emberwake.flooded-archive"
             canResolveVaultChoice = campaign.world.quest.stage == "vault" && campaign.world.sceneProgress[LanternBelowFloodedArchive.sceneID] == .completed
             try await store.save(campaign)
+            if let event = resolution.events.first(where: { $0.kind == .actionResolved }) { await refreshGMNarration(for: event, in: campaign) }
         } catch {
             statusText = "The SRD engine rejected the River Shade’s turn: " + error.localizedDescription
         }
@@ -217,6 +225,7 @@ final class CampaignViewModel {
             srdSummary = resolution.result.outcome == .success ? "The archive yields. A stairway spirals toward the sealed vault. Audit seed " + String(seed) : "The archive fights you, but the stairway opens amid rising alarms. Audit seed " + String(seed)
             statusText = campaign.world.quest.objective
             try await store.save(campaign)
+            await refreshGMNarration(for: resolution.event, in: campaign)
         } catch {
             statusText = "The archive could not resolve that choice: " + error.localizedDescription
         }
@@ -239,6 +248,7 @@ final class CampaignViewModel {
             srdSummary = "Your decision is recorded. The first arc ends here. Audit seed " + String(seed)
             statusText = campaign.world.quest.objective
             try await store.save(campaign)
+            await refreshGMNarration(for: resolution.event, in: campaign)
         } catch {
             statusText = "The vault could not resolve that decision: " + error.localizedDescription
         }
@@ -248,5 +258,13 @@ final class CampaignViewModel {
         guard let encounter = campaign.world.encounter, let result = LanternBelowEncounter.completionEvents(campaignID: campaign.id, encounter: encounter) else { return nil }
         for event in result.events { try campaign.apply(event) }
         return result.completion
+    }
+
+    private func refreshGMNarration(for event: CampaignEvent, in campaign: CampaignState) async {
+        do {
+            gmNarration = try await gm.narrate(resolved: event, campaign: campaign)
+        } catch {
+            gmNarration = "The outcome is saved and ready. Apple Intelligence narration is unavailable on this device."
+        }
     }
 }

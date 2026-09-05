@@ -33,7 +33,7 @@ Rules packs ship as compact structured records plus an offline deterministic sea
 
 ## Apple Intelligence
 
-`FoundationModelsGM` is conditionally compiled for Apple platforms that provide Foundation Models. Its output must decode into an owned, small Swift type such as `GMIntentProposal`. Tool calls should be the only route from a model proposal to platform behavior. The first implementation is a safe unavailable fallback so the project builds before the full Apple Intelligence integration is added.
+`FoundationModelsGM` is conditionally compiled for Apple platforms that provide Foundation Models. It generates a guided `GMIntentProposal` before resolution and a guided, player-facing narration only after the reducer records an outcome. The narration input is a bounded snapshot of the resolved event and recorded campaign facts; it cannot mutate state, decide rules, or supply dice. When Apple Intelligence is unavailable, the app visibly retains deterministic play and labels the missing narration rather than silently substituting a cloud model.
 
 ## Module dependency direction
 
