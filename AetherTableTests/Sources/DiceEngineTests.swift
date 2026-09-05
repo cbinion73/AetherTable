@@ -142,6 +142,18 @@ import Testing
     #expect(attack.damage == .init(count: 1, sides: 8, modifier: 3))
 }
 
+@Test func ownedRiverShadeTurnUsesTheSameAuditedSrdEngine() throws {
+    var campaign = CampaignState(title: "Enemy Turn", rulesPackID: "srd-5.2.1")
+    let hero = EncounterCombatant(id: LanternBelowEncounter.playerID, name: "Arden", team: .player, initiative: 14, maximumHitPoints: 12, armorClass: 16)
+    let shade = EncounterCombatant(id: LanternBelowEncounter.riverShadeID, name: "River Shade", team: .enemy, initiative: 9, maximumHitPoints: 20, armorClass: 12)
+    for event in SRD521EncounterEngine.startEvents(campaignID: campaign.id, encounterID: "emberwake.river-shade", title: "Dark Beneath the Bridge", combatants: [hero, shade]) { try campaign.apply(event) }
+    try campaign.apply(try SRD521EncounterEngine.nextTurnEvent(campaignID: campaign.id, encounter: campaign.world.encounter!))
+    let resolution = try SRD521EncounterEngine.resolveAttack(campaignID: campaign.id, in: campaign.world.encounter!, request: LanternBelowEncounter.riverShadeAttack(), attackDice: [20], damageDice: [3, 4])
+    #expect(resolution.damage == 9)
+    for event in resolution.events { try campaign.apply(event) }
+    #expect(campaign.world.encounter?.combatants.first(where: { $0.id == LanternBelowEncounter.playerID })?.hitPoints == 3)
+}
+
 @Test func diceStayWithinBounds() throws {
     let roll = try DiceEngine.roll(DiceExpression(count: 3, sides: 6, modifier: 0), seed: 9)
     #expect(roll.values.allSatisfy { (1...6).contains($0) })

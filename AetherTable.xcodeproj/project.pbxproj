@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00FD247D51A0D4283FC901B2 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		09CD2A9921B94E6E8E80A4B8 /* LanternBelowEncounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920A07D84D42A102891EED79 /* LanternBelowEncounter.swift */; };
 		0B4A381AFF67E8E65DDA2300 /* SRD_CC_v5.1.pdf in Resources */ = {isa = PBXBuildFile; fileRef = F2285E740822A1F216F788A1 /* SRD_CC_v5.1.pdf */; };
 		0C71F5A00197E38CB426F166 /* SRD521CoreMechanics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C364377810AC3E817264E01 /* SRD521CoreMechanics.swift */; };
 		13063DDAF1672D91BAF94F6A /* DiceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1026CE731153F14BE439BC5 /* DiceEngine.swift */; };
@@ -252,6 +253,7 @@
 		5CDE643BAC394DF45B3B10D4 /* AetherTableTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AetherTableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		66536B383FC649FBA913E2CC /* RulesEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RulesEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CE0433A3F73148B823FCE96 /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		920A07D84D42A102891EED79 /* LanternBelowEncounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanternBelowEncounter.swift; sourceTree = "<group>"; };
 		92CC1A7D1C98B14A3EF60B6F /* Rules.srd-5.2.1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Rules.srd-5.2.1.json"; sourceTree = "<group>"; };
 		9BA6F82EF172B8D8F2863444 /* Domain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain.swift; sourceTree = "<group>"; };
 		9C44DB3695D5584B8139C380 /* RulesPacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesPacks.swift; sourceTree = "<group>"; };
@@ -434,6 +436,7 @@
 		9098C4401B3C971AD1E9A036 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				920A07D84D42A102891EED79 /* LanternBelowEncounter.swift */,
 				B5047E2653ED1144CB9EF722 /* LanternBelowSceneOne.swift */,
 				36D547FE55DD0B90D553D5CD /* RuleCatalog.swift */,
 				9C44DB3695D5584B8139C380 /* RulesPacks.swift */,
@@ -750,6 +753,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09CD2A9921B94E6E8E80A4B8 /* LanternBelowEncounter.swift in Sources */,
 				FDD9D31241AF747715CF06A4 /* LanternBelowSceneOne.swift in Sources */,
 				86A1CE84D0FB3C5D339F3449 /* RuleCatalog.swift in Sources */,
 				C145D936E07CD5461778552E /* RulesPacks.swift in Sources */,

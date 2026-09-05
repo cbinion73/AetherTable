@@ -40,6 +40,8 @@ struct CampaignHomeView: View {
                     Button("Create level-one guardian") { Task { await model.startSRDQuickstart() } }
                     Button("Roll guardian attack") { Task { await model.resolveSRDAttack() } }
                         .disabled(!model.canResolveSRDAttack || model.isResolving)
+                    Button("Resolve River Shade turn") { Task { await model.resolveRiverShadeTurn() } }
+                        .disabled(!model.canResolveRiverShadeTurn || model.isResolving)
                 }
                 Section("Status") { Text(model.statusText).foregroundStyle(.secondary) }
             }
@@ -59,6 +61,7 @@ final class CampaignViewModel {
     var isResolving = false
     var srdSummary = "Create a source-cited level-one character and enter a persistent encounter."
     var canResolveSRDAttack = false
+    var canResolveRiverShadeTurn = false
 
     private var campaign: CampaignState?
     private let rules = RulesEngine()
@@ -115,6 +118,7 @@ final class CampaignViewModel {
             campaign = newCampaign
             recap = newCampaign.recap
             canResolveSRDAttack = true
+            canResolveRiverShadeTurn = false
             srdSummary = profile.name + ", level 1 " + profile.characterClass + " • HP " + String(profile.maximumHitPoints) + " • AC " + String(profile.armorClass) + " • Your turn against the River Shade."
             statusText = "SRD 5.2.1 character and encounter saved locally."
             try await store.save(newCampaign)
@@ -139,10 +143,33 @@ final class CampaignViewModel {
             let targetHP = campaign.world.encounter?.combatants.first(where: { $0.id == "river-shade" })?.hitPoints ?? 0
             srdSummary = "Attack " + resolution.attack.outcome.rawValue + " • " + String(resolution.damage) + " damage • River Shade: " + String(targetHP) + " HP • audit seed " + String(seed)
             canResolveSRDAttack = false
+            canResolveRiverShadeTurn = campaign.world.encounter?.activeCombatantID == LanternBelowEncounter.riverShadeID
             statusText = "Your attack is recorded. Enemy turns are the next encounter milestone."
             try await store.save(campaign)
         } catch {
             statusText = "The SRD engine rejected that attack: " + error.localizedDescription
+        }
+    }
+
+    func resolveRiverShadeTurn() async {
+        guard var campaign, let encounter = campaign.world.encounter else { return }
+        isResolving = true
+        defer { isResolving = false }
+        do {
+            let seed = UInt64.random(in: .min ... .max)
+            let resolution = try SRD521EncounterEngine.resolveAttack(campaignID: campaign.id, in: encounter, request: LanternBelowEncounter.riverShadeAttack(), seed: seed)
+            for event in resolution.events { try campaign.apply(event) }
+            if let next = try? SRD521EncounterEngine.nextTurnEvent(campaignID: campaign.id, encounter: campaign.world.encounter!) { try campaign.apply(next) }
+            self.campaign = campaign
+            recap = campaign.recap
+            let playerHP = campaign.world.encounter?.combatants.first(where: { $0.id == LanternBelowEncounter.playerID })?.hitPoints ?? 0
+            srdSummary = "River Shade: " + resolution.attack.outcome.rawValue + " • " + String(resolution.damage) + " damage • " + LanternBelowEncounter.playerID + " HP: " + String(playerHP) + " • audit seed " + String(seed)
+            canResolveRiverShadeTurn = false
+            canResolveSRDAttack = campaign.world.encounter?.activeCombatantID == LanternBelowEncounter.playerID && playerHP > 0
+            statusText = playerHP > 0 ? "The River Shade’s turn is recorded. Your turn." : "Your guardian is defeated."
+            try await store.save(campaign)
+        } catch {
+            statusText = "The SRD engine rejected the River Shade’s turn: " + error.localizedDescription
         }
     }
 }
