@@ -19,6 +19,8 @@ This is AetherTable’s separate package boundary for the official System Refere
 
 This attribution must be presented in the package’s About/License view and any distributed rules content. It is carried in code with the package descriptor so releases cannot forget it.
 
+The legally distributable 2014-era corpus is archived separately as SRD 5.1. It must not be mixed into a 5.2.1 campaign; see [Permitted D20 Sources](Permitted-D20-Sources.md).
+
 ## Package boundary
 
 ```text

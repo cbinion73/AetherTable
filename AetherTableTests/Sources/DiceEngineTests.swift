@@ -85,6 +85,13 @@ import Testing
     #expect(SRD521SourceManifest.sha256 == "8974902d109d6e63672d7c490bde9ccf052410503d9cfa768237154fbc5e3d87")
 }
 
+@Test func onlyExplicitlyLicensedD20SourcesAreBundled() {
+    #expect(D20SourceAccessPolicy.bundledRedistributableSources == ["SRD 5.1", "SRD 5.2.1"])
+    #expect(SRD51SourceManifest.pageCount == 403)
+    #expect(SRD51SourceManifest.sha256 == "2504d2a0abb0a4d491a939be4f17910a2dde0312570ab8d208080225ccf0a1f0")
+    #expect(D20SourceAccessPolicy.externalReferenceURL.host == "www.dndbeyond.com")
+}
+
 @Test func diceStayWithinBounds() throws {
     let roll = try DiceEngine.roll(DiceExpression(count: 3, sides: 6, modifier: 0), seed: 9)
     #expect(roll.values.allSatisfy { (1...6).contains($0) })

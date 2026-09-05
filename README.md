@@ -43,6 +43,8 @@ The owned starter adventure and its small rules reference: [Docs/ReferenceCampai
 
 The official SRD 5.2.1 source is isolated in a separately attributed package. Its deterministic core currently supports ability checks, saving throws, attack rolls, advantage/disadvantage, ability modifiers, and proficiency progression; it is not yet a complete playable SRD campaign system. Scope and license boundary: [Docs/RulesPacks/SRD-5.2.1.md](Docs/RulesPacks/SRD-5.2.1.md).
 
+The repository also preserves the separately licensed SRD 5.1 for a future 2014-compatible adapter. It does not copy free-to-read D&D Beyond Basic Rules or paid D&D content without an explicit redistribution license. Full source policy: [Docs/RulesPacks/Permitted-D20-Sources.md](Docs/RulesPacks/Permitted-D20-Sources.md).
+
 ## Open in Xcode 27
 
 ```sh
