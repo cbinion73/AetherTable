@@ -80,10 +80,59 @@ import Testing
     #expect(!BuiltInRulesPacks.all.map(\.descriptor.id).contains(srd.id))
     #expect(srd.license?.sourceVersion == "5.2.1")
     #expect(srd.license?.licenseName == "Creative Commons Attribution 4.0 International")
-    #expect(srd.license?.attribution.contains("Wizards of the Coast") == true)
+    #expect(srd.license?.attribution == SRD521SourceManifest.requiredAttribution)
+    #expect(SRD521SourceManifest.pageCount == 364)
+    #expect(SRD521SourceManifest.sha256 == "8974902d109d6e63672d7c490bde9ccf052410503d9cfa768237154fbc5e3d87")
 }
 
 @Test func diceStayWithinBounds() throws {
     let roll = try DiceEngine.roll(DiceExpression(count: 3, sides: 6, modifier: 0), seed: 9)
     #expect(roll.values.allSatisfy { (1...6).contains($0) })
+}
+
+@Test func srdCoreUsesAbilityAndProficiencyForAnAbilityCheck() throws {
+    let request = SRD521TestRequest(
+        kind: .abilityCheck,
+        ability: .intelligence,
+        abilityScore: 15,
+        proficiencyBonus: 2,
+        isProficient: true,
+        target: 15
+    )
+    let result = try SRD521CoreMechanics.resolve(request: request, dice: [10])
+    #expect(result.abilityModifier == 2)
+    #expect(result.proficiencyApplied == 2)
+    #expect(result.total == 14)
+    #expect(result.outcome == .failure)
+}
+
+@Test func srdCoreSelectsHighOrLowD20AndCancelsOpposingRollStates() throws {
+    let advantage = SRD521TestRequest(kind: .savingThrow, ability: .wisdom, abilityScore: 12, target: 14, rollMode: .advantage)
+    let advantaged = try SRD521CoreMechanics.resolve(request: advantage, dice: [4, 16])
+    #expect(advantaged.selectedDie == 16)
+    #expect(advantaged.outcome == .success)
+
+    let disadvantage = SRD521TestRequest(kind: .savingThrow, ability: .wisdom, abilityScore: 12, target: 14, rollMode: .disadvantage)
+    let disadvantaged = try SRD521CoreMechanics.resolve(request: disadvantage, dice: [4, 16])
+    #expect(disadvantaged.selectedDie == 4)
+    #expect(disadvantaged.outcome == .failure)
+    #expect(SRD521RollMode.effective(hasAdvantage: true, hasDisadvantage: true) == .normal)
+}
+
+@Test func srdCoreHonorsAttackNaturalTwentyAndOneOnlyForAttacks() throws {
+    let attack = SRD521TestRequest(kind: .attackRoll, ability: .strength, abilityScore: 8, target: 99)
+    #expect(try SRD521CoreMechanics.resolve(request: attack, dice: [20]).outcome == .criticalHit)
+    #expect(try SRD521CoreMechanics.resolve(request: attack, dice: [1]).outcome == .automaticMiss)
+
+    let check = SRD521TestRequest(kind: .abilityCheck, ability: .strength, abilityScore: 20, target: 5)
+    #expect(try SRD521CoreMechanics.resolve(request: check, dice: [1]).outcome == .success)
+}
+
+@Test func srdCoreUsesOfficialCharacterLevelProficiencyProgression() {
+    #expect(SRD521CoreMechanics.proficiencyBonus(forCharacterLevel: 1) == 2)
+    #expect(SRD521CoreMechanics.proficiencyBonus(forCharacterLevel: 5) == 3)
+    #expect(SRD521CoreMechanics.proficiencyBonus(forCharacterLevel: 9) == 4)
+    #expect(SRD521CoreMechanics.proficiencyBonus(forCharacterLevel: 13) == 5)
+    #expect(SRD521CoreMechanics.proficiencyBonus(forCharacterLevel: 17) == 6)
+    #expect(SRD521CoreMechanics.proficiencyBonus(forCharacterLevel: 21) == nil)
 }

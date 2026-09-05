@@ -41,7 +41,7 @@ The product decision record and gate-based delivery plan: [Docs/PRD.md](Docs/PRD
 
 The owned starter adventure and its small rules reference: [Docs/ReferenceCampaign.md](Docs/ReferenceCampaign.md).
 
-Official SRD rules are isolated in a separate attribution-bearing package; current scope and license boundary: [Docs/RulesPacks/SRD-5.2.1.md](Docs/RulesPacks/SRD-5.2.1.md).
+The official SRD 5.2.1 source is isolated in a separately attributed package. Its deterministic core currently supports ability checks, saving throws, attack rolls, advantage/disadvantage, ability modifiers, and proficiency progression; it is not yet a complete playable SRD campaign system. Scope and license boundary: [Docs/RulesPacks/SRD-5.2.1.md](Docs/RulesPacks/SRD-5.2.1.md).
 
 ## Open in Xcode 27
 

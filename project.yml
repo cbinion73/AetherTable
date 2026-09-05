@@ -60,6 +60,7 @@ targets:
     type: framework
     platform: iOS
     sources: [RulesPacks/Sources]
+    resources: [RulesPacks/Resources]
     dependencies: [{target: AetherTableCore}, {target: RulesEngine}]
   AetherTableTests:
     type: bundle.unit-test

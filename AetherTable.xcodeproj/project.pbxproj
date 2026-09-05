@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00FD247D51A0D4283FC901B2 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0C71F5A00197E38CB426F166 /* SRD521CoreMechanics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C364377810AC3E817264E01 /* SRD521CoreMechanics.swift */; };
 		13063DDAF1672D91BAF94F6A /* DiceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1026CE731153F14BE439BC5 /* DiceEngine.swift */; };
 		173918AC64BD6637C65490E5 /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		1A1D878EC5C27D5AD95A78E4 /* RulesPacks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B390AFE6D1EA54727752FFFD /* RulesPacks.framework */; };
@@ -232,6 +233,7 @@
 
 /* Begin PBXFileReference section */
 		08DC82BCD9BA5EE0D286D19E /* SRD521RulesPack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRD521RulesPack.swift; sourceTree = "<group>"; };
+		0C364377810AC3E817264E01 /* SRD521CoreMechanics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRD521CoreMechanics.swift; sourceTree = "<group>"; };
 		184F6C6CEDB51EAE72C4C165 /* AIGM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIGM.swift; sourceTree = "<group>"; };
 		25EDB530CEDC843874C6558F /* AetherTableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AetherTableApp.swift; sourceTree = "<group>"; };
 		3739AFFC1CC9EBCE52DD7A5B /* CampaignReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignReducer.swift; sourceTree = "<group>"; };
@@ -404,6 +406,7 @@
 			children = (
 				B5047E2653ED1144CB9EF722 /* LanternBelowSceneOne.swift */,
 				9C44DB3695D5584B8139C380 /* RulesPacks.swift */,
+				0C364377810AC3E817264E01 /* SRD521CoreMechanics.swift */,
 				08DC82BCD9BA5EE0D286D19E /* SRD521RulesPack.swift */,
 			);
 			name = Sources;
@@ -692,6 +695,7 @@
 			files = (
 				FDD9D31241AF747715CF06A4 /* LanternBelowSceneOne.swift in Sources */,
 				C145D936E07CD5461778552E /* RulesPacks.swift in Sources */,
+				0C71F5A00197E38CB426F166 /* SRD521CoreMechanics.swift in Sources */,
 				C327F443AE706F3AB00787BF /* SRD521RulesPack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

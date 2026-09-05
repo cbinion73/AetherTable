@@ -18,7 +18,7 @@ public enum SRD521RulesPack {
             sourceVersion: "5.2.1",
             licenseName: "Creative Commons Attribution 4.0 International",
             sourceURL: URL(string: "https://www.dndbeyond.com/srd")!,
-            attribution: "This work includes material taken from the System Reference Document 5.2.1 by Wizards of the Coast LLC and available at https://www.dndbeyond.com/srd. The System Reference Document 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License available at https://creativecommons.org/licenses/by/4.0/legalcode."
+            attribution: SRD521SourceManifest.requiredAttribution
         )
     )
 
@@ -31,4 +31,16 @@ public enum SRD521RulesPack {
         "attack rolls, armor class, damage, and conditions",
         "character options and resource rules"
     ]
+}
+
+/// Provenance for the verbatim, separately bundled SRD source document.
+/// The document is source material; mechanics become player-facing only after
+/// their deterministic implementation and conformance tests are complete.
+public enum SRD521SourceManifest {
+    public static let version = "5.2.1"
+    public static let sourceURL = URL(string: "https://media.dndbeyond.com/compendium-images/srd/5.2/SRD_CC_v5.2.1.pdf")!
+    public static let pageCount = 364
+    public static let sha256 = "8974902d109d6e63672d7c490bde9ccf052410503d9cfa768237154fbc5e3d87"
+    public static let bundledFilename = "SRD_CC_v5.2.1.pdf"
+    public static let requiredAttribution = "This work includes material from the System Reference Document 5.2.1 (\"SRD 5.2.1\") by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode."
 }
