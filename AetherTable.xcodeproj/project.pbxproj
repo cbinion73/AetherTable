@@ -44,6 +44,7 @@
 		AD900BD5B14CE7D0A5421969 /* DiceEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B227A6A86F72535A61C3C55F /* SRD521CharacterProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3BDA5CD22D3FA51A8101A /* SRD521CharacterProfile.swift */; };
 		B387F7B75C80B398B2841881 /* DiceEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; };
+		B39FBF29836625A3D65EA93F /* LanternBelowFloodedArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72343ED330858BC416BA2737 /* LanternBelowFloodedArchive.swift */; };
 		B6DC10EEA1A187A1E11729D3 /* CampaignStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC553D23E52A4774FEAA4D6 /* CampaignStore.swift */; };
 		C0B6BE2B75C309ADDC949459 /* RulesEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; };
 		C0C6CDA2C394F00ED8E66DA5 /* AetherTableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EDB530CEDC843874C6558F /* AetherTableApp.swift */; };
@@ -252,6 +253,7 @@
 		4B696C0D640B3561E9AB304C /* FoundationModels.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FoundationModels.framework; path = System/Library/Frameworks/FoundationModels.framework; sourceTree = SDKROOT; };
 		5CDE643BAC394DF45B3B10D4 /* AetherTableTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AetherTableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		66536B383FC649FBA913E2CC /* RulesEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RulesEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		72343ED330858BC416BA2737 /* LanternBelowFloodedArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanternBelowFloodedArchive.swift; sourceTree = "<group>"; };
 		7CE0433A3F73148B823FCE96 /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		920A07D84D42A102891EED79 /* LanternBelowEncounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanternBelowEncounter.swift; sourceTree = "<group>"; };
 		92CC1A7D1C98B14A3EF60B6F /* Rules.srd-5.2.1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Rules.srd-5.2.1.json"; sourceTree = "<group>"; };
@@ -437,6 +439,7 @@
 			isa = PBXGroup;
 			children = (
 				920A07D84D42A102891EED79 /* LanternBelowEncounter.swift */,
+				72343ED330858BC416BA2737 /* LanternBelowFloodedArchive.swift */,
 				B5047E2653ED1144CB9EF722 /* LanternBelowSceneOne.swift */,
 				36D547FE55DD0B90D553D5CD /* RuleCatalog.swift */,
 				9C44DB3695D5584B8139C380 /* RulesPacks.swift */,
@@ -754,6 +757,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09CD2A9921B94E6E8E80A4B8 /* LanternBelowEncounter.swift in Sources */,
+				B39FBF29836625A3D65EA93F /* LanternBelowFloodedArchive.swift in Sources */,
 				FDD9D31241AF747715CF06A4 /* LanternBelowSceneOne.swift in Sources */,
 				86A1CE84D0FB3C5D339F3449 /* RuleCatalog.swift in Sources */,
 				C145D936E07CD5461778552E /* RulesPacks.swift in Sources */,

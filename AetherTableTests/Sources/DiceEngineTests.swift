@@ -182,6 +182,20 @@ import Testing
     #expect(campaign.world.locationID == "emberwake.lantern-shelter")
 }
 
+@Test func floodedArchiveFailureAdvancesTheStoryWithACost() throws {
+    var campaign = CampaignState(title: "Archive", rulesPackID: "srd-5.2.1")
+    let profile = try SRD521QuickstartCharacter.guardian()
+    try campaign.apply(profile.stateEvent(campaignID: campaign.id))
+    let resolution = try LanternBelowFloodedArchive.resolve(campaignID: campaign.id, profile: profile, choiceID: "force-seal", die: 1)
+    #expect(resolution.result.outcome == .failure)
+    try campaign.apply(resolution.event)
+    for event in try LanternBelowFloodedArchive.consequenceEvents(campaignID: campaign.id, choiceID: "force-seal", result: resolution.result) { try campaign.apply(event) }
+    #expect(campaign.world.quest.stage == "vault")
+    #expect(campaign.world.threatClock.current == 1)
+    #expect(campaign.world.facts["lantern-below.archiveAlarm"] == "raised")
+    #expect(campaign.world.sceneProgress[LanternBelowFloodedArchive.sceneID] == .completed)
+}
+
 @Test func diceStayWithinBounds() throws {
     let roll = try DiceEngine.roll(DiceExpression(count: 3, sides: 6, modifier: 0), seed: 9)
     #expect(roll.values.allSatisfy { (1...6).contains($0) })

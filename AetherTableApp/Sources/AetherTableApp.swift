@@ -43,6 +43,14 @@ struct CampaignHomeView: View {
                     Button("Resolve River Shade turn") { Task { await model.resolveRiverShadeTurn() } }
                         .disabled(!model.canResolveRiverShadeTurn || model.isResolving)
                 }
+                if model.canResolveArchiveChoice {
+                    Section("Flooded Archive") {
+                        Text("The Brass Tide-Key fits a lock beneath the waterline. How do you enter?")
+                        ForEach(LanternBelowFloodedArchive.choices) { choice in
+                            Button(choice.title) { Task { await model.resolveArchive(choiceID: choice.id) } }
+                        }
+                    }
+                }
                 Section("Status") { Text(model.statusText).foregroundStyle(.secondary) }
             }
             .navigationTitle("AetherTable")
@@ -62,6 +70,7 @@ final class CampaignViewModel {
     var srdSummary = "Create a source-cited level-one character and enter a persistent encounter."
     var canResolveSRDAttack = false
     var canResolveRiverShadeTurn = false
+    var canResolveArchiveChoice = false
 
     private var campaign: CampaignState?
     private let rules = RulesEngine()
@@ -146,6 +155,7 @@ final class CampaignViewModel {
             canResolveSRDAttack = false
             canResolveRiverShadeTurn = completion == nil && campaign.world.encounter?.activeCombatantID == LanternBelowEncounter.riverShadeID
             statusText = completion == nil ? "Your attack is recorded. The River Shade acts next." : "Encounter complete. " + campaign.world.quest.objective
+            canResolveArchiveChoice = campaign.world.locationID == "emberwake.flooded-archive"
             try await store.save(campaign)
         } catch {
             statusText = "The SRD engine rejected that attack: " + error.localizedDescription
@@ -169,9 +179,32 @@ final class CampaignViewModel {
             canResolveRiverShadeTurn = false
             canResolveSRDAttack = completion == nil && campaign.world.encounter?.activeCombatantID == LanternBelowEncounter.playerID && playerHP > 0
             statusText = completion == nil ? "The River Shade’s turn is recorded. Your turn." : "Encounter complete. " + campaign.world.quest.objective
+            canResolveArchiveChoice = campaign.world.locationID == "emberwake.flooded-archive"
             try await store.save(campaign)
         } catch {
             statusText = "The SRD engine rejected the River Shade’s turn: " + error.localizedDescription
+        }
+    }
+
+    func resolveArchive(choiceID: String) async {
+        guard var campaign else { return }
+        isResolving = true
+        defer { isResolving = false }
+        do {
+            let profile = try SRD521CharacterProfile.from(campaign: campaign)
+            let seed = UInt64.random(in: .min ... .max)
+            let die = try DiceEngine.roll(.init(count: 1, sides: 20), seed: seed).values[0]
+            let resolution = try LanternBelowFloodedArchive.resolve(campaignID: campaign.id, profile: profile, choiceID: choiceID, die: die)
+            try campaign.apply(resolution.event)
+            for event in try LanternBelowFloodedArchive.consequenceEvents(campaignID: campaign.id, choiceID: choiceID, result: resolution.result) { try campaign.apply(event) }
+            self.campaign = campaign
+            recap = campaign.recap
+            canResolveArchiveChoice = false
+            srdSummary = resolution.result.outcome == .success ? "The archive yields. A stairway spirals toward the sealed vault. Audit seed " + String(seed) : "The archive fights you, but the stairway opens amid rising alarms. Audit seed " + String(seed)
+            statusText = campaign.world.quest.objective
+            try await store.save(campaign)
+        } catch {
+            statusText = "The archive could not resolve that choice: " + error.localizedDescription
         }
     }
 
