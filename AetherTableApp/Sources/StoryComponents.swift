@@ -246,6 +246,48 @@ struct SheetAbilityTile: View {
         .overlay(Rectangle().stroke(StoryStyle.border.opacity(0.56), lineWidth: 1))
     }
 }
+/// A framed presentation for a single portrait asset (one file per class/race,
+/// not a cropped sprite-sheet cell — that crop math was the source of a real
+/// layout bug). Source art varies (some are cutouts with a colored edge halo,
+/// others already sit on a dark background); this gives every portrait the
+/// same stage — a dark vignette behind it and an edge-darkening mask over it
+/// — so the whole gallery reads as one consistent set of cards.
+struct PortraitMedallion: View {
+    let asset: String
+    var label: String = "the selected option"
+    var body: some View {
+        Color.clear
+            .aspectRatio(1, contentMode: .fit)
+            .overlay {
+                ZStack {
+                    RadialGradient(colors: [StoryStyle.seal.opacity(0.55), StoryStyle.night], center: .center, startRadius: 4, endRadius: 260)
+                    Image(asset).resizable().scaledToFill()
+                        .transition(.opacity)
+                    // Darkens toward every edge so a transparent cutout and an
+                    // already-dark photo both fade into the same frame instead
+                    // of showing a hard seam. Purely decorative, so an
+                    // approximate reader here can't affect the portrait itself.
+                    GeometryReader { proxy in
+                        let side = proxy.size.width
+                        RadialGradient(colors: [.clear, .clear, StoryStyle.night.opacity(0.85)], center: .center, startRadius: side * 0.45, endRadius: side * 1.05)
+                    }.allowsHitTesting(false)
+                }
+                .animation(.easeInOut(duration: 0.25), value: asset)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 20))
+        .overlay {
+            RoundedRectangle(cornerRadius: 20).stroke(StoryStyle.gilded, lineWidth: 1.5)
+            RoundedRectangle(cornerRadius: 15).inset(by: 6).stroke(StoryStyle.border.opacity(0.5), lineWidth: 1)
+        }
+        .overlay(alignment: .topLeading) { Circle().fill(StoryStyle.copper).frame(width: 7, height: 7).padding(8) }
+        .overlay(alignment: .topTrailing) { Circle().fill(StoryStyle.copper).frame(width: 7, height: 7).padding(8) }
+        .overlay(alignment: .bottomLeading) { Circle().fill(StoryStyle.copper).frame(width: 7, height: 7).padding(8) }
+        .overlay(alignment: .bottomTrailing) { Circle().fill(StoryStyle.copper).frame(width: 7, height: 7).padding(8) }
+        .shadow(color: .black.opacity(0.4), radius: 14, y: 8)
+        .accessibilityLabel("Illustration of \(label)")
+    }
+}
+
 struct StoryCard<Content: View>: View {
     @ViewBuilder var content: Content
     var body: some View {
@@ -293,18 +335,24 @@ struct TabletopPrimaryButtonStyle: ButtonStyle {
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
     }
 }
-struct StoryAction: View {
-    let title: String
-    let detail: String
-    var enabled = true
-    let action: () -> Void
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 14) {
-                VStack(alignment: .leading, spacing: 5) { Text(title).font(.headline); Text(detail).font(.subheadline).foregroundStyle(.secondary) }
-                Spacer(minLength: 0)
-                Image(systemName: enabled ? "chevron.right" : "lock.fill").accessibilityHidden(true)
-            }.multilineTextAlignment(.leading).frame(maxWidth: .infinity, minHeight: 44, alignment: .leading).padding(16)
-        }.buttonStyle(.plain).background(StoryStyle.parchment.opacity(0.58), in: RoundedRectangle(cornerRadius: 16)).overlay(RoundedRectangle(cornerRadius: 16).stroke(StoryStyle.border.opacity(0.45), lineWidth: 1)).disabled(!enabled).opacity(enabled ? 1 : 0.65)
+
+/// A tappable grid tile for a class/race/other named choice, shared between
+/// the full character-creation flow and the campaign-home quickstart so the
+/// two pickers read as one system instead of two slightly different ones.
+struct ChoiceTileStyle: ButtonStyle {
+    let isSelected: Bool
+    var minHeight: CGFloat = 46
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.subheadline.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.72)
+            .frame(maxWidth: .infinity, minHeight: minHeight)
+            .foregroundStyle(isSelected ? .white : StoryStyle.ink)
+            .background(isSelected ? StoryStyle.seal : StoryStyle.parchment.opacity(0.95), in: RoundedRectangle(cornerRadius: 10))
+            .overlay(RoundedRectangle(cornerRadius: 10).stroke(isSelected ? StoryStyle.gilded : StoryStyle.border.opacity(0.62), lineWidth: isSelected ? 1.5 : 1))
+            .shadow(color: StoryStyle.seal.opacity(isSelected ? 0.35 : 0), radius: 6, y: 3)
+            .contentShape(Rectangle())
+            .scaleEffect(configuration.isPressed ? 0.94 : (isSelected ? 1.03 : 1))
+            .animation(.spring(response: 0.32, dampingFraction: 0.65), value: isSelected)
+            .animation(.spring(response: 0.25, dampingFraction: 0.7), value: configuration.isPressed)
     }
 }

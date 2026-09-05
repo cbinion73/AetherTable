@@ -2,7 +2,7 @@ name: AetherTable
 options:
   minimumXcodeGenVersion: 2.44.0
   deploymentTarget:
-    iOS: "26.0"
+    iOS: "27.0"
 settings:
   base:
     SWIFT_VERSION: "6.0"

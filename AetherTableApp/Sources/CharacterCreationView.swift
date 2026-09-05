@@ -12,7 +12,12 @@ struct CharacterCreationView: View {
     @State private var backstory = ""
     @State private var opening = AdventureOpening.default
     @State private var stage = CreationStage.identity
+    @State private var direction = 1
     private var index: Int { CreationStage.allCases.firstIndex(of: stage)! }
+    private func advance(to newStage: CreationStage) {
+        direction = (CreationStage.allCases.firstIndex(of: newStage) ?? 0) >= index ? 1 : -1
+        withAnimation(.easeInOut(duration: 0.3)) { stage = newStage }
+    }
     private var errors: [String] { draft.validationErrors + (backstory.count > 4000 ? ["Backstory must be 4,000 characters or fewer."] : []) + (!opening.isValid ? ["Complete each part of the opening setup (800 characters maximum per field)."] : []) }
     var body: some View {
         NavigationStack {
@@ -34,15 +39,19 @@ struct CharacterCreationView: View {
                         }
                     }.padding(22).frame(maxWidth: 680, alignment: .leading).frame(maxWidth: .infinity)
                 }.id(stage).scrollDismissesKeyboard(.interactively).background(TabletopPaper())
+                    .transition(.asymmetric(
+                        insertion: .move(edge: direction >= 0 ? .trailing : .leading).combined(with: .opacity),
+                        removal: .move(edge: direction >= 0 ? .leading : .trailing).combined(with: .opacity)
+                    ))
                 HStack {
-                    if index > 0 { Button("Back") { stage = CreationStage.allCases[index - 1] }.frame(minHeight: 44) }
+                    if index > 0 { Button("Back") { advance(to: CreationStage.allCases[index - 1]) }.frame(minHeight: 44) }
                     Spacer()
                     if stage == .review {
                         Button("Create adventure") {
                             Task { if await model.createAdventure(character: draft, backstory: backstory, opening: opening) { dismiss() } }
                         }.buttonStyle(.borderedProminent).disabled(!errors.isEmpty || model.isResolving)
                     } else {
-                        Button("Continue") { stage = CreationStage.allCases[index + 1] }.buttonStyle(.borderedProminent)
+                        Button("Continue") { advance(to: CreationStage.allCases[index + 1]) }.buttonStyle(.borderedProminent)
                     }
                 }.padding(.horizontal, 22).padding(.vertical, 12).background(.bar).disabled(model.isResolving)
             }.background(StoryStyle.parchment).navigationTitle("Character creation").navigationBarTitleDisplayMode(.inline)
@@ -83,7 +92,7 @@ struct CharacterCreationView: View {
                         .buttonStyle(ChoiceTileStyle(isSelected: draft.characterClass == option))
                 }
             }
-            SelectionPortrait(asset: "ClassPortraits", index: AdventurerClass.allCases.firstIndex(of: draft.characterClass) ?? 0, columns: 4, rows: 3)
+            PortraitMedallion(asset: draft.characterClass.portraitAsset, label: draft.characterClass.rawValue)
             SheetSection(title: draft.characterClass.rawValue, symbol: "shield.lefthalf.filled") {
                 Text(classDescription).font(.system(.body, design: .serif))
                 LabeledContent("Level-one benefit", value: classBenefit)
@@ -102,12 +111,17 @@ struct CharacterCreationView: View {
                         .buttonStyle(ChoiceTileStyle(isSelected: draft.species == option))
                 }
             }
-            SelectionPortrait(asset: "RacePortraits", index: CharacterSpecies.allCases.firstIndex(of: draft.species) ?? 0, columns: 4, rows: 2)
+            PortraitMedallion(asset: draft.species.portraitAsset, label: draft.species.rawValue)
             SheetSection(title: draft.species.rawValue, symbol: "person.2.badge.gearshape") {
                 Text(speciesDescription).font(.system(.body, design: .serif))
                 LabeledContent("Benefit", value: raceBenefit)
                 LabeledContent("Tradeoff", value: raceDrawback)
                 Text("Race sets lineage and supported traits; it does not dictate personality, story role, or success on a roll.").font(.footnote).foregroundStyle(.secondary)
+                if draft.species == .human {
+                    Divider()
+                    Toggle("Small-sized Human", isOn: $draft.humanSmall)
+                    Text("An optional variant: a Small Human changes how the world and its furniture respond, with no other mechanical difference.").font(.footnote).foregroundStyle(.secondary)
+                }
             }
         }
     }
@@ -258,8 +272,15 @@ struct CharacterCreationView: View {
 
     private var review: some View {
         VStack(alignment: .leading, spacing: 20) {
-            Text(draft.name.isEmpty ? "Your adventurer" : draft.name).font(.system(.largeTitle, design: .serif, weight: .bold))
-            Text("\(draft.species.rawValue) · \(draft.characterClass.rawValue) · \(draft.background.rawValue)").font(.headline)
+            HStack(spacing: 14) {
+                PortraitMedallion(asset: draft.characterClass.portraitAsset, label: draft.characterClass.rawValue)
+                PortraitMedallion(asset: draft.species.portraitAsset, label: draft.species.rawValue)
+            }
+            OrnateSheetPanel(title: "Character record", symbol: "seal") {
+                WaxSeal(label: "Ready for the table")
+                Text(draft.name.isEmpty ? "Your adventurer" : draft.name).font(.system(.largeTitle, design: .serif, weight: .bold))
+                Text("\(draft.species.rawValue) · \(draft.characterClass.rawValue) · \(draft.background.rawValue)").font(.headline).foregroundStyle(.secondary)
+            }
             derivedSummary
             SheetSection(title: "Ability scores & training", symbol: "list.bullet.rectangle") {
                 ForEach(CharacterCreationDraft.abilities, id: \.self) { ability in LabeledContent(ability.rawValue.capitalized, value: "\(draft.finalScores[ability, default: 8]) (\(signed(draft.modifier(ability))))") }
@@ -359,37 +380,34 @@ struct CharacterCreationView: View {
     private var raceDrawback: String { switch draft.species { case .halfling, .gnome: "Small size can change how the world responds."; case .tiefling, .dragonborn: "Legacy spells, breath weapons, and resistance are not silently invented outside the supported rules subset."; default: "Lineage gives defined traits, not automatic social access or a free solution." } }
 }
 
-private struct SelectionPortrait: View {
-    let asset: String
-    let index: Int
-    let columns: Int
-    let rows: Int
-    var body: some View {
-        GeometryReader { proxy in
-            let cellWidth = proxy.size.width
-            let cellHeight = proxy.size.height
-            // The source sheets use square portrait cells. Keeping this surface
-            // square prevents the iPhone layout from slicing off faces or gear.
-            Image(asset).resizable().scaledToFill()
-                .frame(width: cellWidth * CGFloat(columns), height: cellWidth * CGFloat(rows))
-                .offset(x: -CGFloat(index % columns) * cellWidth, y: -CGFloat(index / columns) * cellHeight)
+private extension AdventurerClass {
+    /// Each class has its own portrait asset (sliced once from the original
+    /// sprite sheet rather than cropped live), named explicitly here so a
+    /// future rename or reorder of this enum can't silently point at the
+    /// wrong picture — see CharacterSpecies.portraitAsset for why that
+    /// matters: a sprite-sheet-index version of this exact mapping is what
+    /// originally showed the wrong race portraits.
+    var portraitAsset: String {
+        switch self {
+        case .barbarian: "ClassPortraitBarbarian"; case .bard: "ClassPortraitBard"
+        case .cleric: "ClassPortraitCleric"; case .druid: "ClassPortraitDruid"
+        case .fighter: "ClassPortraitFighter"; case .monk: "ClassPortraitMonk"
+        case .paladin: "ClassPortraitPaladin"; case .ranger: "ClassPortraitRanger"
+        case .rogue: "ClassPortraitRogue"; case .sorcerer: "ClassPortraitSorcerer"
+        case .warlock: "ClassPortraitWarlock"; case .wizard: "ClassPortraitWizard"
         }
-        .aspectRatio(1, contentMode: .fit).clipped()
-        .overlay(Rectangle().stroke(StoryStyle.border.opacity(0.7), lineWidth: 1))
-        .accessibilityLabel("Illustration for the selected option")
+    }
+}
+private extension CharacterSpecies {
+    /// Each species has its own portrait asset (sliced once from the original
+    /// sprite sheet rather than cropped live).
+    var portraitAsset: String {
+        switch self {
+        case .human: "RacePortraitHuman"; case .dwarf: "RacePortraitDwarf"
+        case .elf: "RacePortraitElf"; case .gnome: "RacePortraitGnome"
+        case .halfling: "RacePortraitHalfling"; case .orc: "RacePortraitOrc"
+        case .tiefling: "RacePortraitTiefling"; case .dragonborn: "RacePortraitDragonborn"
+        }
     }
 }
 
-private struct ChoiceTileStyle: ButtonStyle {
-    let isSelected: Bool
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.subheadline.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.75)
-            .frame(maxWidth: .infinity, minHeight: 46)
-            .foregroundStyle(isSelected ? .white : StoryStyle.ink)
-            .background(isSelected ? StoryStyle.seal : StoryStyle.parchment.opacity(0.95))
-            .overlay(Rectangle().stroke(isSelected ? StoryStyle.gilded : StoryStyle.border.opacity(0.62), lineWidth: 1))
-            .contentShape(Rectangle())
-            .opacity(configuration.isPressed ? 0.72 : 1)
-    }
-}

@@ -119,7 +119,7 @@ struct CharacterCreationEntryView: View {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 7), count: 3), spacing: 7) {
                         ForEach(AdventurerClass.allCases, id: \.self) { option in
                             Button(option.rawValue) { characterClass = option }
-                                .buttonStyle(QuickstartClassChoiceStyle(isSelected: characterClass == option))
+                                .buttonStyle(ChoiceTileStyle(isSelected: characterClass == option, minHeight: 42))
                         }
                     }
                     openingFields
@@ -144,17 +144,5 @@ struct CharacterCreationEntryView: View {
             TextField("Why are you here?", text: $opening.reason)
             TextField("Initial campaign story", text: $opening.premise, axis: .vertical).lineLimit(3...5)
         }
-    }
-}
-
-private struct QuickstartClassChoiceStyle: ButtonStyle {
-    let isSelected: Bool
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label.font(.subheadline.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.72)
-            .frame(maxWidth: .infinity, minHeight: 42)
-            .foregroundStyle(isSelected ? .white : StoryStyle.ink)
-            .background(isSelected ? StoryStyle.seal : StoryStyle.parchment.opacity(0.94))
-            .overlay(Rectangle().stroke(isSelected ? StoryStyle.gilded : StoryStyle.border.opacity(0.65), lineWidth: 1))
-            .opacity(configuration.isPressed ? 0.7 : 1)
     }
 }
