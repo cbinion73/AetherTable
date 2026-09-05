@@ -1,6 +1,7 @@
 import AetherTableCore
 import RulesPacks
 import SwiftUI
+import UIKit
 
 struct CharacterView: View {
     let model: CampaignViewModel
@@ -8,7 +9,11 @@ struct CharacterView: View {
         StoryPage {
             if let world = model.adventure {
                 let hero = world.hero
-                StoryHeading(eyebrow: "Level \(hero.level) \(hero.characterClass.rawValue)", title: hero.name)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("AETHERTABLE CHARACTER SHEET").font(.caption.bold()).tracking(2).foregroundStyle(StoryStyle.copper)
+                    Text(hero.name).font(.system(.largeTitle, design: .serif, weight: .bold))
+                    Text("\(hero.creation?.species.rawValue ?? "Adventurer") · Level \(hero.level) \(hero.characterClass.rawValue) · \(hero.creation?.background.rawValue ?? "")").font(.subheadline.weight(.semibold)).foregroundStyle(.secondary)
+                }.padding(18).frame(maxWidth: .infinity, alignment: .leading).background(StoryStyle.parchment).overlay(Rectangle().stroke(StoryStyle.ink.opacity(0.75), lineWidth: 1.25))
                 if let creation = hero.creation {
                     StoryCard {
                         Text("\(creation.species.rawValue) · \(creation.background.rawValue)").font(.headline)
@@ -33,8 +38,12 @@ struct CharacterView: View {
                     }
                 }
                 StoryCard {
-                    Text("Abilities & training").font(.title2.bold())
-                    ForEach(SRD521Ability.allCases, id: \.rawValue) { ability in LabeledContent(ability.rawValue.capitalized, value: "\(hero.scores[ability, default: 10]) (\(hero.modifier(ability).formatted(.number.sign(strategy: .always()))))") }
+                    Text("ABILITY SCORES").font(.caption.bold()).tracking(1.5).foregroundStyle(StoryStyle.copper)
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 7), count: 3), spacing: 7) {
+                        ForEach(SRD521Ability.allCases, id: \.rawValue) { ability in
+                            SheetAbilityTile(ability: ability.rawValue, score: hero.scores[ability, default: 10], modifier: hero.modifier(ability), proficient: hero.creation?.savingThrowProficiencies.contains(ability) ?? false)
+                        }
+                    }
                     Divider()
                     ForEach(hero.skills.keys.sorted(), id: \.self) { skill in LabeledContent(skill.capitalized, value: hero.skills[skill] == 4 ? "Expertise +4" : "Trained +2") }
                     Text("Training is added to the relevant ability modifier.").font(.caption).foregroundStyle(.secondary)
@@ -42,9 +51,10 @@ struct CharacterView: View {
                 StoryCard {
                     Text("Equipment").font(.title2.bold())
                     ForEach(Array(hero.equipment.enumerated()), id: \.offset) { _, item in
+                        let detail = inventoryDetail(for: item, in: world)
                         VStack(alignment: .leading) {
                             Text(item.capitalized).font(.headline)
-                            if let detail = world.memories.first(where: { $0.category == "inventory" && $0.status == "active" && $0.name.lowercased() == item.lowercased() })?.detail { Text(detail).font(.subheadline).foregroundStyle(.secondary) }
+                            if let detail { Text(detail).font(.subheadline).foregroundStyle(.secondary) }
                         }
                     }
                 }
@@ -53,6 +63,68 @@ struct CharacterView: View {
                 StoryCard { Label("Creation backstory", systemImage: "lock").font(.headline); Text(world.creationBackstory ?? "No special pre-adventure history was established.").font(.system(.body, design: .serif)).textSelection(.enabled); Text("Fixed at creation. Relationships and experiences earned during play live in your journal.").font(.caption).foregroundStyle(.secondary) }
             }
         }.navigationTitle("Character").navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                if let world = model.adventure {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Print sheet", systemImage: "printer") { CharacterSheetPrinter.printSheet(for: world) }
+                    }
+                }
+            }
+    }
+
+    private func inventoryDetail(for item: String, in world: OpenWorldAdventure) -> String? {
+        world.memories.first { memory in
+            memory.category == "inventory" && memory.status == "active" && memory.name.caseInsensitiveCompare(item) == .orderedSame
+        }?.detail
+    }
+}
+
+/// A deliberately plain, high-contrast companion sheet for the real table.
+/// The in-app sheet remains the authoritative interactive surface; this one is
+/// sized for paper and contains no hidden game state.
+@MainActor
+private enum CharacterSheetPrinter {
+    static func printSheet(for world: OpenWorldAdventure) {
+        let hero = world.hero
+        let abilities = SRD521Ability.allCases.map { ability in
+            let score = hero.scores[ability, default: 10]
+            return "<tr><td>\(escape(ability.rawValue.capitalized))</td><td class=\"number\">\(score)</td><td class=\"number\">\(hero.modifier(ability).formatted(.number.sign(strategy: .always())))</td></tr>"
+        }.joined()
+        let skills = hero.skills.keys.sorted().map { skill in
+            "<li>\(escape(skill.capitalized)): \(hero.skills[skill] == 4 ? "Expertise +4" : "Trained +2")</li>"
+        }.joined()
+        let equipment = hero.equipment.map { "<li>\(escape($0.capitalized))</li>" }.joined()
+        let spells = hero.spells.map { "<li>\(escape($0.capitalized))</li>" }.joined()
+        let creation = hero.creation
+        let html = """
+        <!doctype html><html><head><meta charset=\"utf-8\"><style>
+        @page { margin: 0.45in; } body { color:#22150d; font-family: Georgia, serif; font-size: 11pt; }
+        h1 { margin:0; font-size:28pt; } h2 { border-bottom:2px solid #8b4513; font-size:13pt; letter-spacing:.08em; margin:20px 0 8px; text-transform:uppercase; }
+        .sub { color:#70421c; font-weight:bold; letter-spacing:.08em; } .stats { display:table; width:100%; border-spacing:6px 0; margin:12px 0; }
+        .stat { display:table-cell; border:1px solid #8b4513; text-align:center; padding:9px; } .stat b { display:block; font-size:20pt; }
+        table { border-collapse:collapse; width:100%; } td, th { border:1px solid #8b4513; padding:6px; text-align:left; } .number { text-align:center; width:16%; }
+        ul { margin:5px 0; padding-left:22px; } .note { border:1px solid #8b4513; min-height:70px; padding:8px; white-space:pre-wrap; }
+        </style></head><body>
+        <div class=\"sub\">AETHERTABLE · LEVEL \(hero.level) ADVENTURER</div>
+        <h1>\(escape(hero.name))</h1>
+        <p>\(escape(creation?.species.rawValue ?? "Adventurer")) · \(escape(hero.characterClass.rawValue)) · \(escape(creation?.background.rawValue ?? "")) · \(escape(creation?.alignment ?? ""))</p>
+        <div class=\"stats\"><div class=\"stat\">ARMOR CLASS<b>\(hero.armorClass)</b></div><div class=\"stat\">HIT POINTS<b>\(hero.hitPoints) / \(hero.maximumHitPoints)</b></div><div class=\"stat\">SPEED<b>\(creation?.speed ?? 30) ft</b></div><div class=\"stat\">PROFICIENCY<b>+2</b></div></div>
+        <h2>Ability Scores</h2><table><tr><th>Ability</th><th class=\"number\">Score</th><th class=\"number\">Modifier</th></tr>\(abilities)</table>
+        <h2>Training & Features</h2><p><b>Saving Throws:</b> \(escape(creation?.savingThrowProficiencies.map { $0.rawValue.capitalized }.joined(separator: ", ") ?? "—"))</p><p><b>Skills:</b></p><ul>\(skills)</ul><p><b>Feats:</b> \(escape(creation?.feats.joined(separator: ", ") ?? "—"))</p>
+        <h2>Equipment</h2><ul>\(equipment)</ul>
+        \(spells.isEmpty ? "" : "<h2>Spells</h2><ul>\(spells)</ul>")
+        <h2>Campaign Notes</h2><div class=\"note\">Location: \(escape(world.location))\n\n</div>
+        </body></html>
+        """
+        let controller = UIPrintInteractionController.shared
+        controller.printFormatter = UIMarkupTextPrintFormatter(markupText: html)
+        controller.present(animated: true)
+    }
+
+    private static func escape(_ value: String) -> String {
+        value.replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
     }
 }
 struct JournalView: View {
