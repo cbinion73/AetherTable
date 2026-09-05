@@ -52,6 +52,14 @@ public enum CampaignReducer {
             try startTurn(from: event, in: &campaign)
         case .combatantDamaged:
             try damageCombatant(from: event, in: &campaign)
+        case .combatantHealed:
+            guard var encounter = campaign.world.encounter else { throw CampaignReducerError.missingEncounter }
+            let id = try required("combatantID", in: event)
+            let healing = try integer("healing", in: event)
+            guard healing >= 0, let index = encounter.combatants.firstIndex(where: { $0.id == id }) else { throw CampaignReducerError.missingCombatant }
+            encounter.combatants[index].hitPoints = min(encounter.combatants[index].maximumHitPoints, encounter.combatants[index].hitPoints + healing)
+            if encounter.combatants[index].hitPoints > 0 { encounter.combatants[index].conditions.remove("defeated") }
+            campaign.world.encounter = encounter
         case .combatantConditionChanged:
             try changeCombatantCondition(from: event, in: &campaign)
         case .encounterEnded:

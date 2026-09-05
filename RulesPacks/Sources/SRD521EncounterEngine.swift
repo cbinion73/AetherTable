@@ -59,9 +59,10 @@ public enum SRD521EncounterEngine {
         )
 
         let action = CampaignEvent(campaignID: campaignID, kind: .actionResolved, payload: [
-            "verb": "attack", "detail": "(attacker.name) attacks (target.name)", "ruleID": "srd-5.2.1.playing-the-game.attack-rolls",
+            "verb": "attack", "detail": "\(attacker.name) attacks \(target.name)", "ruleID": "srd-5.2.1.playing-the-game.attack-rolls",
             "attackerID": attacker.id, "targetID": target.id, "target": String(target.armorClass), "total": String(attack.total),
-            "dice": attack.dice.map(String.init).joined(separator: ","), "outcome": attack.outcome.rawValue
+            "dice": attack.dice.map(String.init).joined(separator: ","), "outcome": attack.outcome.rawValue,
+            "modifier": String(attack.total - attack.selectedDie), "selectedDie": String(attack.selectedDie), "rollMode": request.rollMode.rawValue
         ])
 
         guard attack.outcome == .success || attack.outcome == .criticalHit else {
@@ -72,7 +73,7 @@ public enum SRD521EncounterEngine {
         guard damageDice.count == expectedDice, damageDice.allSatisfy({ (1...request.damage.sides).contains($0) }) else { throw SRD521EncounterError.invalidDamageExpression }
         let damage = damageDice.reduce(request.damage.modifier, +)
         let damageEvent = CampaignEvent(campaignID: campaignID, kind: .combatantDamaged, payload: [
-            "combatantID": target.id, "damage": String(damage), "ruleID": "srd-5.2.1.combat.damage", "damageDice": damageDice.map(String.init).joined(separator: ",")
+            "combatantID": target.id, "damage": String(damage), "ruleID": "srd-5.2.1.combat.damage", "damageDice": damageDice.map(String.init).joined(separator: ","), "damageModifier": String(request.damage.modifier), "damageSides": String(request.damage.sides)
         ])
         return .init(attack: attack, damage: damage, damageDice: damageDice, events: [action, damageEvent])
     }
@@ -94,7 +95,13 @@ public enum SRD521EncounterEngine {
         } else {
             damageDice = []
         }
-        return try resolveAttack(campaignID: campaignID, in: encounter, request: request, attackDice: attackDice, damageDice: damageDice)
+        let result = try resolveAttack(campaignID: campaignID, in: encounter, request: request, attackDice: attackDice, damageDice: damageDice)
+        let events = result.events.map { event in
+            var payload = event.payload
+            payload["seed"] = String(seed)
+            return CampaignEvent(id: event.id, campaignID: event.campaignID, createdAt: event.createdAt, kind: event.kind, payload: payload)
+        }
+        return .init(attack: result.attack, damage: result.damage, damageDice: result.damageDice, events: events)
     }
 
     public static func nextTurnEvent(campaignID: CampaignID, encounter: EncounterState) throws -> CampaignEvent {

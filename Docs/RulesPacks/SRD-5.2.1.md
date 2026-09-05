@@ -2,7 +2,7 @@
 
 ## Status
 
-**Official source is bundled; core d20 adjudication is implemented; the package is not yet playable.**
+**Official source is bundled. The active solo game uses a tested, partial SRD 5.2.1 adapter; full first-edition rules coverage is still in development.**
 
 This is AetherTable’s separate package boundary for the official System Reference Document v5.2.1. It is not mixed into the original `d20-fantasy` pack, and it does not make a claim that the whole Dungeons & Dragons game, its settings, books, trademarks, art, or marketplace material are bundled in AetherTable.
 
@@ -35,11 +35,9 @@ AetherTableTests/Sources
   -> deterministic conformance tests
 ```
 
-### Included only after implementation and test
+### Current implementation boundary
 
-1. Armor class, damage, and SRD conditions.
-2. Character options and resources covered by the selected SRD version.
-3. SRD equipment, spells, monsters, and encounter procedures appropriate to a first playable rules release.
+The open-world adapter includes checks, attacks, selected damage/spell/resource handling, and a level-one character builder with point-buy and standard-array validation. Character creation covers four classes and selected species/backgrounds. Some selected feats, species traits, mastery properties and tactical procedures still require implementation. The builder's coverage notes must disclose these gaps rather than imply full conformance.
 
 ### Never infer permission for
 
@@ -49,4 +47,4 @@ AetherTableTests/Sources
 
 ## Product rule
 
-The SRD package becomes selectable only when its mechanics adapter has deterministic conformance coverage. Until then, AetherTable continues to ship the separate owned starter rules packet.
+The active app uses `OpenWorldAdventure` and `OpenWorldEngine` with the SRD package identifier. Original setting material remains separate. Earlier fixed-scene starter engines remain migration/test fixtures, not the current player experience. A passing test suite proves the covered cases, not implementation of the whole SRD.

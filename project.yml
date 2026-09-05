@@ -20,6 +20,9 @@ targets:
         DEVELOPMENT_TEAM: LGNJ56Y22G
         CODE_SIGN_STYLE: Automatic
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
         GENERATE_INFOPLIST_FILE: YES
     dependencies:
       - target: AetherTableCore
@@ -47,7 +50,7 @@ targets:
     type: framework
     platform: iOS
     sources: [AIGM/Sources]
-    dependencies: [{target: AetherTableCore}, {target: RulesEngine}, {sdk: FoundationModels.framework}]
+    dependencies: [{target: AetherTableCore}, {target: RulesEngine}, {target: RulesPacks}, {sdk: FoundationModels.framework}]
   Persistence:
     type: framework
     platform: iOS
@@ -70,4 +73,4 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources: [AetherTableTests/Sources]
-    dependencies: [{target: DiceEngine}, {target: RulesEngine}, {target: RulesPacks}, {target: Persistence}]
+    dependencies: [{target: DiceEngine}, {target: RulesEngine}, {target: RulesPacks}, {target: Persistence}, {target: AetherTable}, {target: AIGM}]

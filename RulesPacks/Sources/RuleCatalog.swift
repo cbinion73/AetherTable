@@ -89,7 +89,12 @@ public enum RuleCatalogError: Error, Equatable {
 public enum SRD521RuleCatalog {
     public static func loadBundled() throws -> RuleCatalog {
         let filename = "Rules.srd-5.2.1"
-        guard let url = Bundle(for: RulesPacksBundleAnchor.self).url(forResource: filename, withExtension: "json") else {
+        #if SWIFT_PACKAGE
+        let bundle = Bundle.module
+        #else
+        let bundle = Bundle(for: RulesPacksBundleAnchor.self)
+        #endif
+        guard let url = bundle.url(forResource: filename, withExtension: "json") else {
             throw RuleCatalogError.bundledResourceNotFound(filename)
         }
         guard let data = try? Data(contentsOf: url), let records = try? JSONDecoder().decode([RuleRecord].self, from: data) else {

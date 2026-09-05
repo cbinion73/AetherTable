@@ -1,5 +1,7 @@
 # AetherTable Product Requirements Document
 
+> **Current scope supersedes the historical plan below:** Chris's 2026-09-04 instructions require a solo D&D-first first edition, multiple classes, free-form text play with **no suggested actions**, Apple Intelligence as a creative storytelling Dungeon Master, an open world that supports exploration and side quests, and durable campaign memory. Multiplayer and all other genres are out of scope for now. See `PlayerExperience.md` and `Implementation/spec-open-world-first-edition.md`. The earlier fixed three-scene/Fighter-only loop is a foundation, not the accepted product.
+
 **Status:** Directional product contract
 
 **Decision:** Build one excellent persistent solo campaign experience first. The architecture supports multiple systems; the product earns that complexity only after players return to the first one.

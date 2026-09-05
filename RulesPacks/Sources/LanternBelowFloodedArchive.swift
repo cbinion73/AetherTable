@@ -40,7 +40,8 @@ public enum LanternBelowFloodedArchive {
             .init(campaignID: campaignID, kind: .worldFactSet, payload: ["key": "lantern-below.archiveChoice", "value": choiceID]),
             .init(campaignID: campaignID, kind: .worldFactSet, payload: ["key": "town.truth", "value": "vaultDebt"]),
             .init(campaignID: campaignID, kind: .questUpdated, payload: ["stage": "vault", "objective": "Descend through the archive to the sealed vault and learn who extinguished the Lantern Below."]),
-            .init(campaignID: campaignID, kind: .sceneStatusChanged, payload: ["sceneID": sceneID, "status": "completed"])
+            .init(campaignID: campaignID, kind: .sceneStatusChanged, payload: ["sceneID": sceneID, "status": "completed"]),
+            .init(campaignID: campaignID, kind: .sceneEntered, payload: ["sceneID": LanternBelowVault.sceneID, "locationID": "emberwake.vault"])
         ]
         switch choiceID {
         case "oren-ledger":

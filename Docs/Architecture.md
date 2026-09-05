@@ -1,54 +1,41 @@
-# Architecture decision record: one kernel, many packs
+# First-edition architecture
 
-## Non-negotiable boundary
+## Storyteller and engine
 
-The AI Game Master is not the game engine. It may describe a consequence, select an NPC voice, propose an action classification, and generate a recap. It never mutates campaign state directly, invents a dice result, or decides whether an action is legal.
-
-```text
-Player intent
-    -> AI GM proposes structured intent (optional)
-    -> Rules Engine validates against active Rules Pack
-    -> Dice Engine resolves seedable audited rolls
-    -> Event log is appended
-    -> Persistence saves local truth
-    -> Multiplayer distributes the same events
-    -> AI GM narrates the already-resolved outcome
-```
-
-## Campaign truth
-
-`CampaignState` is a compact materialized view. `CampaignEvent` is the durable audit trail. Each event carries a stable identifier and date. A future sync transport will also need explicit ordering, deduplication, and authority semantics before it can safely merge events without making the AI authoritative.
-
-The first persistence adapter is local and replaceable. CloudKit sharing is the expected Apple-native multiplayer candidate, but it is an implementation choice for the next milestone, not an unearned claim in this scaffold.
-
-## Rules packs
-
-Every pack identifies itself by an owned identifier and version. It supplies a mechanic family, a list of declared actions, and UI/narrative vocabulary. The platform owns identities, campaigns, dice audit records, events, persistence, and sync.
-
-Rules Packs must only contain material we own or are licensed to distribute. A “compatible with” claim is a legal/product decision, not an engineering convenience; do not add publisher marks, setting names, protected stat blocks, or rule text to a pack without rights review.
-
-### Phone-native rules retrieval
-
-Rules packs ship as compact structured records plus an offline deterministic search index. The Rules Engine addresses records by stable identifier and never delegates adjudication to retrieval. Full-text search serves the player and AI GM only when a rule needs to be located or explained; every result includes its rules version, source section, and source page. Semantic/vector retrieval is deferred until campaign-memory evidence shows it improves player questions beyond this local, source-cited path.
-
-## Apple Intelligence
-
-`FoundationModelsGM` is conditionally compiled for Apple platforms that provide Foundation Models. It generates a guided `GMIntentProposal` before resolution and a guided, player-facing narration only after the reducer records an outcome. The narration input is a bounded snapshot of the resolved event and recorded campaign facts; it cannot mutate state, decide rules, or supply dice. When Apple Intelligence is unavailable, the app visibly retains deterministic play and labels the missing narration rather than silently substituting a cloud model.
-
-## Module dependency direction
+The model is the Dungeon Master, not a caption generator attached to a fixed adventure. It interprets free-form intent, creates the world and NPCs, and follows player-led exploration and side quests. It never supplies dice totals or directly writes storage.
 
 ```text
-App -> AI GM / Persistence / Multiplayer / Rules Packs / Rules Engine / Dice Engine
-AI GM -> Rules Engine -> Dice Engine -> Core
-Persistence / Multiplayer / Rules Packs -> Core
+Player words → model proposes mechanics → engine validates and resolves
+             → model tells the next moment → model extracts memory
+             → validate candidate → atomic save → publish UI
 ```
 
-No engine module imports the UI. No rules pack imports a publisher SDK. No AI module writes storage or sync state.
+The model proposes fictional difficulty, targets and whether a hostile can respond. The engine owns rolls, modifiers, slots, healing, damage, attacks, rest recovery and existing actor statistics. Only validated and saved turns become committed history. Dice receipts remain available.
 
-## Scaffold versus delivered behavior
+`DungeonMaster` is injectable. `AppleDungeonMaster` runs real on-device Foundation Models; tests use explicitly scripted implementations. There is no canned narrator or cloud fallback. A fresh bounded session per stage avoids unbounded session context.
 
-`project.yml` is the source for the eight product targets plus the test target. `Multiplayer/Sources/Sync.swift` currently defines `CampaignEventTransport` and `SyncMode` only; there is no network transport or shared-session UI yet. Event identifiers and timestamps alone do not provide ordering, authorization, idempotency, or conflict resolution. Those must be specified and tested before claiming multiplayer support.
+## State and memory
 
-The generic 2d20 and dice-pool entries in `RulesPacks/Sources/RulesPacks.swift` are descriptors, not implementations of published Star Trek or Marvel mechanics. Published-system support requires an explicit edition, permitted source material, a rules adapter, and conformance tests. Warcraft-like fantasy can use the common engine with original world content; the scaffold does not grant rights to Warcraft settings or assets.
+`OpenWorldAdventure` is the authoritative snapshot inside `CampaignState.world.packState["open-world.v1"]`. It stores class resources, stable actors/statistics, equipment, every transcript message and structured world memory. Narrative memory cannot overwrite mechanical fields. Inventory developments reconcile with possession and usable supported weapons.
 
-The scaffold preserves these extension boundaries while delivering the first solo slice. Completion of the full platform requires both actual multiplayer and additional playable systems.
+Current entity memories have stable IDs. Changes retain prior versions as inactive history. The full transcript stays on disk; retrieval ranks relevant memories/older messages and reserves recent conversation within 6,500 characters. This is durable memory with bounded retrieval, not perfect model recall.
+
+Outer events record compact mechanical audits, not full transcript copies per turn. Legacy campaigns import player resources, opponents, notes and world facts. Malformed snapshots are reported without deleting files.
+
+## Persistence and concurrency
+
+The store writes campaign JSON atomically in Application Support. The view model publishes after successful storage. An operation token ignores late model responses after cancellation. Saves cannot be cancelled once started; creation, notes and turns share the mutation lock. Failed generation/save retains the draft and cached adjudication bound to the exact base campaign, preventing rerolls or overwriting intervening notes.
+
+## Boundaries
+
+App depends on AIGM, RulesPacks, Persistence and Core. AIGM depends on RulesPacks/Core but cannot access storage. RulesPacks uses RulesEngine/DiceEngine contracts and Core. Persistence depends only on Core; embedded adventure validation occurs at the app boundary.
+
+The active game is solo 5E-compatible fantasy. Dormant multi-system descriptors and Multiplayer contracts remain extension points, not delivered features.
+
+## Rules and IP
+
+Selected level-one procedures use separately attributed SRD 5.2.1 material. The full reference is offline, but reference availability does not imply every procedure is automated. The Rules screen states the subset. Emberwake's starting premise is original; proprietary franchise content is excluded.
+
+## Validation limits
+
+Format, agency, ID and mechanical guards are deterministic. They cannot prove every generated sentence is semantically consistent or artistically strong. Live model playtesting complements unit tests; mocked tests do not prove a captivating GM. Rejected generation leaves the prior campaign unchanged. Release evidence distinguishes builds/tests, actual model runs and installation.

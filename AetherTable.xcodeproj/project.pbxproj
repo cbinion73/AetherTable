@@ -8,62 +8,103 @@
 
 /* Begin PBXBuildFile section */
 		00FD247D51A0D4283FC901B2 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		019061CB0C60539D9B41429A /* CreationFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7528975B0D8FD213C914E54B /* CreationFeatureTests.swift */; };
+		079BE5040A0C34F27ABBCF8C /* EngineReviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A47325C2ACF9CF82B1A8880 /* EngineReviewTests.swift */; };
 		09CD2A9921B94E6E8E80A4B8 /* LanternBelowEncounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920A07D84D42A102891EED79 /* LanternBelowEncounter.swift */; };
 		0B4A381AFF67E8E65DDA2300 /* SRD_CC_v5.1.pdf in Resources */ = {isa = PBXBuildFile; fileRef = F2285E740822A1F216F788A1 /* SRD_CC_v5.1.pdf */; };
 		0C71F5A00197E38CB426F166 /* SRD521CoreMechanics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C364377810AC3E817264E01 /* SRD521CoreMechanics.swift */; };
 		13063DDAF1672D91BAF94F6A /* DiceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1026CE731153F14BE439BC5 /* DiceEngine.swift */; };
+		15F5E80DB8068D79AD79EFD3 /* AIGM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AE12E5501D0FF6727FFA3A /* AIGM.framework */; };
 		173918AC64BD6637C65490E5 /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
+		185A4867CD5CDC1CDCD4FAF0 /* DungeonMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF161799211DBEB5913C47FB /* DungeonMaster.swift */; };
 		1A1D878EC5C27D5AD95A78E4 /* RulesPacks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B390AFE6D1EA54727752FFFD /* RulesPacks.framework */; };
 		1CE31CA992DE2ACF08A89BD8 /* RulesPacks.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B390AFE6D1EA54727752FFFD /* RulesPacks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		22FCDFD91FE6BFC8D7876BB1 /* RulesPacks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B390AFE6D1EA54727752FFFD /* RulesPacks.framework */; };
+		23992B4A8173574812C25F97 /* StoryComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B1BB5360BACFDE240455CE /* StoryComponents.swift */; };
 		241662FE4FFC9B47380DF366 /* RulesEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45B31AF3828ED24E93DDA24 /* RulesEngine.swift */; };
 		254360AF72CC1964B8AB3F1C /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		2CB4FDA90D11AEF2D402B3D0 /* DiceEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; };
 		2CF3C5095443978B8731EB0C /* FoundationModels.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B696C0D640B3561E9AB304C /* FoundationModels.framework */; };
+		2F03149EDF162FA41E684774 /* SpellCreationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 743A151A480ECA0F93B83CF7 /* SpellCreationTests.swift */; };
 		2FC1597F886AF7C18972AB81 /* AIGM.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C9AE12E5501D0FF6727FFA3A /* AIGM.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		39A155BAEA4A79F28AD89C2A /* ViewModelReviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6832DC94F4CAA97CF791FFD /* ViewModelReviewTests.swift */; };
 		3ABFEAF86C2F573377898CBE /* DiceEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD52EB3EEAAD783282440F12 /* DiceEngineTests.swift */; };
 		3DC0CA78B7C45C1E311CB42C /* AIGM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AE12E5501D0FF6727FFA3A /* AIGM.framework */; };
 		3E20C2C4DD3E6F8D943D9D67 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; };
+		4A34675472C8545AF7F8064D /* OriginClaimGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D658FC8E52BDE97276C798C4 /* OriginClaimGate.swift */; };
 		4A9FB0AAF9D0500C3E2A450C /* Sync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECD545DCF4FF0741A08BF77 /* Sync.swift */; };
+		4DFC40984C9826B453C137DB /* OpenWorldEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A451B8C97D0A6C14FDE38FB /* OpenWorldEngine.swift */; };
+		552D9629D036DCA815172AC0 /* RulesPacks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B390AFE6D1EA54727752FFFD /* RulesPacks.framework */; };
 		56A79B6FC1FFFF23B99A00B4 /* DiceEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; };
+		5DBAEE6454167C210ABFA0DD /* SoloCampaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3154C2AE6125C5921247F6 /* SoloCampaign.swift */; };
+		65091991B30662167B4E7755 /* CreationFeatureRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = D058A05C4A682BB363B457C7 /* CreationFeatureRules.swift */; };
 		67F2E6891233E23D731E92B4 /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		6835436203A7AAC6AE11ECFD /* AIGM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184F6C6CEDB51EAE72C4C165 /* AIGM.swift */; };
 		68C9AF1EA3D40B3E5B0505E2 /* RulesEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; };
+		7082D9AB7DB8298F2EDE4BFB /* CharacterCreationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA8A70C746933AE536ECE449 /* CharacterCreationTests.swift */; };
+		70AF7D5A48BB72CC9DF5D600 /* AIGM.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C9AE12E5501D0FF6727FFA3A /* AIGM.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7344A828EEF6EEAA645C2D33 /* RulesEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; };
 		76C06EE6B2B68CFEAC04D202 /* Domain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA6F82EF172B8D8F2863444 /* Domain.swift */; };
 		7A9E4809D5D6830C0FD43454 /* SRD_CC_v5.2.1.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AB08F3E53FD3665E1D791DC9 /* SRD_CC_v5.2.1.pdf */; };
+		7B340121C4C0466E2553C4E4 /* OriginClaimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE28A43FD2BF88D6A80E068 /* OriginClaimTests.swift */; };
 		7FDC6BCCD8D45BBABBF5FCE7 /* LanternBelowVault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 057864876C66DCA7F4886830 /* LanternBelowVault.swift */; };
 		86A1CE84D0FB3C5D339F3449 /* RuleCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D547FE55DD0B90D553D5CD /* RuleCatalog.swift */; };
+		8D92FDB1A73195A523A7CDEF /* OpenWorldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8512BC7980ACC439DA4A1A84 /* OpenWorldTests.swift */; };
 		8E6BABDB28FEB181DBF01CCF /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		92827809424A22D159310C59 /* CharacterCreation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B9AB9F09FE933CF5F5938B /* CharacterCreation.swift */; };
 		94455743C360D96AA9EF6268 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; };
 		9A1D6197AFB187FBE73CC7C2 /* SRD521EncounterEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4827EE83EE5BA4D0010FF0 /* SRD521EncounterEngine.swift */; };
 		9BCAA510D6DD3833F10DAD4C /* CampaignReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3739AFFC1CC9EBCE52DD7A5B /* CampaignReducer.swift */; };
+		9D7A8BE3BBDCCEE08510354B /* CharacterCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C76310B1E512F7D347391E2 /* CharacterCreationView.swift */; };
 		9F26C2348B609BE067E6165A /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		A32CE61B760AB46F4C9FB85C /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		A98BE176FA355D41DB4743A6 /* Multiplayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D6DC8478EAC3C46C0C5E7670 /* Multiplayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AC7C74DC8E8B9CDD601D2EA0 /* DiceEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AD900BD5B14CE7D0A5421969 /* DiceEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AEEA9711D9795ECDF3119EB6 /* CampaignViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF787DC27F4A577BC8F1DC49 /* CampaignViewModel.swift */; };
 		B227A6A86F72535A61C3C55F /* SRD521CharacterProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3BDA5CD22D3FA51A8101A /* SRD521CharacterProfile.swift */; };
+		B2C3528398412AE9E0E1E9F5 /* SoloCampaignTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0584E60F9ED7A66BFD29176C /* SoloCampaignTests.swift */; };
 		B387F7B75C80B398B2841881 /* DiceEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; };
 		B39FBF29836625A3D65EA93F /* LanternBelowFloodedArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72343ED330858BC416BA2737 /* LanternBelowFloodedArchive.swift */; };
 		B6DC10EEA1A187A1E11729D3 /* CampaignStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC553D23E52A4774FEAA4D6 /* CampaignStore.swift */; };
+		BA30138B6DD0749FC87A67F0 /* CampaignHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AE1A9CFA79F0CB4DB810F9 /* CampaignHomeView.swift */; };
 		C0B6BE2B75C309ADDC949459 /* RulesEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; };
 		C0C6CDA2C394F00ED8E66DA5 /* AetherTableApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EDB530CEDC843874C6558F /* AetherTableApp.swift */; };
 		C145D936E07CD5461778552E /* RulesPacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C44DB3695D5584B8139C380 /* RulesPacks.swift */; };
 		C327F443AE706F3AB00787BF /* SRD521RulesPack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08DC82BCD9BA5EE0D286D19E /* SRD521RulesPack.swift */; };
 		C3670CFF965E41B120890921 /* RulesPacks.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B390AFE6D1EA54727752FFFD /* RulesPacks.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CAE224DD89EC363D31E017B8 /* Multiplayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6DC8478EAC3C46C0C5E7670 /* Multiplayer.framework */; };
+		D08CB833FEE7D398FCB34C8B /* AdventureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E52B3D6449D3272450533F62 /* AdventureView.swift */; };
 		D3421417365AA54E8F2D9D18 /* RulesEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; };
+		D7CCBF650CA675A0A58E49CD /* OpenWorldState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5108C99C11BF53E84F8CB905 /* OpenWorldState.swift */; };
+		DCB1DCFFBAFE598AAE29F54C /* CreationSpellCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B26746D1DCEEF4CC103FC8F /* CreationSpellCatalog.swift */; };
+		DE23C664D6C8827A2BE59302 /* ReferenceViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2D9A4AF2A84F0174B9BF1D /* ReferenceViews.swift */; };
 		DF1EA34B8536BB726579F39A /* AetherTableCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E2C487D9CB59AF3CD02C5C39 /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		E854D2733F2142BA8237926F /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		F15D58E720573BC2E3AB6C52 /* RulesEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F3E7E9C72F0A2C9FCFDD267D /* RulesEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F469554EC8C7D48EE49026B8 /* Rules.srd-5.2.1.json in Resources */ = {isa = PBXBuildFile; fileRef = 92CC1A7D1C98B14A3EF60B6F /* Rules.srd-5.2.1.json */; };
+		F80D134AD0D8868302126E09 /* StateReviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF87A2C29D4A5816D647C189 /* StateReviewTests.swift */; };
+		FCCFBA1DB4C680B8BBF9F5ED /* StoryBoundaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8AE258E24824669E524502 /* StoryBoundaryTests.swift */; };
 		FDD9D31241AF747715CF06A4 /* LanternBelowSceneOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5047E2653ED1144CB9EF722 /* LanternBelowSceneOne.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		02BF832A8B4D284A1AB2D5D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D1EDC2A780611DF5ED0340F6;
+			remoteInfo = AetherTable;
+		};
+		16EEA5EBA7E96F2A5F5B7C63 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DDF9B132C6C5D53DA1209B7C;
+			remoteInfo = RulesPacks;
+		};
 		1F21269CCA32D22771BD74B5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
@@ -77,6 +118,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 996B9621C5054CAF33861987;
 			remoteInfo = AetherTableCore;
+		};
+		5E3C539598F0C6EB934990EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31504572D5921C5E7A843ABC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCD767AEA34FA534EA038995;
+			remoteInfo = AIGM;
 		};
 		64E7F1255B13102C3F335ADF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -217,6 +265,7 @@
 				F3E7E9C72F0A2C9FCFDD267D /* RulesEngine.framework in Embed Frameworks */,
 				C3670CFF965E41B120890921 /* RulesPacks.framework in Embed Frameworks */,
 				00FD247D51A0D4283FC901B2 /* Persistence.framework in Embed Frameworks */,
+				70AF7D5A48BB72CC9DF5D600 /* AIGM.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -242,34 +291,58 @@
 
 /* Begin PBXFileReference section */
 		057864876C66DCA7F4886830 /* LanternBelowVault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanternBelowVault.swift; sourceTree = "<group>"; };
+		0584E60F9ED7A66BFD29176C /* SoloCampaignTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoloCampaignTests.swift; sourceTree = "<group>"; };
 		08DC82BCD9BA5EE0D286D19E /* SRD521RulesPack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRD521RulesPack.swift; sourceTree = "<group>"; };
 		0C364377810AC3E817264E01 /* SRD521CoreMechanics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRD521CoreMechanics.swift; sourceTree = "<group>"; };
+		0C76310B1E512F7D347391E2 /* CharacterCreationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCreationView.swift; sourceTree = "<group>"; };
 		184F6C6CEDB51EAE72C4C165 /* AIGM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIGM.swift; sourceTree = "<group>"; };
+		23AE1A9CFA79F0CB4DB810F9 /* CampaignHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignHomeView.swift; sourceTree = "<group>"; };
 		25EDB530CEDC843874C6558F /* AetherTableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AetherTableApp.swift; sourceTree = "<group>"; };
+		2AE28A43FD2BF88D6A80E068 /* OriginClaimTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OriginClaimTests.swift; sourceTree = "<group>"; };
 		2C4827EE83EE5BA4D0010FF0 /* SRD521EncounterEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRD521EncounterEngine.swift; sourceTree = "<group>"; };
 		36D547FE55DD0B90D553D5CD /* RuleCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleCatalog.swift; sourceTree = "<group>"; };
 		3739AFFC1CC9EBCE52DD7A5B /* CampaignReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignReducer.swift; sourceTree = "<group>"; };
 		38FEA55027F02101F9035B23 /* AetherTableCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AetherTableCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B26746D1DCEEF4CC103FC8F /* CreationSpellCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationSpellCatalog.swift; sourceTree = "<group>"; };
 		3BE3BDA5CD22D3FA51A8101A /* SRD521CharacterProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRD521CharacterProfile.swift; sourceTree = "<group>"; };
 		3ECD545DCF4FF0741A08BF77 /* Sync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sync.swift; sourceTree = "<group>"; };
+		4A451B8C97D0A6C14FDE38FB /* OpenWorldEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWorldEngine.swift; sourceTree = "<group>"; };
 		4B696C0D640B3561E9AB304C /* FoundationModels.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FoundationModels.framework; path = System/Library/Frameworks/FoundationModels.framework; sourceTree = SDKROOT; };
+		5108C99C11BF53E84F8CB905 /* OpenWorldState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWorldState.swift; sourceTree = "<group>"; };
 		5CDE643BAC394DF45B3B10D4 /* AetherTableTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AetherTableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		66536B383FC649FBA913E2CC /* RulesEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RulesEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		72343ED330858BC416BA2737 /* LanternBelowFloodedArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanternBelowFloodedArchive.swift; sourceTree = "<group>"; };
+		743A151A480ECA0F93B83CF7 /* SpellCreationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpellCreationTests.swift; sourceTree = "<group>"; };
+		7528975B0D8FD213C914E54B /* CreationFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationFeatureTests.swift; sourceTree = "<group>"; };
 		7CE0433A3F73148B823FCE96 /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8512BC7980ACC439DA4A1A84 /* OpenWorldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWorldTests.swift; sourceTree = "<group>"; };
+		8A47325C2ACF9CF82B1A8880 /* EngineReviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineReviewTests.swift; sourceTree = "<group>"; };
 		920A07D84D42A102891EED79 /* LanternBelowEncounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanternBelowEncounter.swift; sourceTree = "<group>"; };
 		92CC1A7D1C98B14A3EF60B6F /* Rules.srd-5.2.1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Rules.srd-5.2.1.json"; sourceTree = "<group>"; };
 		9BA6F82EF172B8D8F2863444 /* Domain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain.swift; sourceTree = "<group>"; };
 		9C44DB3695D5584B8139C380 /* RulesPacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesPacks.swift; sourceTree = "<group>"; };
+		9D3154C2AE6125C5921247F6 /* SoloCampaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoloCampaign.swift; sourceTree = "<group>"; };
+		9F2D9A4AF2A84F0174B9BF1D /* ReferenceViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceViews.swift; sourceTree = "<group>"; };
 		A877D0B22B698F5E367C32BB /* DiceEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DiceEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB08F3E53FD3665E1D791DC9 /* SRD_CC_v5.2.1.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = SRD_CC_v5.2.1.pdf; sourceTree = "<group>"; };
+		AD8AE258E24824669E524502 /* StoryBoundaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryBoundaryTests.swift; sourceTree = "<group>"; };
 		B390AFE6D1EA54727752FFFD /* RulesPacks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RulesPacks.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B45B31AF3828ED24E93DDA24 /* RulesEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesEngine.swift; sourceTree = "<group>"; };
 		B5047E2653ED1144CB9EF722 /* LanternBelowSceneOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanternBelowSceneOne.swift; sourceTree = "<group>"; };
+		BF161799211DBEB5913C47FB /* DungeonMaster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DungeonMaster.swift; sourceTree = "<group>"; };
 		C9AE12E5501D0FF6727FFA3A /* AIGM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AIGM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA8A70C746933AE536ECE449 /* CharacterCreationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCreationTests.swift; sourceTree = "<group>"; };
 		CEC553D23E52A4774FEAA4D6 /* CampaignStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignStore.swift; sourceTree = "<group>"; };
+		D058A05C4A682BB363B457C7 /* CreationFeatureRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationFeatureRules.swift; sourceTree = "<group>"; };
 		D1026CE731153F14BE439BC5 /* DiceEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceEngine.swift; sourceTree = "<group>"; };
+		D658FC8E52BDE97276C798C4 /* OriginClaimGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OriginClaimGate.swift; sourceTree = "<group>"; };
 		D6DC8478EAC3C46C0C5E7670 /* Multiplayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Multiplayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4B1BB5360BACFDE240455CE /* StoryComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryComponents.swift; sourceTree = "<group>"; };
+		E52B3D6449D3272450533F62 /* AdventureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdventureView.swift; sourceTree = "<group>"; };
+		E6832DC94F4CAA97CF791FFD /* ViewModelReviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelReviewTests.swift; sourceTree = "<group>"; };
+		EF787DC27F4A577BC8F1DC49 /* CampaignViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignViewModel.swift; sourceTree = "<group>"; };
+		EF87A2C29D4A5816D647C189 /* StateReviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateReviewTests.swift; sourceTree = "<group>"; };
+		F1B9AB9F09FE933CF5F5938B /* CharacterCreation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCreation.swift; sourceTree = "<group>"; };
 		F2285E740822A1F216F788A1 /* SRD_CC_v5.1.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = SRD_CC_v5.1.pdf; sourceTree = "<group>"; };
 		F56842A0DDD821FCABC92D57 /* AetherTable.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AetherTable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD52EB3EEAAD783282440F12 /* DiceEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceEngineTests.swift; sourceTree = "<group>"; };
@@ -282,6 +355,7 @@
 			files = (
 				E2C487D9CB59AF3CD02C5C39 /* AetherTableCore.framework in Frameworks */,
 				D3421417365AA54E8F2D9D18 /* RulesEngine.framework in Frameworks */,
+				552D9629D036DCA815172AC0 /* RulesPacks.framework in Frameworks */,
 				2CF3C5095443978B8731EB0C /* FoundationModels.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -342,6 +416,7 @@
 				68C9AF1EA3D40B3E5B0505E2 /* RulesEngine.framework in Frameworks */,
 				1A1D878EC5C27D5AD95A78E4 /* RulesPacks.framework in Frameworks */,
 				3E20C2C4DD3E6F8D943D9D67 /* Persistence.framework in Frameworks */,
+				15F5E80DB8068D79AD79EFD3 /* AIGM.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,7 +452,13 @@
 		1126C782460FDA5F2CE4EAD0 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				E52B3D6449D3272450533F62 /* AdventureView.swift */,
 				25EDB530CEDC843874C6558F /* AetherTableApp.swift */,
+				23AE1A9CFA79F0CB4DB810F9 /* CampaignHomeView.swift */,
+				EF787DC27F4A577BC8F1DC49 /* CampaignViewModel.swift */,
+				0C76310B1E512F7D347391E2 /* CharacterCreationView.swift */,
+				9F2D9A4AF2A84F0174B9BF1D /* ReferenceViews.swift */,
+				E4B1BB5360BACFDE240455CE /* StoryComponents.swift */,
 			);
 			name = Sources;
 			path = AetherTableApp/Sources;
@@ -387,6 +468,8 @@
 			isa = PBXGroup;
 			children = (
 				184F6C6CEDB51EAE72C4C165 /* AIGM.swift */,
+				BF161799211DBEB5913C47FB /* DungeonMaster.swift */,
+				D658FC8E52BDE97276C798C4 /* OriginClaimGate.swift */,
 			);
 			name = Sources;
 			path = AIGM/Sources;
@@ -404,7 +487,17 @@
 		6D5B46C969418A89734C591A /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				CA8A70C746933AE536ECE449 /* CharacterCreationTests.swift */,
+				7528975B0D8FD213C914E54B /* CreationFeatureTests.swift */,
 				FD52EB3EEAAD783282440F12 /* DiceEngineTests.swift */,
+				8A47325C2ACF9CF82B1A8880 /* EngineReviewTests.swift */,
+				8512BC7980ACC439DA4A1A84 /* OpenWorldTests.swift */,
+				2AE28A43FD2BF88D6A80E068 /* OriginClaimTests.swift */,
+				0584E60F9ED7A66BFD29176C /* SoloCampaignTests.swift */,
+				743A151A480ECA0F93B83CF7 /* SpellCreationTests.swift */,
+				EF87A2C29D4A5816D647C189 /* StateReviewTests.swift */,
+				AD8AE258E24824669E524502 /* StoryBoundaryTests.swift */,
+				E6832DC94F4CAA97CF791FFD /* ViewModelReviewTests.swift */,
 			);
 			name = Sources;
 			path = AetherTableTests/Sources;
@@ -440,12 +533,18 @@
 		9098C4401B3C971AD1E9A036 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				F1B9AB9F09FE933CF5F5938B /* CharacterCreation.swift */,
+				D058A05C4A682BB363B457C7 /* CreationFeatureRules.swift */,
+				3B26746D1DCEEF4CC103FC8F /* CreationSpellCatalog.swift */,
 				920A07D84D42A102891EED79 /* LanternBelowEncounter.swift */,
 				72343ED330858BC416BA2737 /* LanternBelowFloodedArchive.swift */,
 				B5047E2653ED1144CB9EF722 /* LanternBelowSceneOne.swift */,
 				057864876C66DCA7F4886830 /* LanternBelowVault.swift */,
+				4A451B8C97D0A6C14FDE38FB /* OpenWorldEngine.swift */,
+				5108C99C11BF53E84F8CB905 /* OpenWorldState.swift */,
 				36D547FE55DD0B90D553D5CD /* RuleCatalog.swift */,
 				9C44DB3695D5584B8139C380 /* RulesPacks.swift */,
+				9D3154C2AE6125C5921247F6 /* SoloCampaign.swift */,
 				3BE3BDA5CD22D3FA51A8101A /* SRD521CharacterProfile.swift */,
 				0C364377810AC3E817264E01 /* SRD521CoreMechanics.swift */,
 				2C4827EE83EE5BA4D0010FF0 /* SRD521EncounterEngine.swift */,
@@ -589,6 +688,8 @@
 				29E35FC2EDDD24F4325493A9 /* PBXTargetDependency */,
 				18910F1A81158D8EE103BE2D /* PBXTargetDependency */,
 				FB2D4F6619F2086851DFB9FF /* PBXTargetDependency */,
+				0127E03393B21AB2660AC3D8 /* PBXTargetDependency */,
+				B70C4778F5BFE1C392545239 /* PBXTargetDependency */,
 			);
 			name = AetherTableTests;
 			packageProductDependencies = (
@@ -655,6 +756,7 @@
 			dependencies = (
 				DEE5E859FB0ABCBDA2190D35 /* PBXTargetDependency */,
 				37941A047161E45CD3F82595 /* PBXTargetDependency */,
+				3ED69A5194771B1D4E32C408 /* PBXTargetDependency */,
 			);
 			name = AIGM;
 			packageProductDependencies = (
@@ -763,16 +865,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92827809424A22D159310C59 /* CharacterCreation.swift in Sources */,
+				65091991B30662167B4E7755 /* CreationFeatureRules.swift in Sources */,
+				DCB1DCFFBAFE598AAE29F54C /* CreationSpellCatalog.swift in Sources */,
 				09CD2A9921B94E6E8E80A4B8 /* LanternBelowEncounter.swift in Sources */,
 				B39FBF29836625A3D65EA93F /* LanternBelowFloodedArchive.swift in Sources */,
 				FDD9D31241AF747715CF06A4 /* LanternBelowSceneOne.swift in Sources */,
 				7FDC6BCCD8D45BBABBF5FCE7 /* LanternBelowVault.swift in Sources */,
+				4DFC40984C9826B453C137DB /* OpenWorldEngine.swift in Sources */,
+				D7CCBF650CA675A0A58E49CD /* OpenWorldState.swift in Sources */,
 				86A1CE84D0FB3C5D339F3449 /* RuleCatalog.swift in Sources */,
 				C145D936E07CD5461778552E /* RulesPacks.swift in Sources */,
 				B227A6A86F72535A61C3C55F /* SRD521CharacterProfile.swift in Sources */,
 				0C71F5A00197E38CB426F166 /* SRD521CoreMechanics.swift in Sources */,
 				9A1D6197AFB187FBE73CC7C2 /* SRD521EncounterEngine.swift in Sources */,
 				C327F443AE706F3AB00787BF /* SRD521RulesPack.swift in Sources */,
+				5DBAEE6454167C210ABFA0DD /* SoloCampaign.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -797,6 +905,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				6835436203A7AAC6AE11ECFD /* AIGM.swift in Sources */,
+				185A4867CD5CDC1CDCD4FAF0 /* DungeonMaster.swift in Sources */,
+				4A34675472C8545AF7F8064D /* OriginClaimGate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -804,7 +914,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7082D9AB7DB8298F2EDE4BFB /* CharacterCreationTests.swift in Sources */,
+				019061CB0C60539D9B41429A /* CreationFeatureTests.swift in Sources */,
 				3ABFEAF86C2F573377898CBE /* DiceEngineTests.swift in Sources */,
+				079BE5040A0C34F27ABBCF8C /* EngineReviewTests.swift in Sources */,
+				8D92FDB1A73195A523A7CDEF /* OpenWorldTests.swift in Sources */,
+				7B340121C4C0466E2553C4E4 /* OriginClaimTests.swift in Sources */,
+				B2C3528398412AE9E0E1E9F5 /* SoloCampaignTests.swift in Sources */,
+				2F03149EDF162FA41E684774 /* SpellCreationTests.swift in Sources */,
+				F80D134AD0D8868302126E09 /* StateReviewTests.swift in Sources */,
+				FCCFBA1DB4C680B8BBF9F5ED /* StoryBoundaryTests.swift in Sources */,
+				39A155BAEA4A79F28AD89C2A /* ViewModelReviewTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -821,7 +941,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D08CB833FEE7D398FCB34C8B /* AdventureView.swift in Sources */,
 				C0C6CDA2C394F00ED8E66DA5 /* AetherTableApp.swift in Sources */,
+				BA30138B6DD0749FC87A67F0 /* CampaignHomeView.swift in Sources */,
+				AEEA9711D9795ECDF3119EB6 /* CampaignViewModel.swift in Sources */,
+				9D7A8BE3BBDCCEE08510354B /* CharacterCreationView.swift in Sources */,
+				DE23C664D6C8827A2BE59302 /* ReferenceViews.swift in Sources */,
+				23992B4A8173574812C25F97 /* StoryComponents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -844,6 +970,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		0127E03393B21AB2660AC3D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D1EDC2A780611DF5ED0340F6 /* AetherTable */;
+			targetProxy = 02BF832A8B4D284A1AB2D5D8 /* PBXContainerItemProxy */;
+		};
 		01EDE73E26AA466892D459F8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CAD00816D739FEDE4EB5FBA5 /* RulesEngine */;
@@ -883,6 +1014,11 @@
 			isa = PBXTargetDependency;
 			target = CAD00816D739FEDE4EB5FBA5 /* RulesEngine */;
 			targetProxy = FBED806F8FBAF978C42587AA /* PBXContainerItemProxy */;
+		};
+		3ED69A5194771B1D4E32C408 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DDF9B132C6C5D53DA1209B7C /* RulesPacks */;
+			targetProxy = 16EEA5EBA7E96F2A5F5B7C63 /* PBXContainerItemProxy */;
 		};
 		4777CDF07835E05A2F35CDBE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -924,6 +1060,11 @@
 			target = 996B9621C5054CAF33861987 /* AetherTableCore */;
 			targetProxy = 64E7F1255B13102C3F335ADF /* PBXContainerItemProxy */;
 		};
+		B70C4778F5BFE1C392545239 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCD767AEA34FA534EA038995 /* AIGM */;
+			targetProxy = 5E3C539598F0C6EB934990EF /* PBXContainerItemProxy */;
+		};
 		CAE2A12D9FFB33C31E9AFC17 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 3A110ACB14A60DED7D3EEFB2 /* Multiplayer */;
@@ -953,13 +1094,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = LGNJ56Y22G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chrisbinion.aethertable;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1019,6 +1163,7 @@
 				);
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AetherTable.app/AetherTable";
 			};
 			name = Release;
 		};
@@ -1239,6 +1384,7 @@
 				);
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AetherTable.app/AetherTable";
 			};
 			name = Debug;
 		};
@@ -1356,13 +1502,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = LGNJ56Y22G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chrisbinion.aethertable;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

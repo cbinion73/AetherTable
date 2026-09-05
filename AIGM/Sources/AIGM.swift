@@ -27,6 +27,10 @@ public enum GameMasterError: LocalizedError { case unavailable(String)
 public struct FoundationModelsGM: GameMaster {
     public init() {}
     public func proposeIntent(from playerText: String, campaign: CampaignState) async throws -> GMIntentProposal {
+        try await proposeIntent(from: playerText, campaign: campaign, availableActions: ["attempt"])
+    }
+    public func proposeIntent(from playerText: String, campaign: CampaignState, availableActions: [String]) async throws -> GMIntentProposal {
+        guard !availableActions.isEmpty else { throw GameMasterError.unavailable("No actions available.") }
         #if canImport(FoundationModels)
         let model = SystemLanguageModel.default
         guard case .available = model.availability else { throw GameMasterError.unavailable("Apple Intelligence is not ready on this device.") }
@@ -35,11 +39,12 @@ public struct FoundationModelsGM: GameMaster {
         You do not decide rules, outcomes, dice results, inventory, hit points, or world state.
         Use one of the supplied action verbs exactly. Keep narration under 60 words.
         """)
-        let packActions = campaign.rulesPackID.rawValue
+        let packActions = availableActions.joined(separator: ", ")
         let response = try await session.respond(
-            to: "Campaign recap: \(campaign.recap)\nActive rules-pack identifier: \(packActions)\nPlayer says: \(playerText)\nReturn a safe proposed verb, concise detail, and narration prompt.",
+            to: "Campaign recap: \(campaign.recap)\nAvailable action verbs: \(packActions)\nPlayer says: \(playerText)\nReturn a safe proposed verb, concise detail, and narration prompt.",
             generating: GeneratedGMProposal.self
         )
+        guard availableActions.contains(response.content.verb.lowercased()) else { throw GameMasterError.unavailable("Intent does not match an available action.") }
         return GMIntentProposal(verb: response.content.verb.lowercased(), detail: response.content.detail, narrationPrompt: response.content.narration)
         #else
         throw GameMasterError.unavailable("Foundation Models is not available in this SDK.")

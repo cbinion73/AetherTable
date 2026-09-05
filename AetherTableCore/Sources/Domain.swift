@@ -21,7 +21,7 @@ public struct CampaignEvent: Identifiable, Codable, Hashable, Sendable {
     public enum Kind: String, Codable, Sendable {
         case campaignCreated, characterCreated, sceneEntered, sceneStatusChanged, intentProposed, actionResolved, worldFactSet
         case resourceChanged, conditionChanged, relationshipChanged, threatChanged, questUpdated, choiceCommitted, noteAdded
-        case encounterStarted, combatantJoined, turnStarted, combatantDamaged, combatantConditionChanged, encounterEnded, packStateSet
+        case encounterStarted, combatantJoined, turnStarted, combatantDamaged, combatantHealed, combatantConditionChanged, encounterEnded, packStateSet
     }
 
     public init(id: UUID = UUID(), campaignID: CampaignID, createdAt: Date = .now, kind: Kind, payload: [String: String]) {
