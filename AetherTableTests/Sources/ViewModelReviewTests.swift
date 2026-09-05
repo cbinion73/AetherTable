@@ -35,6 +35,34 @@ import Testing
     #expect(try await store.discover().campaigns.isEmpty)
 }
 
+@Test func openingBriefingSurvivesEncodingAndGroundsGMContext() throws {
+    let opening = AdventureOpening(place: "The Lantern Quay", activity: "guarding a midnight cargo", companions: "Captain Maelin and her nervous crew", reason: "to repay a debt to Maelin", premise: "A sealed crate begins answering questions in a child's voice.")
+    let state = OpenWorldAdventure(hero: .preset(.rogue, name: "Mara"), opening: opening)
+    let restored = try JSONDecoder().decode(OpenWorldAdventure.self, from: JSONEncoder().encode(state))
+    #expect(restored.opening == opening)
+    #expect(restored.location == "The Lantern Quay")
+    #expect(restored.context(for: "I inspect the crate").contains("guarding a midnight cargo"))
+    #expect(restored.memories.contains { $0.id == "opening.premise" && $0.detail.contains("child's voice") })
+}
+
+@MainActor @Test func returningAfterADayOffersRecapUntilPlayerResumes() async throws {
+    let store = InMemoryCampaignStore()
+    let model = CampaignViewModel(store: store)
+    await model.start()
+    #expect(await model.createAdventure(name: "Return QA", characterClass: .cleric))
+    var campaign = try #require(model.campaign)
+    var world = try OpenWorldAdventure.from(campaign)
+    world.lastPlayedAt = Date.now.addingTimeInterval(-86_401)
+    campaign.world.packState[OpenWorldAdventure.key] = String(decoding: try JSONEncoder().encode(world), as: UTF8.self)
+    try await store.save(campaign)
+    let reopened = CampaignViewModel(store: store)
+    await reopened.start()
+    reopened.select(try #require(reopened.campaigns.first))
+    #expect(reopened.returnRecap?.contains("Return QA") == true)
+    await reopened.resumeAfterAbsence()
+    #expect(reopened.returnRecap == nil)
+}
+
 @MainActor @Test func libraryRejectsMalformedEmbeddedAdventureWithoutChangingSavedData() async throws {
     let store = InMemoryCampaignStore()
     var corrupt = CampaignState(title: "Damaged", rulesPackID: SRD521RulesPack.descriptor.id)

@@ -33,7 +33,7 @@ struct CampaignHomeView: View {
             }
         }.tint(StoryStyle.copper)
             .task { if !model.loaded { await model.start() } }
-            .sheet(isPresented: $creating) { CharacterCreationView(model: model) }
+            .sheet(isPresented: $creating) { CharacterCreationEntryView(model: model) }
             .alert("Your story needs attention", isPresented: Binding(get: { model.error != nil }, set: { if !$0 { model.error = nil } })) { Button("OK") { model.error = nil } } message: { Text(model.error ?? "") }
     }
 }
@@ -47,6 +47,54 @@ struct CampaignPlayView: View {
             Tab("Character", systemImage: "person.crop.rectangle") { NavigationStack { CharacterView(model: model) } }
             Tab("Journal", systemImage: "text.book.closed") { NavigationStack { JournalView(model: model) } }
             Tab("Rules", systemImage: "dice") { NavigationStack { RulesView() } }
+        }.alert("Welcome back", isPresented: Binding(get: { model.returnRecap != nil && !model.isShowingReturnRecap }, set: { _ in })) {
+            Button("Show recap") { model.showReturnRecap() }
+            Button("Continue without recap") { Task { await model.resumeAfterAbsence() } }
+        } message: { Text("It has been more than a day since this campaign was played. Would you like a recap first?") }
+        .sheet(isPresented: Binding(get: { model.isShowingReturnRecap }, set: { shown in if !shown { Task { await model.resumeAfterAbsence() } } })) {
+            NavigationStack { StoryPage { StoryHeading(eyebrow: "Previously at the table", title: "Your return"); Text(model.returnRecap ?? "").font(.system(.body, design: .serif)).lineSpacing(6) }.navigationTitle("Campaign recap").toolbar { ToolbarItem(placement: .confirmationAction) { Button("Continue") { Task { await model.resumeAfterAbsence() } } } } }
+        }
+    }
+}
+
+struct CharacterCreationEntryView: View {
+    let model: CampaignViewModel
+    @Environment(\.dismiss) private var dismiss
+    @State private var custom = false
+    @State private var name = ""
+    @State private var characterClass: AdventurerClass = .fighter
+    @State private var opening = AdventureOpening.default
+
+    var body: some View {
+        NavigationStack {
+            StoryPage {
+                StoryHeading(eyebrow: "AetherTable", title: "Choose your path")
+                StoryCard {
+                    Label("Quickstart", systemImage: "bolt.shield").font(.title3.bold())
+                    Text("Start a complete, rules-backed level-one hero in a minute. You choose a name, class, and the opening scene; the game supplies a usable build.").font(.system(.body, design: .serif))
+                    TextField("Character name", text: $name).textInputAutocapitalization(.words)
+                    Picker("Class", selection: $characterClass) { ForEach(AdventurerClass.allCases, id: \.self) { Text($0.rawValue).tag($0) } }
+                    openingFields
+                    Button("Start quick adventure") { Task { if await model.createAdventure(name: name, characterClass: characterClass, backstory: "", opening: opening) { dismiss() } } }
+                        .buttonStyle(.borderedProminent).disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || !opening.isValid || model.isResolving)
+                }
+                StoryCard {
+                    Label("Custom character", systemImage: "person.text.rectangle").font(.title3.bold())
+                    Text("Use the full D&D-inspired character workflow: species, background, ability scores, training, magic, equipment, backstory, and an opening brief.").font(.system(.body, design: .serif))
+                    Button("Build a custom character") { custom = true }.buttonStyle(.bordered)
+                }
+            }.navigationTitle("New adventure").toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } } }
+        }.sheet(isPresented: $custom) { CharacterCreationView(model: model) }.tint(StoryStyle.copper)
+    }
+
+    private var openingFields: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Opening scene").font(.headline)
+            TextField("Where are you?", text: $opening.place)
+            TextField("What are you doing?", text: $opening.activity)
+            TextField("Who are you with?", text: $opening.companions)
+            TextField("Why are you here?", text: $opening.reason)
+            TextField("Initial campaign story", text: $opening.premise, axis: .vertical).lineLimit(3...5)
         }
     }
 }

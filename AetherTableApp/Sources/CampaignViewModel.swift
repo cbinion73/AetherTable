@@ -23,6 +23,8 @@ final class CampaignViewModel {
         didSet { if let id = campaign?.id.rawValue.uuidString { UserDefaults.standard.set(draft, forKey: "AetherTable.draft.\(id)") } }
     }
     private(set) var turnStatus = ""
+    private(set) var returnRecap: String?
+    private(set) var isShowingReturnRecap = false
     private(set) var isSaving = false
     private var turnTask: Task<Void, Never>?
     private var isTurnActive = false
@@ -53,21 +55,23 @@ final class CampaignViewModel {
         do { _ = try OpenWorldAdventure.from(state) }
         catch { self.error = "This adventure could not be read. Its saved file has been preserved. \(error.localizedDescription)"; return }
         narrationTask?.cancel(); campaign = state; draft = UserDefaults.standard.string(forKey: "AetherTable.draft.\(state.id.rawValue.uuidString)") ?? ""; pending = nil; aiNarration = nil; aiStatus = "Apple Intelligence Dungeon Master"
+        if let adventure, Date.now.timeIntervalSince(adventure.lastPlayedAt) > 86_400 { returnRecap = adventure.returnRecap; isShowingReturnRecap = false }
     }
-    func leave() { guard !isResolving else { return }; narrationTask?.cancel(); campaign = nil; draft = ""; pending = nil; aiNarration = nil }
-    @discardableResult func createAdventure(name: String, characterClass: AdventurerClass, backstory: String = "") async -> Bool {
+    func leave() { guard !isResolving else { return }; narrationTask?.cancel(); campaign = nil; draft = ""; pending = nil; aiNarration = nil; returnRecap = nil; isShowingReturnRecap = false }
+    @discardableResult func createAdventure(name: String, characterClass: AdventurerClass, backstory: String = "", opening: AdventureOpening = .default) async -> Bool {
         guard !isResolving, !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
         isResolving = true
         defer { isResolving = false }
         do {
             let history = backstory.trimmingCharacters(in: .whitespacesAndNewlines)
             guard history.count <= 4000 else { throw OpenWorldError.invalidPlan("Keep your creation backstory within 4,000 characters. It is saved exactly as written.") }
-            let state = OpenWorldAdventure(hero: .preset(characterClass, name: name), creationBackstory: history.isEmpty ? nil : history)
+            guard opening.isValid else { throw OpenWorldError.invalidPlan("Complete all opening-story fields before starting the campaign.") }
+            let state = OpenWorldAdventure(hero: .preset(characterClass, name: name), creationBackstory: history.isEmpty ? nil : history, opening: opening)
             let campaign = CampaignState(title: "\(state.hero.name)’s Adventure", rulesPackID: SRD521RulesPack.descriptor.id)
             try await commit(state.storing(in: campaign)); draft = ""; pending = nil; return true
         } catch { report(error); return false }
     }
-    @discardableResult func createAdventure(character: CharacterCreationDraft, backstory: String) async -> Bool {
+    @discardableResult func createAdventure(character: CharacterCreationDraft, backstory: String, opening: AdventureOpening = .default) async -> Bool {
         guard !isResolving else { return false }
         isResolving = true
         defer { isResolving = false }
@@ -75,13 +79,22 @@ final class CampaignViewModel {
             let hero = try character.build()
             let history = backstory.trimmingCharacters(in: .whitespacesAndNewlines)
             guard history.count <= 4000 else { throw OpenWorldError.invalidPlan("Keep your creation backstory within 4,000 characters.") }
-            let world = OpenWorldAdventure(hero: hero, creationBackstory: history.isEmpty ? nil : history)
+            guard opening.isValid else { throw OpenWorldError.invalidPlan("Complete all opening-story fields before starting the campaign.") }
+            let world = OpenWorldAdventure(hero: hero, creationBackstory: history.isEmpty ? nil : history, opening: opening)
             let newCampaign = CampaignState(title: "\(hero.name)’s Adventure", rulesPackID: SRD521RulesPack.descriptor.id)
             try await commit(world.storing(in: newCampaign))
             draft = ""; pending = nil; pendingBase = nil
             return true
         } catch { report(error); return false }
     }
+    func resumeAfterAbsence() async {
+        guard !isResolving, let campaign, var world = try? OpenWorldAdventure.from(campaign) else { return }
+        returnRecap = nil; isShowingReturnRecap = false
+        world.lastPlayedAt = .now
+        do { try await commit(world.storing(in: campaign)) }
+        catch { report(error) }
+    }
+    func showReturnRecap() { guard returnRecap != nil else { return }; isShowingReturnRecap = true }
     func send(opening: Bool = false) {
         guard !isResolving else { return }
         turnTask = Task { await submit(opening: opening) }
