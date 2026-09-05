@@ -80,6 +80,7 @@
 		DCB1DCFFBAFE598AAE29F54C /* CreationSpellCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B26746D1DCEEF4CC103FC8F /* CreationSpellCatalog.swift */; };
 		DE23C664D6C8827A2BE59302 /* ReferenceViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2D9A4AF2A84F0174B9BF1D /* ReferenceViews.swift */; };
 		DF1EA34B8536BB726579F39A /* AetherTableCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DF203EC3A5E3CFF873237664 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08CA512EDC6FE46CE114D3E3 /* Assets.xcassets */; };
 		E2C487D9CB59AF3CD02C5C39 /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		E854D2733F2142BA8237926F /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		F15D58E720573BC2E3AB6C52 /* RulesEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -292,6 +293,7 @@
 /* Begin PBXFileReference section */
 		057864876C66DCA7F4886830 /* LanternBelowVault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanternBelowVault.swift; sourceTree = "<group>"; };
 		0584E60F9ED7A66BFD29176C /* SoloCampaignTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoloCampaignTests.swift; sourceTree = "<group>"; };
+		08CA512EDC6FE46CE114D3E3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		08DC82BCD9BA5EE0D286D19E /* SRD521RulesPack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRD521RulesPack.swift; sourceTree = "<group>"; };
 		0C364377810AC3E817264E01 /* SRD521CoreMechanics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRD521CoreMechanics.swift; sourceTree = "<group>"; };
 		0C76310B1E512F7D347391E2 /* CharacterCreationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCreationView.swift; sourceTree = "<group>"; };
@@ -454,6 +456,7 @@
 			children = (
 				E52B3D6449D3272450533F62 /* AdventureView.swift */,
 				25EDB530CEDC843874C6558F /* AetherTableApp.swift */,
+				08CA512EDC6FE46CE114D3E3 /* Assets.xcassets */,
 				23AE1A9CFA79F0CB4DB810F9 /* CampaignHomeView.swift */,
 				EF787DC27F4A577BC8F1DC49 /* CampaignViewModel.swift */,
 				0C76310B1E512F7D347391E2 /* CharacterCreationView.swift */,
@@ -723,6 +726,7 @@
 			buildConfigurationList = 6D08F8ACBAF726009BCEF58C /* Build configuration list for PBXNativeTarget "AetherTable" */;
 			buildPhases = (
 				D6A55A86A625588A4825BA5E /* Sources */,
+				57B40CA114D1F7C97370FF63 /* Resources */,
 				BE846855FEA369711381450E /* Frameworks */,
 				AE900D8DD6A14A3122B74231 /* Embed Frameworks */,
 			);
@@ -848,6 +852,14 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		57B40CA114D1F7C97370FF63 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DF203EC3A5E3CFF873237664 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		665B4A983809744D0E709C85 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;

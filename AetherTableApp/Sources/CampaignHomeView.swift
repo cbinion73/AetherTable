@@ -11,6 +11,7 @@ struct CampaignHomeView: View {
             else {
                 NavigationStack {
                     StoryPage {
+                        TabletopHeroArt()
                         StoryHeading(eyebrow: "AetherTable · Solo adventures", title: model.campaigns.isEmpty ? "A world awaits\nyour next move." : "Your stories,\nstill waiting.")
                         StoryCard {
                             Image(systemName: "flame").font(.largeTitle).foregroundStyle(StoryStyle.copper).accessibilityHidden(true)

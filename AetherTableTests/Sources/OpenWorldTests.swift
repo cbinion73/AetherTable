@@ -27,6 +27,23 @@ import Testing
     #expect(first == (try OpenWorldEngine.resolve(plan, in: state, seed: 42)))
     #expect(first.receipt.contains("+ 7"))
 }
+@Test func playerD20IsAppliedToAHeroCheck() throws {
+    let state = OpenWorldAdventure(hero: .preset(.rogue, name: "Nim"))
+    let plan = WorldActionPlan(kind: "check", ability: "dexterity", skill: "stealth", difficulty: 12)
+    let result = try OpenWorldEngine.resolve(plan, in: state, seed: 42, playerD20: 17)
+    #expect(plan.requiresPlayerD20Roll)
+    #expect(result.receipt.contains("selected 17"))
+    #expect(result.outcome == "Success")
+}
+@Test func repeatedOpeningIsRemovedBeforeTheNextSceneIsSaved() {
+    let earlier = AdventureMessage(role: "gm", text: "Rain taps the lantern glass. The ferryman grips the chain.")
+    let next = AdventureTurn.removingRepeatedOpening("Rain taps the lantern glass. The ferryman grips the chain. A bell rings below the black water.", transcript: [earlier])
+    #expect(next == "A bell rings below the black water.")
+}
+@Test func heroMentionOutsideDialogueIsNotAcceptedAsWorldNarration() {
+    let kept = AdventureTurn.worldOnlyPrefix("The bakery bell shivers in its frame. Rowan steps through the door and asks for bread.", heroName: "Rowan")
+    #expect(kept == "The bakery bell shivers in its frame.")
+}
 @Test func magicMissileSpendsSlotAndAlwaysDoesThreeDarts() throws {
     let state = OpenWorldAdventure(hero: .preset(.wizard, name: "W"))
     let plan = WorldActionPlan(kind: "spell", tool: "magic missile", target: "Shade", targetHitPoints: 60)
@@ -114,6 +131,14 @@ private actor ScriptedDungeonMaster: DungeonMaster {
         return .init(prose: "Iven brushes flour from a blue tin. ‘Lysa has not been paid.’", location: "Iven’s Bakery", memories: [.init(id: "person.iven", category: "person", name: "Iven", detail: "Baker who owes Lysa wages.")])
     }
 }
+private actor CheckDungeonMaster: DungeonMaster {
+    func plan(playerText: String, adventure: OpenWorldAdventure) async throws -> WorldActionPlan {
+        .init(kind: "check", ability: "dexterity", skill: "stealth", difficulty: 12, reason: "The dockmaster is watching the alley.")
+    }
+    func tell(playerText: String, resolution: WorldResolution) async throws -> WorldStory {
+        .init(prose: "The fog shifts around the crates.", location: "Emberwake Docks", memories: [])
+    }
+}
 private actor ToggleStore: CampaignStore {
     var state: CampaignState?
     var fail = false
@@ -132,6 +157,20 @@ private actor ToggleStore: CampaignStore {
     await model.submit()
     let counts = await gm.counts()
     #expect(counts.0 == 1 && counts.1 == 2)
+    #expect(model.adventure?.transcript.count == 2 && model.draft.isEmpty)
+}
+@MainActor @Test func playerMustRollBeforeAResolvedCheckReachesTheStory() async throws {
+    let model = CampaignViewModel(store: InMemoryCampaignStore(), dungeonMaster: CheckDungeonMaster())
+    await model.start(); #expect(await model.createAdventure(name: "Nim", characterClass: .rogue))
+    model.draft = "I slip behind the dockmaster's crates."
+    await model.submit()
+    #expect(model.diceRoll?.title == "Dexterity check")
+    #expect(model.adventure?.transcript.isEmpty == true)
+    model.rollDice()
+    try await Task.sleep(for: .seconds(1))
+    #expect(model.diceRoll?.rolledD20 != nil && model.diceRoll?.resolution != nil)
+    model.continueAfterDice()
+    try await Task.sleep(for: .milliseconds(100))
     #expect(model.adventure?.transcript.count == 2 && model.draft.isEmpty)
 }
 @MainActor @Test func saveFailureRetriesPreparedStoryWithoutAnotherModelTurn() async throws {

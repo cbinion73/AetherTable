@@ -30,6 +30,17 @@ public struct WorldActionPlan: Codable, Hashable, Sendable {
     public init(kind: String = "narrative", ability: String = "wisdom", skill: String = "", difficulty: Int = 10, tool: String = "", target: String = "", targetArmorClass: Int = 12, targetHitPoints: Int = 10, targetSaveModifier: Int = 0, advantage: Bool = false, disadvantage: Bool = false, adjacentAlly: Bool = false, enemyResponds: Bool = false, enemyAttackBonus: Int = 2, enemyDamageSides: Int = 6, reason: String = "") {
         self.kind = kind; self.ability = ability; self.skill = skill; self.difficulty = difficulty; self.tool = tool; self.target = target; self.targetArmorClass = targetArmorClass; self.targetHitPoints = targetHitPoints; self.targetSaveModifier = targetSaveModifier; self.advantage = advantage; self.disadvantage = disadvantage; self.adjacentAlly = adjacentAlly; self.enemyResponds = enemyResponds; self.enemyAttackBonus = enemyAttackBonus; self.enemyDamageSides = enemyDamageSides; self.reason = reason
     }
+
+    /// The rolls where the player supplies the hero's visible d20 result.
+    /// Damage, healing, and enemy response dice remain deterministic engine rolls.
+    public var requiresPlayerD20Roll: Bool {
+        switch (kind, tool.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)) {
+        case ("check", _), ("weapon", _), ("spell", "fire bolt"), ("spell", "guiding bolt"):
+            true
+        default:
+            false
+        }
+    }
 }
 public struct WorldResolution: Codable, Hashable, Sendable {
     public var adventure: OpenWorldAdventure
@@ -42,11 +53,23 @@ public enum OpenWorldError: LocalizedError {
     public var errorDescription: String? { switch self { case .invalidPlan(let reason): reason } }
 }
 public enum OpenWorldEngine {
-    public static func resolve(_ plan: WorldActionPlan, in original: OpenWorldAdventure, seed: UInt64) throws -> WorldResolution {
+    /// `playerD20` is an optional physical roll made in the UI. It replaces the
+    /// first d20 of the hero's action while every other die stays seeded.
+    public static func resolve(_ plan: WorldActionPlan, in original: OpenWorldAdventure, seed: UInt64, playerD20: Int? = nil) throws -> WorldResolution {
+        if let playerD20, !(1...20).contains(playerD20) { throw OpenWorldError.invalidPlan("A d20 roll must be between 1 and 20.") }
         var state = original
         if let expires = state.guidingBoltExpires, state.turn > expires { state.guidingBoltTarget = nil; state.guidingBoltExpires = nil }
         var serial: UInt64 = 0
-        func roll(_ count: Int, _ sides: Int) throws -> [Int] { defer { serial += 1 }; return try DiceEngine.roll(.init(count: count, sides: sides), seed: seed &+ serial).values }
+        var playerD20Available = playerD20
+        func roll(_ count: Int, _ sides: Int) throws -> [Int] {
+            defer { serial += 1 }
+            var values = try DiceEngine.roll(.init(count: count, sides: sides), seed: seed &+ serial).values
+            if sides == 20, let value = playerD20Available {
+                values[0] = value
+                playerD20Available = nil
+            }
+            return values
+        }
         var receipt: [String] = []
         var outcome = "No roll required"
         let tool = plan.tool.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)

@@ -5,6 +5,19 @@ import Observation
 import Persistence
 import RulesPacks
 
+struct DiceRollState: Identifiable {
+    let id = UUID()
+    let title: String
+    let reason: String
+    var isRolling = false
+    var rolledD20: Int?
+    var resolution: WorldResolution?
+
+    var resultLine: String? {
+        resolution?.receipt.split(separator: "\n").map(String.init).first(where: { $0.contains("d20") && $0.contains("versus") })
+    }
+}
+
 @MainActor @Observable
 final class CampaignViewModel {
     private(set) var campaigns: [CampaignState] = []
@@ -31,6 +44,8 @@ final class CampaignViewModel {
     private var turnToken = UUID()
     private var pending: (campaignID: CampaignID, text: String, resolution: WorldResolution, candidate: CampaignState?)?
     private var pendingBase: CampaignState?
+    private var pendingDice: (campaignID: CampaignID, text: String, plan: WorldActionPlan, adventure: OpenWorldAdventure, seed: UInt64)?
+    private(set) var diceRoll: DiceRollState?
     var adventure: OpenWorldAdventure? { campaign.flatMap { try? OpenWorldAdventure.from($0) } }
     init(store: (any CampaignStore)? = nil, gm: any GameMaster = FoundationModelsGM(), dungeonMaster: any DungeonMaster = AppleDungeonMaster()) { self.store = store; self.gm = gm; self.dungeonMaster = dungeonMaster }
     func start() async {
@@ -54,10 +69,10 @@ final class CampaignViewModel {
         guard !isResolving else { return }
         do { _ = try OpenWorldAdventure.from(state) }
         catch { self.error = "This adventure could not be read. Its saved file has been preserved. \(error.localizedDescription)"; return }
-        narrationTask?.cancel(); campaign = state; draft = UserDefaults.standard.string(forKey: "AetherTable.draft.\(state.id.rawValue.uuidString)") ?? ""; pending = nil; aiNarration = nil; aiStatus = "Apple Intelligence Dungeon Master"; returnRecap = nil; isShowingReturnRecap = false
+        narrationTask?.cancel(); campaign = state; draft = UserDefaults.standard.string(forKey: "AetherTable.draft.\(state.id.rawValue.uuidString)") ?? ""; pending = nil; pendingDice = nil; diceRoll = nil; aiNarration = nil; aiStatus = "Apple Intelligence Dungeon Master"; returnRecap = nil; isShowingReturnRecap = false
         if let adventure, Date.now.timeIntervalSince(adventure.lastPlayedAt) > 86_400 { returnRecap = adventure.returnRecap; isShowingReturnRecap = false }
     }
-    func leave() { guard !isResolving else { return }; narrationTask?.cancel(); campaign = nil; draft = ""; pending = nil; aiNarration = nil; returnRecap = nil; isShowingReturnRecap = false }
+    func leave() { guard !isResolving else { return }; narrationTask?.cancel(); campaign = nil; draft = ""; pending = nil; pendingDice = nil; diceRoll = nil; aiNarration = nil; returnRecap = nil; isShowingReturnRecap = false }
     @discardableResult func createAdventure(name: String, characterClass: AdventurerClass, backstory: String = "", opening: AdventureOpening = .default) async -> Bool {
         guard !isResolving, !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return false }
         isResolving = true
@@ -96,7 +111,7 @@ final class CampaignViewModel {
     }
     func showReturnRecap() { guard returnRecap != nil else { return }; isShowingReturnRecap = true }
     func send(opening: Bool = false) {
-        guard !isResolving else { return }
+        guard !isResolving, diceRoll == nil else { return }
         turnTask = Task { await submit(opening: opening) }
     }
     func cancelTurn() {
@@ -104,7 +119,7 @@ final class CampaignViewModel {
         turnTask?.cancel(); turnToken = UUID(); isTurnActive = false; isResolving = false; turnStatus = "Turn cancelled. Your draft is unchanged."
     }
     func submit(opening: Bool = false) async {
-        guard !Task.isCancelled, !isResolving, let original = campaign else { return }
+        guard !Task.isCancelled, !isResolving, diceRoll == nil, let original = campaign else { return }
         let text = opening ? "Begin my adventure." : draft.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty, text.count <= 3000 else { error = "Write an action of 3,000 characters or fewer."; return }
         let token = UUID(); turnToken = token; isTurnActive = true; isResolving = true; error = nil
@@ -116,27 +131,74 @@ final class CampaignViewModel {
                 turnStatus = "The Dungeon Master is considering your action…"
                 let plan = try await dungeonMaster.plan(playerText: text, adventure: state)
                 guard token == turnToken, !Task.isCancelled else { return }
-                let resolution = try OpenWorldEngine.resolve(plan, in: state, seed: .random(in: .min ... .max))
+                let seed = UInt64.random(in: .min ... .max)
+                if plan.requiresPlayerD20Roll {
+                    pendingDice = (original.id, text, plan, state, seed)
+                    diceRoll = .init(title: diceTitle(for: plan), reason: plan.reason.isEmpty ? "Your action calls for a d20 check." : plan.reason)
+                    turnStatus = ""
+                    return
+                }
+                let resolution = try OpenWorldEngine.resolve(plan, in: state, seed: seed)
                 pending = (original.id, text, resolution, nil)
                 pendingBase = original
             }
-            guard let prepared = pending else { return }
-            var candidate = prepared.candidate
-            if candidate == nil {
-                turnStatus = "Your story is taking shape…"
-                let story = try await dungeonMaster.tell(playerText: text, resolution: prepared.resolution)
-                guard token == turnToken, !Task.isCancelled else { return }
-                let updated = try AdventureTurn.finish(playerText: text, resolution: prepared.resolution, story: story)
-                candidate = try updated.storing(in: original)
-                pending?.candidate = candidate
-            }
-            guard let candidate, token == turnToken, !Task.isCancelled else { return }
-            turnStatus = "Saving your story…"
-            try await commit(candidate)
-            pending = nil; pendingBase = nil; draft = ""; aiStatus = "Apple Intelligence Dungeon Master"
+            try await narrateAndCommit(original: original, text: text, token: token)
         } catch {
             guard token == turnToken, !Task.isCancelled else { return }
             self.error = "\(error.localizedDescription)\nYour saved story and draft are unchanged. Retry to continue the same turn."
+        }
+    }
+    func rollDice() {
+        guard var roll = diceRoll, !roll.isRolling, roll.rolledD20 == nil, let request = pendingDice else { return }
+        roll.isRolling = true; diceRoll = roll
+        Task {
+            try? await Task.sleep(for: .milliseconds(720))
+            guard var settled = diceRoll, settled.isRolling, settled.rolledD20 == nil, let current = pendingDice, current.campaignID == request.campaignID else { return }
+            do {
+                let value = Int.random(in: 1...20)
+                let resolution = try OpenWorldEngine.resolve(current.plan, in: current.adventure, seed: current.seed, playerD20: value)
+                settled.isRolling = false; settled.rolledD20 = value; settled.resolution = resolution; diceRoll = settled
+            } catch {
+                diceRoll = nil; pendingDice = nil; self.error = "The roll could not be resolved. Your story and draft are unchanged. \(error.localizedDescription)"
+            }
+        }
+    }
+    func cancelDiceRoll() { guard diceRoll?.isRolling != true else { return }; diceRoll = nil; pendingDice = nil; turnStatus = "Your action is ready to revise." }
+    func continueAfterDice() {
+        guard let request = pendingDice, let roll = diceRoll, let resolution = roll.resolution, !roll.isRolling, let original = campaign, original.id == request.campaignID else { return }
+        pending = (original.id, request.text, resolution, nil); pendingBase = original; pendingDice = nil; diceRoll = nil
+        turnTask = Task { [weak self] in await self?.resumeNarration(original: original, text: request.text) }
+    }
+    private func resumeNarration(original: CampaignState, text: String) async {
+        guard !isResolving else { return }
+        let token = UUID(); turnToken = token; isTurnActive = true; isResolving = true; error = nil
+        defer { if token == turnToken { isTurnActive = false; isResolving = false; turnStatus = "" } }
+        do { try await narrateAndCommit(original: original, text: text, token: token) }
+        catch where !Task.isCancelled { self.error = "\(error.localizedDescription)\nYour saved story and draft are unchanged. Retry to continue the same turn." }
+        catch { }
+    }
+    private func narrateAndCommit(original: CampaignState, text: String, token: UUID) async throws {
+        guard let prepared = pending else { return }
+        var candidate = prepared.candidate
+        if candidate == nil {
+            turnStatus = "Your story is taking shape…"
+            let story = try await dungeonMaster.tell(playerText: text, resolution: prepared.resolution)
+            guard token == turnToken, !Task.isCancelled else { return }
+            let updated = try AdventureTurn.finish(playerText: text, resolution: prepared.resolution, story: story)
+            candidate = try updated.storing(in: original)
+            pending?.candidate = candidate
+        }
+        guard let candidate, token == turnToken, !Task.isCancelled else { return }
+        turnStatus = "Saving your story…"
+        try await commit(candidate)
+        pending = nil; pendingBase = nil; draft = ""; aiStatus = "Apple Intelligence Dungeon Master"
+    }
+    private func diceTitle(for plan: WorldActionPlan) -> String {
+        switch plan.kind {
+        case "check": return "\(plan.ability.capitalized) check"
+        case "weapon": return "\(plan.tool.capitalized) attack"
+        case "spell": return "\(plan.tool.capitalized) spell attack"
+        default: return "d20 roll"
         }
     }
     @discardableResult func create(name: String) async -> Bool {

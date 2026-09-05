@@ -6,6 +6,30 @@ enum StoryStyle {
     static let ink = Color(uiColor: UIColor { traits in traits.userInterfaceStyle == .dark ? UIColor(red: 0.90, green: 0.84, blue: 0.72, alpha: 1) : UIColor(red: 0.16, green: 0.10, blue: 0.06, alpha: 1) })
     static let border = Color(uiColor: UIColor { traits in traits.userInterfaceStyle == .dark ? UIColor(red: 0.52, green: 0.31, blue: 0.16, alpha: 1) : UIColor(red: 0.62, green: 0.43, blue: 0.22, alpha: 1) })
 }
+
+struct TabletopHeroArt: View {
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            Image("LibraryHero")
+                .resizable()
+                .scaledToFill()
+                .frame(height: 250)
+                .clipped()
+            LinearGradient(colors: [.clear, Color.black.opacity(0.82)], startPoint: .top, endPoint: .bottom)
+            VStack(alignment: .leading, spacing: 5) {
+                Label("AETHER TABLE", systemImage: "die.face.5")
+                    .font(.caption.bold()).tracking(2).foregroundStyle(.white.opacity(0.85))
+                Text("Every story\nbegins at the table.")
+                    .font(.system(.title2, design: .serif, weight: .bold))
+                    .foregroundStyle(.white)
+            }.padding(18)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .overlay(RoundedRectangle(cornerRadius: 22).stroke(StoryStyle.border.opacity(0.8), lineWidth: 1))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("AetherTable tabletop fantasy artwork")
+    }
+}
 struct StoryPage<Content: View>: View {
     @ViewBuilder var content: Content
     var body: some View {

@@ -48,7 +48,58 @@ struct AdventureView: View {
             }.padding(.horizontal, 16).padding(.top, 10).background(.bar)
         }.background(StoryStyle.parchment).navigationTitle("Adventure").navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .topBarLeading) { Button("Library", systemImage: "books.vertical") { model.leave() }.disabled(model.isResolving) } }
+            .sheet(item: Binding(get: { model.diceRoll }, set: { if $0 == nil { model.cancelDiceRoll() } })) { roll in
+                DiceRollView(model: model, initialRoll: roll)
+                    .interactiveDismissDisabled(true)
+            }
             .sheet(isPresented: Binding(get: { receipt != nil }, set: { if !$0 { receipt = nil } })) { NavigationStack { StoryPage { StoryHeading(eyebrow: "Engine record", title: "Dice & consequences"); Text(receipt ?? "").font(.body.monospaced()).textSelection(.enabled) }.toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { receipt = nil } } } } }
+    }
+}
+
+private struct DiceRollView: View {
+    @Bindable var model: CampaignViewModel
+    let initialRoll: DiceRollState
+    @State private var spinning = false
+
+    private var roll: DiceRollState { model.diceRoll ?? initialRoll }
+
+    var body: some View {
+        ZStack {
+            LinearGradient(colors: [Color(red: 0.12, green: 0.07, blue: 0.035), Color(red: 0.28, green: 0.12, blue: 0.04), Color.black.opacity(0.92)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                .ignoresSafeArea()
+            VStack(spacing: 18) {
+                Image("RollingD20")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 330, maxHeight: 330)
+                    .shadow(color: .orange.opacity(0.7), radius: spinning ? 34 : 16)
+                    .rotationEffect(.degrees(spinning ? 1_440 : 0))
+                    .scaleEffect(spinning ? 0.86 : 1)
+                    .accessibilityLabel("Photorealistic twenty-sided die")
+                Text(roll.title.uppercased())
+                    .font(.caption.bold()).tracking(2.4).foregroundStyle(Color.orange.opacity(0.9))
+                Text(roll.reason)
+                    .font(.system(.body, design: .serif)).multilineTextAlignment(.center).foregroundStyle(.white.opacity(0.84)).padding(.horizontal, 24)
+
+                if let raw = roll.rolledD20, let resolution = roll.resolution {
+                    VStack(spacing: 8) {
+                        Text("d20 · \(raw)").font(.system(size: 38, weight: .bold, design: .serif)).foregroundStyle(.white)
+                        Text(resolution.outcome.uppercased()).font(.caption.bold()).tracking(2).foregroundStyle(resolution.outcome.contains("Success") || resolution.outcome.contains("hit") ? Color.green.opacity(0.9) : Color.orange.opacity(0.9))
+                        if let line = roll.resultLine { Text(line).font(.footnote.monospaced()).multilineTextAlignment(.center).foregroundStyle(.white.opacity(0.8)).padding(.horizontal, 20) }
+                    }
+                    Button("Continue to consequence", systemImage: "text.book.closed") { model.continueAfterDice() }
+                        .buttonStyle(.borderedProminent).tint(StoryStyle.copper).controlSize(.large).padding(.top, 4)
+                } else {
+                    Button(roll.isRolling ? "Rolling…" : "Roll the d20", systemImage: "dice") { model.rollDice() }
+                        .buttonStyle(.borderedProminent).tint(StoryStyle.copper).controlSize(.large).disabled(roll.isRolling)
+                    if !roll.isRolling { Button("Revise action") { model.cancelDiceRoll() }.foregroundStyle(.white.opacity(0.7)) }
+                }
+            }
+            .padding(24)
+        }
+        .onChange(of: roll.isRolling, initial: true) { _, isRolling in
+            withAnimation(.easeInOut(duration: 0.7), { spinning = isRolling })
+        }
     }
 }
 
