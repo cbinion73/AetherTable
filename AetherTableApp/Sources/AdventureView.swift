@@ -15,7 +15,13 @@ struct AdventureView: View {
                             StoryHeading(eyebrow: "\(state.hero.name) · \(state.hero.characterClass.rawValue)", title: state.location)
                             HStack { Label("\(state.hero.hitPoints)/\(state.hero.maximumHitPoints) HP", systemImage: "heart"); Text("AC \(state.hero.armorClass)"); if state.hero.characterClass == .wizard || state.hero.characterClass == .cleric { Text("\(state.hero.spellSlots) spell slots") } }.font(.caption.bold()).foregroundStyle(.secondary)
                             if state.transcript.isEmpty {
-                                StoryCard { Text("Your Dungeon Master is ready to meet you.").font(.system(.title2, design: .serif)); Text("Apple Intelligence brings this world to life. Your words decide where the adventure goes.").foregroundStyle(.secondary); Button("Begin adventure") { model.send(opening: true) }.buttonStyle(.borderedProminent).disabled(model.isResolving) }
+                                StoryCard {
+                                    Label("The opening scene", systemImage: "theatermasks").font(.headline)
+                                    Text(state.opening.briefing).font(.system(.body, design: .serif)).lineSpacing(5)
+                                    Divider()
+                                    Text("Your Dungeon Master will begin from this moment. After that, every choice is yours to write.").font(.subheadline).foregroundStyle(.secondary)
+                                    Button("Begin adventure") { model.send(opening: true) }.buttonStyle(.borderedProminent).disabled(model.isResolving)
+                                }
                             }
                             ForEach(state.transcript) { message in
                                 VStack(alignment: .leading, spacing: 10) {
