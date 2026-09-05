@@ -110,9 +110,24 @@ public struct RulesPackDescriptor: Identifiable, Codable, Hashable, Sendable {
     public var mechanicFamily: String
     public var standardCheck: DiceSpecification
     public var actionVerbs: [String]
+    public var license: RulesPackLicense?
 
-    public init(id: RulesPackID, version: String, displayName: String, mechanicFamily: String, standardCheck: DiceSpecification, actionVerbs: [String]) {
-        self.id = id; self.version = version; self.displayName = displayName; self.mechanicFamily = mechanicFamily; self.standardCheck = standardCheck; self.actionVerbs = actionVerbs
+    public init(id: RulesPackID, version: String, displayName: String, mechanicFamily: String, standardCheck: DiceSpecification, actionVerbs: [String], license: RulesPackLicense? = nil) {
+        self.id = id; self.version = version; self.displayName = displayName; self.mechanicFamily = mechanicFamily; self.standardCheck = standardCheck; self.actionVerbs = actionVerbs; self.license = license
+    }
+}
+
+/// A visible provenance contract for any pack that contains third-party rules.
+/// It travels with the pack instead of being buried in a release note.
+public struct RulesPackLicense: Codable, Hashable, Sendable {
+    public let sourceName: String
+    public let sourceVersion: String
+    public let licenseName: String
+    public let sourceURL: URL
+    public let attribution: String
+
+    public init(sourceName: String, sourceVersion: String, licenseName: String, sourceURL: URL, attribution: String) {
+        self.sourceName = sourceName; self.sourceVersion = sourceVersion; self.licenseName = licenseName; self.sourceURL = sourceURL; self.attribution = attribution
     }
 }
 

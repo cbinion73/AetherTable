@@ -75,6 +75,14 @@ import Testing
     #expect(campaign.world.sceneProgress[LanternBelowSceneOne.id] == .completed)
 }
 
+@Test func officialSRDReferenceIsSeparateAndCarriesAttribution() {
+    let srd = SRD521RulesPack.descriptor
+    #expect(!BuiltInRulesPacks.all.map(\.descriptor.id).contains(srd.id))
+    #expect(srd.license?.sourceVersion == "5.2.1")
+    #expect(srd.license?.licenseName == "Creative Commons Attribution 4.0 International")
+    #expect(srd.license?.attribution.contains("Wizards of the Coast") == true)
+}
+
 @Test func diceStayWithinBounds() throws {
     let roll = try DiceEngine.roll(DiceExpression(count: 3, sides: 6, modifier: 0), seed: 9)
     #expect(roll.values.allSatisfy { (1...6).contains($0) })

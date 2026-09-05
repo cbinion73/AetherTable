@@ -41,6 +41,8 @@ The product decision record and gate-based delivery plan: [Docs/PRD.md](Docs/PRD
 
 The owned starter adventure and its small rules reference: [Docs/ReferenceCampaign.md](Docs/ReferenceCampaign.md).
 
+Official SRD rules are isolated in a separate attribution-bearing package; current scope and license boundary: [Docs/RulesPacks/SRD-5.2.1.md](Docs/RulesPacks/SRD-5.2.1.md).
+
 ## Open in Xcode 27
 
 ```sh
