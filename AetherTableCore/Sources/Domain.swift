@@ -21,6 +21,7 @@ public struct CampaignEvent: Identifiable, Codable, Hashable, Sendable {
     public enum Kind: String, Codable, Sendable {
         case campaignCreated, characterCreated, sceneEntered, sceneStatusChanged, intentProposed, actionResolved, worldFactSet
         case resourceChanged, conditionChanged, relationshipChanged, threatChanged, questUpdated, choiceCommitted, noteAdded
+        case encounterStarted, combatantJoined, turnStarted, combatantDamaged, combatantConditionChanged, encounterEnded
     }
 
     public init(id: UUID = UUID(), campaignID: CampaignID, createdAt: Date = .now, kind: Kind, payload: [String: String]) {
@@ -49,6 +50,7 @@ public struct WorldState: Codable, Hashable, Sendable {
     public var sceneProgress: [String: SceneStatus]
     public var threatClock: ThreatClock
     public var player: CharacterSheet?
+    public var encounter: EncounterState?
 
     public init(
         locationID: String = "emberwake.square",
@@ -57,9 +59,10 @@ public struct WorldState: Codable, Hashable, Sendable {
         relationships: [String: Int] = ["npc.sera": 0, "npc.oren": 0, "npc.nym": 0],
         sceneProgress: [String: SceneStatus] = [:],
         threatClock: ThreatClock = .init(current: 0, maximum: 4),
-        player: CharacterSheet? = nil
+        player: CharacterSheet? = nil,
+        encounter: EncounterState? = nil
     ) {
-        self.locationID = locationID; self.quest = quest; self.facts = facts; self.relationships = relationships; self.sceneProgress = sceneProgress; self.threatClock = threatClock; self.player = player
+        self.locationID = locationID; self.quest = quest; self.facts = facts; self.relationships = relationships; self.sceneProgress = sceneProgress; self.threatClock = threatClock; self.player = player; self.encounter = encounter
     }
 }
 
@@ -76,6 +79,41 @@ public struct ThreatClock: Codable, Hashable, Sendable {
     public var current: Int
     public var maximum: Int
     public init(current: Int, maximum: Int) { self.current = current; self.maximum = maximum }
+}
+
+/// Pack-neutral, persisted encounter state. Rules packs provide the specific
+/// turn and damage adapters; the platform owns the durable shared record.
+public struct EncounterState: Codable, Hashable, Sendable, Identifiable {
+    public enum Status: String, Codable, Sendable { case active, ended }
+
+    public let id: String
+    public var title: String
+    public var round: Int
+    public var activeCombatantID: String?
+    public var combatants: [EncounterCombatant]
+    public var status: Status
+
+    public init(id: String, title: String, round: Int = 0, activeCombatantID: String? = nil, combatants: [EncounterCombatant] = [], status: Status = .active) {
+        self.id = id; self.title = title; self.round = round; self.activeCombatantID = activeCombatantID; self.combatants = combatants; self.status = status
+    }
+}
+
+public struct EncounterCombatant: Codable, Hashable, Sendable, Identifiable {
+    public enum Team: String, Codable, Sendable { case player, ally, enemy }
+
+    public let id: String
+    public var name: String
+    public var team: Team
+    public var initiative: Int
+    public var maximumHitPoints: Int
+    public var hitPoints: Int
+    public var armorClass: Int
+    public var conditions: Set<String>
+
+    public init(id: String, name: String, team: Team, initiative: Int, maximumHitPoints: Int, hitPoints: Int? = nil, armorClass: Int, conditions: Set<String> = []) {
+        self.id = id; self.name = name; self.team = team; self.initiative = initiative
+        self.maximumHitPoints = maximumHitPoints; self.hitPoints = hitPoints ?? maximumHitPoints; self.armorClass = armorClass; self.conditions = conditions
+    }
 }
 
 public enum CharacterTrait: String, CaseIterable, Codable, Hashable, Sendable { case might, wits, presence }

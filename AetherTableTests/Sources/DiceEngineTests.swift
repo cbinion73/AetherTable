@@ -101,6 +101,34 @@ import Testing
     #expect(catalog.search("", limit: 8).isEmpty)
 }
 
+@Test func srdEncounterPersistsCriticalAttackDamageAndTurnOrder() throws {
+    var campaign = CampaignState(title: "Test Encounter", rulesPackID: "srd-5.2.1")
+    let hero = EncounterCombatant(id: "hero", name: "Arden", team: .player, initiative: 14, maximumHitPoints: 12, armorClass: 15)
+    let shade = EncounterCombatant(id: "shade", name: "River Shade", team: .enemy, initiative: 9, maximumHitPoints: 20, armorClass: 12)
+    for event in SRD521EncounterEngine.startEvents(campaignID: campaign.id, encounterID: "emberwake.river-shade", title: "Dark Beneath the Bridge", combatants: [hero, shade]) {
+        try campaign.apply(event)
+    }
+    guard let encounter = campaign.world.encounter else { Issue.record("Expected persisted encounter"); return }
+    #expect(encounter.activeCombatantID == "hero")
+    #expect(encounter.round == 1)
+
+    let resolution = try SRD521EncounterEngine.resolveAttack(
+        campaignID: campaign.id,
+        in: encounter,
+        request: .init(attackerID: "hero", targetID: "shade", ability: .strength, abilityScore: 16, proficiencyBonus: 2, isProficient: true, damage: .init(count: 1, sides: 8, modifier: 3)),
+        attackDice: [20],
+        damageDice: [4, 6]
+    )
+    #expect(resolution.attack.outcome == .criticalHit)
+    #expect(resolution.damage == 13)
+    for event in resolution.events { try campaign.apply(event) }
+    #expect(campaign.world.encounter?.combatants.first(where: { $0.id == "shade" })?.hitPoints == 7)
+
+    let next = try SRD521EncounterEngine.nextTurnEvent(campaignID: campaign.id, encounter: campaign.world.encounter!)
+    try campaign.apply(next)
+    #expect(campaign.world.encounter?.activeCombatantID == "shade")
+}
+
 @Test func diceStayWithinBounds() throws {
     let roll = try DiceEngine.roll(DiceExpression(count: 3, sides: 6, modifier: 0), seed: 9)
     #expect(roll.values.allSatisfy { (1...6).contains($0) })

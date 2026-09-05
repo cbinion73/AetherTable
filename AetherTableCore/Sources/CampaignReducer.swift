@@ -43,6 +43,22 @@ public enum CampaignReducer {
             campaign.world.quest.objective = try required("objective", in: event)
         case .choiceCommitted:
             campaign.world.facts[try required("key", in: event)] = try required("value", in: event)
+        case .encounterStarted:
+            guard campaign.world.encounter == nil || campaign.world.encounter?.status == .ended else { throw CampaignReducerError.encounterAlreadyActive }
+            campaign.world.encounter = .init(id: try required("encounterID", in: event), title: try required("title", in: event))
+        case .combatantJoined:
+            try addCombatant(from: event, in: &campaign)
+        case .turnStarted:
+            try startTurn(from: event, in: &campaign)
+        case .combatantDamaged:
+            try damageCombatant(from: event, in: &campaign)
+        case .combatantConditionChanged:
+            try changeCombatantCondition(from: event, in: &campaign)
+        case .encounterEnded:
+            guard var encounter = campaign.world.encounter else { throw CampaignReducerError.missingEncounter }
+            encounter.status = .ended
+            encounter.activeCombatantID = nil
+            campaign.world.encounter = encounter
         }
 
         campaign.events.append(event)
@@ -84,6 +100,53 @@ public enum CampaignReducer {
         campaign.world.player = player
     }
 
+    private static func addCombatant(from event: CampaignEvent, in campaign: inout CampaignState) throws {
+        guard var encounter = campaign.world.encounter, encounter.status == .active else { throw CampaignReducerError.missingEncounter }
+        let id = try required("combatantID", in: event)
+        guard !encounter.combatants.contains(where: { $0.id == id }) else { throw CampaignReducerError.duplicateCombatant }
+        guard let team = EncounterCombatant.Team(rawValue: try required("team", in: event)) else { throw CampaignReducerError.malformedPayload("team") }
+        let maximumHitPoints = try integer("maximumHitPoints", in: event)
+        let armorClass = try integer("armorClass", in: event)
+        guard maximumHitPoints > 0, armorClass > 0 else { throw CampaignReducerError.malformedPayload("combatant statistics") }
+        encounter.combatants.append(.init(id: id, name: try required("name", in: event), team: team, initiative: try integer("initiative", in: event), maximumHitPoints: maximumHitPoints, armorClass: armorClass))
+        encounter.combatants.sort { $0.initiative == $1.initiative ? $0.id < $1.id : $0.initiative > $1.initiative }
+        campaign.world.encounter = encounter
+    }
+
+    private static func startTurn(from event: CampaignEvent, in campaign: inout CampaignState) throws {
+        guard var encounter = campaign.world.encounter, encounter.status == .active else { throw CampaignReducerError.missingEncounter }
+        let combatantID = try required("combatantID", in: event)
+        guard encounter.combatants.contains(where: { $0.id == combatantID }) else { throw CampaignReducerError.missingCombatant }
+        let round = try integer("round", in: event)
+        guard round > 0 else { throw CampaignReducerError.malformedPayload("round") }
+        encounter.round = round
+        encounter.activeCombatantID = combatantID
+        campaign.world.encounter = encounter
+    }
+
+    private static func damageCombatant(from event: CampaignEvent, in campaign: inout CampaignState) throws {
+        guard var encounter = campaign.world.encounter, encounter.status == .active else { throw CampaignReducerError.missingEncounter }
+        let combatantID = try required("combatantID", in: event)
+        let damage = try integer("damage", in: event)
+        guard damage >= 0, let index = encounter.combatants.firstIndex(where: { $0.id == combatantID }) else { throw CampaignReducerError.missingCombatant }
+        encounter.combatants[index].hitPoints = max(0, encounter.combatants[index].hitPoints - damage)
+        if encounter.combatants[index].hitPoints == 0 { encounter.combatants[index].conditions.insert("defeated") }
+        campaign.world.encounter = encounter
+    }
+
+    private static func changeCombatantCondition(from event: CampaignEvent, in campaign: inout CampaignState) throws {
+        guard var encounter = campaign.world.encounter else { throw CampaignReducerError.missingEncounter }
+        let combatantID = try required("combatantID", in: event)
+        guard let index = encounter.combatants.firstIndex(where: { $0.id == combatantID }) else { throw CampaignReducerError.missingCombatant }
+        let condition = try required("condition", in: event)
+        switch try required("operation", in: event) {
+        case "add": encounter.combatants[index].conditions.insert(condition)
+        case "remove": encounter.combatants[index].conditions.remove(condition)
+        default: throw CampaignReducerError.malformedPayload("operation")
+        }
+        campaign.world.encounter = encounter
+    }
+
     private static func required(_ key: String, in event: CampaignEvent) throws -> String {
         guard let value = event.payload[key], !value.isEmpty else { throw CampaignReducerError.malformedPayload(key) }
         return value
@@ -97,5 +160,6 @@ public enum CampaignReducer {
 
 public enum CampaignReducerError: Error, Equatable, Sendable {
     case wrongCampaign, characterAlreadyExists, missingCharacter, invalidTrait, invalidCondition, unknownResource
+    case encounterAlreadyActive, missingEncounter, duplicateCombatant, missingCombatant
     case malformedPayload(String)
 }

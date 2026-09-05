@@ -34,6 +34,7 @@
 		86A1CE84D0FB3C5D339F3449 /* RuleCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D547FE55DD0B90D553D5CD /* RuleCatalog.swift */; };
 		8E6BABDB28FEB181DBF01CCF /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		94455743C360D96AA9EF6268 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; };
+		9A1D6197AFB187FBE73CC7C2 /* SRD521EncounterEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4827EE83EE5BA4D0010FF0 /* SRD521EncounterEngine.swift */; };
 		9BCAA510D6DD3833F10DAD4C /* CampaignReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3739AFFC1CC9EBCE52DD7A5B /* CampaignReducer.swift */; };
 		9F26C2348B609BE067E6165A /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		A32CE61B760AB46F4C9FB85C /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
@@ -240,6 +241,7 @@
 		0C364377810AC3E817264E01 /* SRD521CoreMechanics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRD521CoreMechanics.swift; sourceTree = "<group>"; };
 		184F6C6CEDB51EAE72C4C165 /* AIGM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIGM.swift; sourceTree = "<group>"; };
 		25EDB530CEDC843874C6558F /* AetherTableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AetherTableApp.swift; sourceTree = "<group>"; };
+		2C4827EE83EE5BA4D0010FF0 /* SRD521EncounterEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRD521EncounterEngine.swift; sourceTree = "<group>"; };
 		36D547FE55DD0B90D553D5CD /* RuleCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleCatalog.swift; sourceTree = "<group>"; };
 		3739AFFC1CC9EBCE52DD7A5B /* CampaignReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignReducer.swift; sourceTree = "<group>"; };
 		38FEA55027F02101F9035B23 /* AetherTableCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AetherTableCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -434,6 +436,7 @@
 				36D547FE55DD0B90D553D5CD /* RuleCatalog.swift */,
 				9C44DB3695D5584B8139C380 /* RulesPacks.swift */,
 				0C364377810AC3E817264E01 /* SRD521CoreMechanics.swift */,
+				2C4827EE83EE5BA4D0010FF0 /* SRD521EncounterEngine.swift */,
 				08DC82BCD9BA5EE0D286D19E /* SRD521RulesPack.swift */,
 			);
 			name = Sources;
@@ -748,6 +751,7 @@
 				86A1CE84D0FB3C5D339F3449 /* RuleCatalog.swift in Sources */,
 				C145D936E07CD5461778552E /* RulesPacks.swift in Sources */,
 				0C71F5A00197E38CB426F166 /* SRD521CoreMechanics.swift in Sources */,
+				9A1D6197AFB187FBE73CC7C2 /* SRD521EncounterEngine.swift in Sources */,
 				C327F443AE706F3AB00787BF /* SRD521RulesPack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
