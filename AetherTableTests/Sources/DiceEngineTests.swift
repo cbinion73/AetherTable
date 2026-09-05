@@ -154,6 +154,34 @@ import Testing
     #expect(campaign.world.encounter?.combatants.first(where: { $0.id == LanternBelowEncounter.playerID })?.hitPoints == 3)
 }
 
+@Test func starterEncounterVictoryRewardsClueAndAdvancesTheStory() throws {
+    var campaign = CampaignState(title: "Victory", rulesPackID: "srd-5.2.1")
+    campaign.world.encounter = .init(id: "emberwake.river-shade", title: "Dark Beneath the Bridge", combatants: [
+        .init(id: LanternBelowEncounter.playerID, name: "Arden", team: .player, initiative: 14, maximumHitPoints: 12, armorClass: 16),
+        .init(id: LanternBelowEncounter.riverShadeID, name: "River Shade", team: .enemy, initiative: 9, maximumHitPoints: 20, hitPoints: 0, armorClass: 12, conditions: ["defeated"])
+    ])
+    guard let result = LanternBelowEncounter.completionEvents(campaignID: campaign.id, encounter: campaign.world.encounter!) else { Issue.record("Expected victory completion"); return }
+    for event in result.events { try campaign.apply(event) }
+    #expect(campaign.world.encounter?.status == .ended)
+    #expect(campaign.world.facts["reward.brassTideKey"] == "claimed")
+    #expect(campaign.world.quest.stage == "archive")
+    #expect(campaign.world.locationID == "emberwake.flooded-archive")
+}
+
+@Test func starterEncounterDefeatReturnsToStoryInsteadOfSoftlocking() throws {
+    var campaign = CampaignState(title: "Defeat", rulesPackID: "srd-5.2.1")
+    campaign.world.encounter = .init(id: "emberwake.river-shade", title: "Dark Beneath the Bridge", combatants: [
+        .init(id: LanternBelowEncounter.playerID, name: "Arden", team: .player, initiative: 14, maximumHitPoints: 12, hitPoints: 0, armorClass: 16, conditions: ["defeated"]),
+        .init(id: LanternBelowEncounter.riverShadeID, name: "River Shade", team: .enemy, initiative: 9, maximumHitPoints: 20, armorClass: 12)
+    ])
+    guard let result = LanternBelowEncounter.completionEvents(campaignID: campaign.id, encounter: campaign.world.encounter!) else { Issue.record("Expected defeat completion"); return }
+    for event in result.events { try campaign.apply(event) }
+    #expect(campaign.world.encounter?.status == .ended)
+    #expect(campaign.world.threatClock.current == 1)
+    #expect(campaign.world.quest.stage == "recover")
+    #expect(campaign.world.locationID == "emberwake.lantern-shelter")
+}
+
 @Test func diceStayWithinBounds() throws {
     let roll = try DiceEngine.roll(DiceExpression(count: 3, sides: 6, modifier: 0), seed: 9)
     #expect(roll.values.allSatisfy { (1...6).contains($0) })

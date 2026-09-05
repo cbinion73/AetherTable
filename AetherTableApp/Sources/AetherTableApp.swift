@@ -137,14 +137,15 @@ final class CampaignViewModel {
             let seed = UInt64.random(in: .min ... .max)
             let resolution = try SRD521EncounterEngine.resolveAttack(campaignID: campaign.id, in: encounter, request: request, seed: seed)
             for event in resolution.events { try campaign.apply(event) }
-            if let next = try? SRD521EncounterEngine.nextTurnEvent(campaignID: campaign.id, encounter: campaign.world.encounter!) { try campaign.apply(next) }
+            let completion = try applyEncounterCompletion(to: &campaign)
+            if completion == nil, let next = try? SRD521EncounterEngine.nextTurnEvent(campaignID: campaign.id, encounter: campaign.world.encounter!) { try campaign.apply(next) }
             self.campaign = campaign
             recap = campaign.recap
             let targetHP = campaign.world.encounter?.combatants.first(where: { $0.id == "river-shade" })?.hitPoints ?? 0
-            srdSummary = "Attack " + resolution.attack.outcome.rawValue + " • " + String(resolution.damage) + " damage • River Shade: " + String(targetHP) + " HP • audit seed " + String(seed)
+            srdSummary = completion?.narration ?? ("Attack " + resolution.attack.outcome.rawValue + " • " + String(resolution.damage) + " damage • River Shade: " + String(targetHP) + " HP • audit seed " + String(seed))
             canResolveSRDAttack = false
-            canResolveRiverShadeTurn = campaign.world.encounter?.activeCombatantID == LanternBelowEncounter.riverShadeID
-            statusText = "Your attack is recorded. Enemy turns are the next encounter milestone."
+            canResolveRiverShadeTurn = completion == nil && campaign.world.encounter?.activeCombatantID == LanternBelowEncounter.riverShadeID
+            statusText = completion == nil ? "Your attack is recorded. The River Shade acts next." : "Encounter complete. " + campaign.world.quest.objective
             try await store.save(campaign)
         } catch {
             statusText = "The SRD engine rejected that attack: " + error.localizedDescription
@@ -159,17 +160,24 @@ final class CampaignViewModel {
             let seed = UInt64.random(in: .min ... .max)
             let resolution = try SRD521EncounterEngine.resolveAttack(campaignID: campaign.id, in: encounter, request: LanternBelowEncounter.riverShadeAttack(), seed: seed)
             for event in resolution.events { try campaign.apply(event) }
-            if let next = try? SRD521EncounterEngine.nextTurnEvent(campaignID: campaign.id, encounter: campaign.world.encounter!) { try campaign.apply(next) }
+            let completion = try applyEncounterCompletion(to: &campaign)
+            if completion == nil, let next = try? SRD521EncounterEngine.nextTurnEvent(campaignID: campaign.id, encounter: campaign.world.encounter!) { try campaign.apply(next) }
             self.campaign = campaign
             recap = campaign.recap
             let playerHP = campaign.world.encounter?.combatants.first(where: { $0.id == LanternBelowEncounter.playerID })?.hitPoints ?? 0
-            srdSummary = "River Shade: " + resolution.attack.outcome.rawValue + " • " + String(resolution.damage) + " damage • " + LanternBelowEncounter.playerID + " HP: " + String(playerHP) + " • audit seed " + String(seed)
+            srdSummary = completion?.narration ?? ("River Shade: " + resolution.attack.outcome.rawValue + " • " + String(resolution.damage) + " damage • " + LanternBelowEncounter.playerID + " HP: " + String(playerHP) + " • audit seed " + String(seed))
             canResolveRiverShadeTurn = false
-            canResolveSRDAttack = campaign.world.encounter?.activeCombatantID == LanternBelowEncounter.playerID && playerHP > 0
-            statusText = playerHP > 0 ? "The River Shade’s turn is recorded. Your turn." : "Your guardian is defeated."
+            canResolveSRDAttack = completion == nil && campaign.world.encounter?.activeCombatantID == LanternBelowEncounter.playerID && playerHP > 0
+            statusText = completion == nil ? "The River Shade’s turn is recorded. Your turn." : "Encounter complete. " + campaign.world.quest.objective
             try await store.save(campaign)
         } catch {
             statusText = "The SRD engine rejected the River Shade’s turn: " + error.localizedDescription
         }
+    }
+
+    private func applyEncounterCompletion(to campaign: inout CampaignState) throws -> LanternBelowEncounter.Completion? {
+        guard let encounter = campaign.world.encounter, let result = LanternBelowEncounter.completionEvents(campaignID: campaign.id, encounter: encounter) else { return nil }
+        for event in result.events { try campaign.apply(event) }
+        return result.completion
     }
 }
