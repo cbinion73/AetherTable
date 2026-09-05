@@ -63,6 +63,22 @@ import Testing
     #expect(reopened.returnRecap == nil)
 }
 
+@MainActor @Test func selectingAnotherCurrentCampaignClearsAStaleReturnPrompt() async throws {
+    let store = InMemoryCampaignStore(), model = CampaignViewModel(store: store)
+    await model.start()
+    #expect(await model.createAdventure(name: "Old", characterClass: .fighter))
+    var oldCampaign = try #require(model.campaign), oldWorld = try OpenWorldAdventure.from(oldCampaign)
+    oldWorld.lastPlayedAt = Date.now.addingTimeInterval(-86_401)
+    oldCampaign.world.packState[OpenWorldAdventure.key] = String(decoding: try JSONEncoder().encode(oldWorld), as: UTF8.self)
+    try await store.save(oldCampaign)
+    #expect(await model.createAdventure(name: "Current", characterClass: .rogue))
+    let currentCampaign = try #require(model.campaign)
+    model.select(oldCampaign)
+    #expect(model.returnRecap != nil)
+    model.select(currentCampaign)
+    #expect(model.returnRecap == nil && !model.isShowingReturnRecap)
+}
+
 @MainActor @Test func libraryRejectsMalformedEmbeddedAdventureWithoutChangingSavedData() async throws {
     let store = InMemoryCampaignStore()
     var corrupt = CampaignState(title: "Damaged", rulesPackID: SRD521RulesPack.descriptor.id)

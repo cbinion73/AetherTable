@@ -54,7 +54,7 @@ final class CampaignViewModel {
         guard !isResolving else { return }
         do { _ = try OpenWorldAdventure.from(state) }
         catch { self.error = "This adventure could not be read. Its saved file has been preserved. \(error.localizedDescription)"; return }
-        narrationTask?.cancel(); campaign = state; draft = UserDefaults.standard.string(forKey: "AetherTable.draft.\(state.id.rawValue.uuidString)") ?? ""; pending = nil; aiNarration = nil; aiStatus = "Apple Intelligence Dungeon Master"
+        narrationTask?.cancel(); campaign = state; draft = UserDefaults.standard.string(forKey: "AetherTable.draft.\(state.id.rawValue.uuidString)") ?? ""; pending = nil; aiNarration = nil; aiStatus = "Apple Intelligence Dungeon Master"; returnRecap = nil; isShowingReturnRecap = false
         if let adventure, Date.now.timeIntervalSince(adventure.lastPlayedAt) > 86_400 { returnRecap = adventure.returnRecap; isShowingReturnRecap = false }
     }
     func leave() { guard !isResolving else { return }; narrationTask?.cancel(); campaign = nil; draft = ""; pending = nil; aiNarration = nil; returnRecap = nil; isShowingReturnRecap = false }
