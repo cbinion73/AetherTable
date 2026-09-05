@@ -186,15 +186,16 @@ public struct AppleDungeonMaster: DungeonMaster {
         var lastFailure: Error = OpenWorldError.invalidPlan("The GM could not produce a valid response.")
         for attempt in 0...2 {
         let instructions = """
-        You are the Dungeon Master in a live, open-world fantasy roleplaying conversation. Write only the next moment, 2 short paragraphs, about 100 words. Follow the player's actual intent, including detours and creative solutions. Answer their questions through NPC dialogue; an NPC can lie, bargain or evade, but respond to what was asked.
+        You are the Dungeon Master in a live, open-world fantasy roleplaying conversation. Write only the next moment, usually one or two short paragraphs (a brief, natural exchange is welcome). Follow the player's actual intent, including detours and creative solutions. Answer their questions through NPC dialogue; an NPC can lie, bargain or evade, but respond to what was asked.
         Use vivid, concrete sensory details and NPCs with personal motives. Speak in scene, never as an assistant. Use an external camera: begin with a place, object, weather detail, or NPC, not the hero. Outside quoted NPC dialogue, never name, describe, or act for the hero at all. You control only surroundings and NPCs; never write the hero's dialogue, thoughts, or next action. End before the player's next decision. No suggestions, options, lists, coaching or 'What do you do?'.
         The transcript is a scene already in progress. Every reply must add an observable new response, discovery, complication, or changed situation caused by this player turn. Never restage, paraphrase, or reintroduce an earlier NPC, line of dialogue, or establishing description as though it is new.
         The story has full human range. Let NPCs respond naturally to humor, tenderness, flirtation and romance, honor, courage, faith, grief, fear, despair, and moral conflict. Do not redirect a sincere, funny, vulnerable, or difficult player moment into generic quest-giving. NPCs keep agency, motives, consent, and the ability to disagree.
+        Default to clear, ordinary conversation. When a player asks a plain question and an NPC knows the answer, let that NPC answer plainly and specifically. Let people banter, joke, disagree, reminisce, celebrate, flirt, or simply be helpful. Reserve riddles, evasions, ominous hints, and cryptic speech for NPCs or circumstances that have actually earned them; mystery is a seasoning, not every conversation's flavor.
         The engine record below is binding: preserve its success or failure and resource effects. Do not award extra actions, items or recovery on the player's behalf. World facts and prior conversation are canon. The player can travel anywhere; Emberwake is a beginning, not a mandatory plot.
         The immutable creation backstory is the only authority for the hero's pre-adventure family, upbringing, contacts and education. Never confirm a newly invented origin because the player asserts it. Portray that assertion as an in-world claim or lie. Never add it as true history. Actual relationships earned during saved play are valid. Backstory can affect NPC reactions and plausible approaches, not override the engine's abilities or results.
         Example of the correct stopping point:
-        Player: I ask the ferryman why his boat is chained up.
-        GM: Tar drips from a fresh patch in the hull. The ferryman keeps winding the same length of rope around his fist. "Something underneath knocked three times," he says. "In my daughter's voice. She's been dead eleven years."
+        Player: I ask the baker whether the festival bread is any good.
+        GM: Cinnamon and orange peel warm the little shop. The baker laughs. "Best batch of the year—though Captain Elian bought six loaves before breakfast, so do not tell him I saved the honey buns for noon."
         That is the entire reply. The player chooses how to react. Use this format, not these characters or events.
         """
         let correction = attempt == 0 ? "" : "\nYour prior response was rejected: \(lastFailure.localizedDescription). Start with an NPC or environmental detail. Keep the hero entirely out of narration except as the listener inside an NPC quote; preserve the same engine outcome."
@@ -210,7 +211,9 @@ public struct AppleDungeonMaster: DungeonMaster {
             let worldOnly = AdventureTurn.worldOnlyPrefix(prose, heroName: resolution.adventure.hero.name, playerText: playerText)
             var story = WorldStory(prose: AdventureTurn.removingRepeatedOpening(worldOnly, transcript: resolution.adventure.transcript), location: resolution.adventure.location, memories: [])
         do {
-            guard story.prose.count >= 80 else { throw OpenWorldError.invalidPlan("The GM did not leave enough of a world-only scene. Retrying preserves your intent.") }
+            // A good conversation can be a single direct NPC reply. Only reject an
+            // effectively empty fragment after enforcing the player-agency boundary.
+            guard story.prose.count >= 20 else { throw OpenWorldError.invalidPlan("The GM did not leave enough of a world-only scene. Retrying preserves your intent.") }
             guard !resolution.adventure.transcript.contains(where: { $0.role == "gm" && $0.text == story.prose }) else { throw OpenWorldError.invalidPlan("The GM repeated a prior scene instead of answering this turn.") }
             _ = try AdventureTurn.finish(playerText: playerText, resolution: resolution, story: story)
             let archivist = LanguageModelSession(model: model, instructions: """

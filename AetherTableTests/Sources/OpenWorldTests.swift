@@ -44,6 +44,12 @@ import Testing
     let kept = AdventureTurn.worldOnlyPrefix("The bakery bell shivers in its frame. Rowan steps through the door and asks for bread.", heroName: "Rowan")
     #expect(kept == "The bakery bell shivers in its frame.")
 }
+@Test func aBriefDirectNPCReplyIsAValidStoryTurn() throws {
+    let state = OpenWorldAdventure(hero: .preset(.cleric, name: "Liora"))
+    let resolution = try OpenWorldEngine.resolve(.init(), in: state, seed: 1)
+    let updated = try AdventureTurn.finish(playerText: "Is the bread fresh?", resolution: resolution, story: .init(prose: "The baker nods. \"Fresh this morning.\"", location: "Bakery", memories: []))
+    #expect(updated.transcript.last?.text == "The baker nods. \"Fresh this morning.\"")
+}
 @Test func magicMissileSpendsSlotAndAlwaysDoesThreeDarts() throws {
     let state = OpenWorldAdventure(hero: .preset(.wizard, name: "W"))
     let plan = WorldActionPlan(kind: "spell", tool: "magic missile", target: "Shade", targetHitPoints: 60)
