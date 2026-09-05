@@ -129,6 +129,19 @@ import Testing
     #expect(campaign.world.encounter?.activeCombatantID == "shade")
 }
 
+@Test func levelOneSrdCharacterProfilePersistsAndBuildsAWeaponAttack() throws {
+    var campaign = CampaignState(title: "Character", rulesPackID: "srd-5.2.1")
+    let profile = try SRD521QuickstartCharacter.guardian(name: "Mara")
+    try campaign.apply(profile.stateEvent(campaignID: campaign.id))
+    let restored = try SRD521CharacterProfile.from(campaign: campaign)
+    #expect(restored.name == "Mara")
+    #expect(restored.level == 1)
+    #expect(restored.proficiencyBonus == 2)
+    let attack = try restored.attackRequest(attackID: "longsword", targetID: "shade")
+    #expect(attack.abilityScore == 16)
+    #expect(attack.damage == .init(count: 1, sides: 8, modifier: 3))
+}
+
 @Test func diceStayWithinBounds() throws {
     let roll = try DiceEngine.roll(DiceExpression(count: 3, sides: 6, modifier: 0), seed: 9)
     #expect(roll.values.allSatisfy { (1...6).contains($0) })

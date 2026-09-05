@@ -77,6 +77,26 @@ public enum SRD521EncounterEngine {
         return .init(attack: attack, damage: damage, damageDice: damageDice, events: [action, damageEvent])
     }
 
+    /// The phone-facing entry point: one seed deterministically produces both
+    /// the attack roll and any resulting damage roll for an auditable event log.
+    public static func resolveAttack(campaignID: CampaignID, in encounter: EncounterState, request: SRD521AttackRequest, seed: UInt64) throws -> SRD521AttackResolution {
+        let attackCount = request.rollMode == .normal ? 1 : 2
+        let attackDice = try DiceEngine.roll(.init(count: attackCount, sides: 20), seed: seed).values
+        guard let target = encounter.combatants.first(where: { $0.id == request.targetID }) else { throw SRD521EncounterError.missingTarget }
+        let test = try SRD521CoreMechanics.resolve(
+            request: .init(kind: .attackRoll, ability: request.ability, abilityScore: request.abilityScore, proficiencyBonus: request.proficiencyBonus, isProficient: request.isProficient, target: target.armorClass, rollMode: request.rollMode),
+            dice: attackDice
+        )
+        let damageCount = test.outcome == .criticalHit ? request.damage.count * 2 : request.damage.count
+        let damageDice: [Int]
+        if test.outcome == .success || test.outcome == .criticalHit {
+            damageDice = try DiceEngine.roll(.init(count: damageCount, sides: request.damage.sides), seed: seed &+ 1).values
+        } else {
+            damageDice = []
+        }
+        return try resolveAttack(campaignID: campaignID, in: encounter, request: request, attackDice: attackDice, damageDice: damageDice)
+    }
+
     public static func nextTurnEvent(campaignID: CampaignID, encounter: EncounterState) throws -> CampaignEvent {
         guard encounter.status == .active, let activeID = encounter.activeCombatantID, let activeIndex = encounter.combatants.firstIndex(where: { $0.id == activeID }) else { throw SRD521EncounterError.missingEncounter }
         let living = encounter.combatants.filter { $0.hitPoints > 0 }

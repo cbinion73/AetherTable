@@ -59,6 +59,8 @@ public enum CampaignReducer {
             encounter.status = .ended
             encounter.activeCombatantID = nil
             campaign.world.encounter = encounter
+        case .packStateSet:
+            campaign.world.packState[try required("key", in: event)] = try required("value", in: event)
         }
 
         campaign.events.append(event)

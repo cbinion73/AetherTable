@@ -21,7 +21,7 @@ public struct CampaignEvent: Identifiable, Codable, Hashable, Sendable {
     public enum Kind: String, Codable, Sendable {
         case campaignCreated, characterCreated, sceneEntered, sceneStatusChanged, intentProposed, actionResolved, worldFactSet
         case resourceChanged, conditionChanged, relationshipChanged, threatChanged, questUpdated, choiceCommitted, noteAdded
-        case encounterStarted, combatantJoined, turnStarted, combatantDamaged, combatantConditionChanged, encounterEnded
+        case encounterStarted, combatantJoined, turnStarted, combatantDamaged, combatantConditionChanged, encounterEnded, packStateSet
     }
 
     public init(id: UUID = UUID(), campaignID: CampaignID, createdAt: Date = .now, kind: Kind, payload: [String: String]) {
@@ -51,6 +51,9 @@ public struct WorldState: Codable, Hashable, Sendable {
     public var threatClock: ThreatClock
     public var player: CharacterSheet?
     public var encounter: EncounterState?
+    /// Pack-owned, versioned payloads. The platform persists this opaque data;
+    /// only the matching rules adapter may interpret it.
+    public var packState: [String: String]
 
     public init(
         locationID: String = "emberwake.square",
@@ -60,9 +63,10 @@ public struct WorldState: Codable, Hashable, Sendable {
         sceneProgress: [String: SceneStatus] = [:],
         threatClock: ThreatClock = .init(current: 0, maximum: 4),
         player: CharacterSheet? = nil,
-        encounter: EncounterState? = nil
+        encounter: EncounterState? = nil,
+        packState: [String: String] = [:]
     ) {
-        self.locationID = locationID; self.quest = quest; self.facts = facts; self.relationships = relationships; self.sceneProgress = sceneProgress; self.threatClock = threatClock; self.player = player; self.encounter = encounter
+        self.locationID = locationID; self.quest = quest; self.facts = facts; self.relationships = relationships; self.sceneProgress = sceneProgress; self.threatClock = threatClock; self.player = player; self.encounter = encounter; self.packState = packState
     }
 }
 

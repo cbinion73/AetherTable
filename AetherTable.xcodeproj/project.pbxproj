@@ -41,6 +41,7 @@
 		A98BE176FA355D41DB4743A6 /* Multiplayer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D6DC8478EAC3C46C0C5E7670 /* Multiplayer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AC7C74DC8E8B9CDD601D2EA0 /* DiceEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		AD900BD5B14CE7D0A5421969 /* DiceEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B227A6A86F72535A61C3C55F /* SRD521CharacterProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE3BDA5CD22D3FA51A8101A /* SRD521CharacterProfile.swift */; };
 		B387F7B75C80B398B2841881 /* DiceEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A877D0B22B698F5E367C32BB /* DiceEngine.framework */; };
 		B6DC10EEA1A187A1E11729D3 /* CampaignStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC553D23E52A4774FEAA4D6 /* CampaignStore.swift */; };
 		C0B6BE2B75C309ADDC949459 /* RulesEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; };
@@ -245,6 +246,7 @@
 		36D547FE55DD0B90D553D5CD /* RuleCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleCatalog.swift; sourceTree = "<group>"; };
 		3739AFFC1CC9EBCE52DD7A5B /* CampaignReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignReducer.swift; sourceTree = "<group>"; };
 		38FEA55027F02101F9035B23 /* AetherTableCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AetherTableCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BE3BDA5CD22D3FA51A8101A /* SRD521CharacterProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRD521CharacterProfile.swift; sourceTree = "<group>"; };
 		3ECD545DCF4FF0741A08BF77 /* Sync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sync.swift; sourceTree = "<group>"; };
 		4B696C0D640B3561E9AB304C /* FoundationModels.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FoundationModels.framework; path = System/Library/Frameworks/FoundationModels.framework; sourceTree = SDKROOT; };
 		5CDE643BAC394DF45B3B10D4 /* AetherTableTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AetherTableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -435,6 +437,7 @@
 				B5047E2653ED1144CB9EF722 /* LanternBelowSceneOne.swift */,
 				36D547FE55DD0B90D553D5CD /* RuleCatalog.swift */,
 				9C44DB3695D5584B8139C380 /* RulesPacks.swift */,
+				3BE3BDA5CD22D3FA51A8101A /* SRD521CharacterProfile.swift */,
 				0C364377810AC3E817264E01 /* SRD521CoreMechanics.swift */,
 				2C4827EE83EE5BA4D0010FF0 /* SRD521EncounterEngine.swift */,
 				08DC82BCD9BA5EE0D286D19E /* SRD521RulesPack.swift */,
@@ -750,6 +753,7 @@
 				FDD9D31241AF747715CF06A4 /* LanternBelowSceneOne.swift in Sources */,
 				86A1CE84D0FB3C5D339F3449 /* RuleCatalog.swift in Sources */,
 				C145D936E07CD5461778552E /* RulesPacks.swift in Sources */,
+				B227A6A86F72535A61C3C55F /* SRD521CharacterProfile.swift in Sources */,
 				0C71F5A00197E38CB426F166 /* SRD521CoreMechanics.swift in Sources */,
 				9A1D6197AFB187FBE73CC7C2 /* SRD521EncounterEngine.swift in Sources */,
 				C327F443AE706F3AB00787BF /* SRD521RulesPack.swift in Sources */,
