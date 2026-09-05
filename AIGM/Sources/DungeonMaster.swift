@@ -115,6 +115,28 @@ public enum AdventureTurn {
         }
         return false
     }
+    /// Turns a rejected draft's failure into regeneration guidance specific to
+    /// what actually went wrong, instead of one generic reminder for every
+    /// rejection. A retry that knows *why* it failed is far more likely to
+    /// land a good scene on the next attempt.
+    public static func retryGuidance(for message: String) -> String {
+        if message.contains("repeated recent scene material") || message.contains("repeated a prior scene") {
+            return "Write something genuinely new: a fresh reaction, detail, or complication. Do not reuse any prior sentence, phrase, or image, even reworded."
+        }
+        if message.contains("did not answer your plain question") {
+            return "Answer the player's question directly and specifically through NPC dialogue before anything else."
+        }
+        if message.contains("tried to decide your next action") || message.contains("narrated your character") {
+            return "Stop the instant the hero's next action would need deciding. Describe only the surroundings and NPCs; the hero appears only as the listener inside a quote responding to what already happened."
+        }
+        if message.contains("offered suggested actions") {
+            return "Do not list options, number choices, or ask what the player does. End the scene once the world has responded."
+        }
+        if message.contains("did not leave enough of a world-only scene") {
+            return "Write more of the surrounding scene before any line that would need the hero's name or action."
+        }
+        return "Start with an NPC or environmental detail. Keep the hero entirely out of narration except as the listener inside an NPC quote."
+    }
     /// A plain "why" question may be refused, but an accepted scene must state
     /// a reason rather than repeat the mystery as an answer.
     public static func answersPlainQuestion(_ playerText: String, prose: String) -> Bool {
@@ -211,35 +233,69 @@ public struct AppleDungeonMaster: DungeonMaster {
         let model = SystemLanguageModel.default
         guard case .available = model.availability else { throw GameMasterError.unavailable("Apple Intelligence is not ready. Your turn can be retried.") }
         var lastFailure: Error = OpenWorldError.invalidPlan("The GM could not produce a valid response.")
+        let isOpeningTurn = resolution.adventure.transcript.isEmpty
+        let maxContext = model.contextSize
+        // How much history/background to include; shrinks only when a real
+        // context-window overflow is caught below, and carries across attempts.
+        var historyLimit = 6
+        var factsBudget = 1800
         for attempt in 0...2 {
         let instructions = """
         You are the Dungeon Master in a live, open-world fantasy roleplaying conversation. Write only the next moment, usually one or two short paragraphs (a brief, natural exchange is welcome). Follow the player's actual intent, including detours and creative solutions. Answer their questions through NPC dialogue; an NPC can lie, bargain or evade, but respond to what was asked.
-        Use vivid, concrete sensory details and NPCs with personal motives. Speak in scene, never as an assistant. Use an external camera: begin with a place, object, weather detail, or NPC, not the hero. Outside quoted NPC dialogue, never name, describe, or act for the hero at all. You control only surroundings and NPCs; never write the hero's dialogue, thoughts, or next action. End before the player's next decision. No suggestions, options, lists, coaching or 'What do you do?'.
+        Use concrete sensory details in service of the scene, not instead of it, and NPCs with personal motives. Speak in scene, never as an assistant. Use an external camera: begin with a place, object, sound, gesture, or NPC, not the hero. Outside quoted NPC dialogue, never name, describe, or act for the hero at all. You control only surroundings and NPCs; never write the hero's dialogue, thoughts, or next action. End before the player's next decision. No suggestions, options, lists, coaching or 'What do you do?'.
+        Vary how each reply opens; do not fall into a habit of starting every scene with weather or ambient sound. Draw the opening image from what is actually happening this turn: an NPC's hands, an object the player just mentioned, a sound tied to the action taken, something already in motion.
         The transcript is a scene already in progress. Every reply must add an observable new response, discovery, complication, or changed situation caused by this player turn. Never restage, paraphrase, or reintroduce an earlier NPC, line of dialogue, or establishing description as though it is new.
         The story has full human range. Let NPCs respond naturally to humor, tenderness, flirtation and romance, honor, courage, faith, grief, fear, despair, and moral conflict. Do not redirect a sincere, funny, vulnerable, or difficult player moment into generic quest-giving. NPCs keep agency, motives, consent, and the ability to disagree.
         Default to clear, ordinary conversation. When a player asks a plain question and an NPC knows the answer, let that NPC answer plainly and specifically. Let people banter, joke, disagree, reminisce, celebrate, flirt, or simply be helpful. Reserve riddles, evasions, ominous hints, and cryptic speech for NPCs or circumstances that have actually earned them; mystery is a seasoning, not every conversation's flavor.
         QUALITY CONTRACT: Do not repeat any distinctive phrase, line of dialogue, image, or revelation from the recent transcript. If the player asks why, the NPC must answer with "because," a concrete risk, or a specific inability/refusal; never answer by repeating the mystery. Preserve the current location and named people unless the player explicitly travels or the scene visibly changes them.
+        Not offering a menu of options is not the same as giving the player nothing to act on. Any tension you raise or continue—a threat, a follower, an anomaly, unease in the air—must add one new, concrete, perceivable detail this reply: a direction it came from, a distinguishing sound, shape, or trait, a visible object, a name, a distance closing. Never spend a reply only restating that something is wrong or someone is watching with nothing new to see, hear, or find; that is a stall, not tension.
+        A clue must be something the player could actually act on: a place they could walk to, a person they could ask, a specific object they could examine. Never answer a direction, a "what does that mean," or a "what's over there" with a riddle, a metaphor, or an ominous stranger's cryptic line standing in for a real answer ("follow where the shadows stretch," "a path worn by something older than the lanterns"). If an NPC would plausibly know the answer, have them say the actual place or thing plainly, even briefly, before any color or mood.
+        MATCH THE PREMISE'S TONE. The OPENING BRIEF states the actual stakes and mood of this campaign; do not override it with generic dark-fantasy or horror instincts. If it describes a festival, celebration, parade, or explicitly calls something harmless, small, or wonder-like, the scene must stay in that register: curiosity, delight, warmth, ordinary festival bustle, and safe, findable mystery—not cloaked strangers, cracked or humming objects, dread, groaning or bone-like imagery, or "something ancient/older" menace, unless danger has actually been established in play by an engine result or the player's own choice. A wonder the premise calls harmless should be delightful to find, not survived.
+        FAVOR HONEST CONVERSATION OVER ORNAMENT. Most replies should read like people actually talking: an NPC states what they think or know plainly, in their own voice, the way a real person would answer a friend. One or two grounding physical details are plenty; do not wrap every line of dialogue in its own paragraph of imagery, metaphor, or mounting mood. Save heavier description for a moment that has actually earned it—a real discovery, arriving somewhere new, danger becoming real—not as the default texture of ordinary talk. If in doubt, cut the flourish and let the line of dialogue do the work.
         The engine record below is binding: preserve its success or failure and resource effects. Do not award extra actions, items or recovery on the player's behalf. World facts and prior conversation are canon. The player can travel anywhere; Emberwake is a beginning, not a mandatory plot.
         The immutable creation backstory is the only authority for the hero's pre-adventure family, upbringing, contacts and education. Never confirm a newly invented origin because the player asserts it. Portray that assertion as an in-world claim or lie. Never add it as true history. Actual relationships earned during saved play are valid. Backstory can affect NPC reactions and plausible approaches, not override the engine's abilities or results.
         Example of the correct stopping point:
         Player: I ask the baker whether the festival bread is any good.
         GM: Cinnamon and orange peel warm the little shop. The baker laughs. "Best batch of the year—though Captain Elian bought six loaves before breakfast, so do not tell him I saved the honey buns for noon."
         That is the entire reply. The player chooses how to react. Use this format, not these characters or events.
+        \(isOpeningTurn ? """
+        THIS IS THE OPENING SCENE. The player has no other source for where they are, who is with them, or what is going on; a vague mood is not enough. This first reply must, through natural in-scene detail rather than exposition: name the actual place, make the established companions and what they are doing concretely visible, and let the specific situation named in the OPENING BRIEF below actually appear on the page (the object, event, or tension it names), not just an atmosphere implying it. The player must be able to say where they are and what is happening after reading it, without guessing. Still end before their first decision; still no lists or options.
+        """ : "")
         """
-        let correction = attempt == 0 ? "" : "\nYour prior response was rejected: \(lastFailure.localizedDescription). Start with an NPC or environmental detail. Keep the hero entirely out of narration except as the listener inside an NPC quote; preserve the same engine outcome."
+        let correction = attempt == 0 ? "" : "\nYour prior response was rejected: \(lastFailure.localizedDescription). \(AdventureTurn.retryGuidance(for: lastFailure.localizedDescription)) Preserve the same engine outcome."
         let sceneCard = resolution.adventure.narrationContext(for: playerText)
         let facts = resolution.adventure.context(for: playerText)
-        var entries: [Transcript.Entry] = [.instructions(.init(segments: [.text(.init(content: instructions + "\n" + sceneCard + "\nBackground reference only:\n" + String(facts.prefix(1800))))], toolDefinitions: []))]
-        for message in resolution.adventure.transcript.filter({ ["player", "gm"].contains($0.role) }).suffix(6) {
-            let segments: [Transcript.Segment] = [.text(.init(content: String(message.text.prefix(1000))))]
-            entries.append(message.role == "player" ? .prompt(.init(segments: segments)) : .response(.init(assetIDs: [], segments: segments)))
+        let factsLabel = isOpeningTurn ? "This opening scene must ground the player in these established facts:" : "Background reference only:"
+        let promptText = playerText + "\n\n[Engine: \(resolution.outcome). \(resolution.receipt)]" + correction + "\nAnswer this turn only. Do not repeat prior introductions. Stop before my next decision."
+        func buildEntries(historyLimit: Int, factsBudget: Int) -> (entries: [Transcript.Entry], measureText: String) {
+            let header = instructions + "\n" + sceneCard + "\n\(factsLabel)\n" + String(facts.prefix(factsBudget))
+            var entries: [Transcript.Entry] = [.instructions(.init(segments: [.text(.init(content: header))], toolDefinitions: []))]
+            var historyText = ""
+            for message in resolution.adventure.transcript.filter({ ["player", "gm"].contains($0.role) }).suffix(historyLimit) {
+                let text = String(message.text.prefix(1000))
+                historyText += text
+                let segments: [Transcript.Segment] = [.text(.init(content: text))]
+                entries.append(message.role == "player" ? .prompt(.init(segments: segments)) : .response(.init(assetIDs: [], segments: segments)))
+            }
+            return (entries, header + historyText)
         }
-        let session = LanguageModelSession(model: model, transcript: Transcript(entries: entries))
-        let response = try await session.respond(to: playerText + "\n\n[Engine: \(resolution.outcome). \(resolution.receipt)]" + correction + "\nAnswer this turn only. Do not repeat prior introductions. Stop before my next decision.", options: GenerationOptions(temperature: 0.6, maximumResponseTokens: 350))
-        let prose = response.content
+        do {
+            // Budget for the context window proactively instead of only discovering
+            // an overflow from the model: shrink history, then background facts,
+            // until the measured input leaves real headroom for the response.
+            let reserveForResponse = 420 + 64
+            var (entries, measureText) = buildEntries(historyLimit: historyLimit, factsBudget: factsBudget)
+            var measured = (try? await model.tokenCount(for: measureText + promptText)) ?? measureText.count / 3
+            while measured + reserveForResponse > maxContext, historyLimit > 0 || factsBudget > 300 {
+                if historyLimit > 0 { historyLimit = max(0, historyLimit - 2) } else { factsBudget = max(300, factsBudget - 500) }
+                (entries, measureText) = buildEntries(historyLimit: historyLimit, factsBudget: factsBudget)
+                measured = (try? await model.tokenCount(for: measureText + promptText)) ?? measureText.count / 3
+            }
+            let session = LanguageModelSession(model: model, transcript: Transcript(entries: entries))
+            let response = try await session.respond(to: promptText, options: GenerationOptions(temperature: 0.6, maximumResponseTokens: 420))
+            let prose = response.content
             let worldOnly = AdventureTurn.worldOnlyPrefix(prose, heroName: resolution.adventure.hero.name, playerText: playerText)
             var story = WorldStory(prose: worldOnly, location: resolution.adventure.location, memories: [])
-        do {
             // A good conversation can be a single direct NPC reply. Only reject an
             // effectively empty fragment after enforcing the player-agency boundary.
             guard story.prose.count >= 20 else { throw OpenWorldError.invalidPlan("The GM did not leave enough of a world-only scene. Retrying preserves your intent.") }
@@ -278,9 +334,17 @@ public struct AppleDungeonMaster: DungeonMaster {
         }
         catch {
             #if DEBUG
-            if ProcessInfo.processInfo.environment["AETHERTABLE_GM_DIAGNOSTICS"] == "1" { print("REJECTED GM RAW: \(prose)\nFILTERED: \(story.prose)\nREASON: \(error)") }
+            if ProcessInfo.processInfo.environment["AETHERTABLE_GM_DIAGNOSTICS"] == "1" { print("GM TURN FAILED: \(error)") }
             #endif
-            lastFailure = error
+            if case LanguageModelError.contextSizeExceeded = error {
+                // A hard token-budget overflow, not a content-quality rejection: the
+                // generic retry guidance can't fix this, so shrink what we send
+                // instead and let the next attempt actually have headroom.
+                if historyLimit > 0 { historyLimit = max(0, historyLimit - 2) } else { factsBudget = max(300, factsBudget - 600) }
+                lastFailure = OpenWorldError.invalidPlan("The GM's memory of this scene grew too large for one turn. Retrying with a trimmed context; your saved story and draft are unchanged.")
+            } else {
+                lastFailure = error
+            }
         }
         }
         throw lastFailure
