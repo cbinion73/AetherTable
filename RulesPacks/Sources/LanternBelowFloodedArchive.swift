@@ -14,9 +14,9 @@ public struct FloodedArchiveChoice: Identifiable, Sendable {
 public enum LanternBelowFloodedArchive {
     public static let sceneID = "lantern-below.flooded-archive"
     public static let choices: [FloodedArchiveChoice] = [
-        .init(id: "study-key", title: "Study the tide-key", prompt: "I study the tide-key and the archive’s lockwork.", ability: .intelligence, difficultyClass: 13),
-        .init(id: "force-seal", title: "Break the seal", prompt: "I force the swollen archive seal apart.", ability: .strength, difficultyClass: 15),
-        .init(id: "speak-oath", title: "Speak the keeper’s oath", prompt: "I speak the old keeper’s oath to the water.", ability: .charisma, difficultyClass: 10)
+        .init(id: "oren-ledger", title: "Ask Oren for the ledger", prompt: "I press Oren to show me the redacted founding ledger.", ability: .charisma, difficultyClass: 13),
+        .init(id: "waterworks", title: "Enter through the waterworks", prompt: "I trace the submerged waterworks to the archive’s forgotten plates.", ability: .intelligence, difficultyClass: 13),
+        .init(id: "sera-memory", title: "Follow Sera’s memory", prompt: "I follow Sera’s memory to the keeper’s hidden record.", ability: .wisdom, difficultyClass: 10)
     ]
 
     public static func resolve(campaignID: CampaignID, profile: SRD521CharacterProfile, choiceID: String, die: Int) throws -> (result: SRD521TestResult, event: CampaignEvent) {
@@ -38,9 +38,22 @@ public enum LanternBelowFloodedArchive {
         var events: [CampaignEvent] = [
             .init(campaignID: campaignID, kind: .worldFactSet, payload: ["key": "lantern-below.archiveRoute", "value": route]),
             .init(campaignID: campaignID, kind: .worldFactSet, payload: ["key": "lantern-below.archiveChoice", "value": choiceID]),
+            .init(campaignID: campaignID, kind: .worldFactSet, payload: ["key": "town.truth", "value": "vaultDebt"]),
             .init(campaignID: campaignID, kind: .questUpdated, payload: ["stage": "vault", "objective": "Descend through the archive to the sealed vault and learn who extinguished the Lantern Below."]),
             .init(campaignID: campaignID, kind: .sceneStatusChanged, payload: ["sceneID": sceneID, "status": "completed"])
         ]
+        switch choiceID {
+        case "oren-ledger":
+            events.append(.init(campaignID: campaignID, kind: .worldFactSet, payload: ["key": "clue.foundingNames", "value": "true"]))
+            events.append(.init(campaignID: campaignID, kind: .relationshipChanged, payload: ["npcID": "npc.oren", "delta": succeeded ? "1" : "-1"]))
+        case "waterworks":
+            events.append(.init(campaignID: campaignID, kind: .worldFactSet, payload: ["key": "clue.foundingNames", "value": "true"]))
+        case "sera-memory":
+            events.append(.init(campaignID: campaignID, kind: .worldFactSet, payload: ["key": "clue.brotherNote", "value": "true"]))
+            events.append(.init(campaignID: campaignID, kind: .relationshipChanged, payload: ["npcID": "npc.sera", "delta": "1"]))
+        default:
+            throw FloodedArchiveError.invalidChoice
+        }
         if !succeeded {
             events.append(.init(campaignID: campaignID, kind: .threatChanged, payload: ["delta": "1"]))
             events.append(.init(campaignID: campaignID, kind: .worldFactSet, payload: ["key": "lantern-below.archiveAlarm", "value": "raised"]))

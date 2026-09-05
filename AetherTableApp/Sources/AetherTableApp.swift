@@ -51,6 +51,14 @@ struct CampaignHomeView: View {
                         }
                     }
                 }
+                if model.canResolveVaultChoice {
+                    Section("The Lantern Vault") {
+                        Text("Nym-of-the-Reed waits at the threshold. The engine records your decision; the GM never chooses it for you.")
+                        ForEach(LanternBelowVault.choices) { choice in
+                            Button(choice.title) { Task { await model.resolveVault(choiceID: choice.id) } }
+                        }
+                    }
+                }
                 Section("Status") { Text(model.statusText).foregroundStyle(.secondary) }
             }
             .navigationTitle("AetherTable")
@@ -71,6 +79,7 @@ final class CampaignViewModel {
     var canResolveSRDAttack = false
     var canResolveRiverShadeTurn = false
     var canResolveArchiveChoice = false
+    var canResolveVaultChoice = false
 
     private var campaign: CampaignState?
     private let rules = RulesEngine()
@@ -128,6 +137,8 @@ final class CampaignViewModel {
             recap = newCampaign.recap
             canResolveSRDAttack = true
             canResolveRiverShadeTurn = false
+            canResolveArchiveChoice = false
+            canResolveVaultChoice = false
             srdSummary = profile.name + ", level 1 " + profile.characterClass + " • HP " + String(profile.maximumHitPoints) + " • AC " + String(profile.armorClass) + " • Your turn against the River Shade."
             statusText = "SRD 5.2.1 character and encounter saved locally."
             try await store.save(newCampaign)
@@ -156,6 +167,7 @@ final class CampaignViewModel {
             canResolveRiverShadeTurn = completion == nil && campaign.world.encounter?.activeCombatantID == LanternBelowEncounter.riverShadeID
             statusText = completion == nil ? "Your attack is recorded. The River Shade acts next." : "Encounter complete. " + campaign.world.quest.objective
             canResolveArchiveChoice = campaign.world.locationID == "emberwake.flooded-archive"
+            canResolveVaultChoice = campaign.world.quest.stage == "vault" && campaign.world.sceneProgress[LanternBelowFloodedArchive.sceneID] == .completed
             try await store.save(campaign)
         } catch {
             statusText = "The SRD engine rejected that attack: " + error.localizedDescription
@@ -180,6 +192,7 @@ final class CampaignViewModel {
             canResolveSRDAttack = completion == nil && campaign.world.encounter?.activeCombatantID == LanternBelowEncounter.playerID && playerHP > 0
             statusText = completion == nil ? "The River Shade’s turn is recorded. Your turn." : "Encounter complete. " + campaign.world.quest.objective
             canResolveArchiveChoice = campaign.world.locationID == "emberwake.flooded-archive"
+            canResolveVaultChoice = campaign.world.quest.stage == "vault" && campaign.world.sceneProgress[LanternBelowFloodedArchive.sceneID] == .completed
             try await store.save(campaign)
         } catch {
             statusText = "The SRD engine rejected the River Shade’s turn: " + error.localizedDescription
@@ -200,11 +213,34 @@ final class CampaignViewModel {
             self.campaign = campaign
             recap = campaign.recap
             canResolveArchiveChoice = false
+            canResolveVaultChoice = campaign.world.quest.stage == "vault"
             srdSummary = resolution.result.outcome == .success ? "The archive yields. A stairway spirals toward the sealed vault. Audit seed " + String(seed) : "The archive fights you, but the stairway opens amid rising alarms. Audit seed " + String(seed)
             statusText = campaign.world.quest.objective
             try await store.save(campaign)
         } catch {
             statusText = "The archive could not resolve that choice: " + error.localizedDescription
+        }
+    }
+
+    func resolveVault(choiceID: String) async {
+        guard var campaign else { return }
+        isResolving = true
+        defer { isResolving = false }
+        do {
+            let profile = try SRD521CharacterProfile.from(campaign: campaign)
+            let seed = UInt64.random(in: .min ... .max)
+            let die = try DiceEngine.roll(.init(count: 1, sides: 20), seed: seed).values[0]
+            let resolution = try LanternBelowVault.resolve(campaignID: campaign.id, campaign: campaign, profile: profile, choiceID: choiceID, die: die)
+            try campaign.apply(resolution.event)
+            for event in try LanternBelowVault.consequenceEvents(campaignID: campaign.id, choiceID: choiceID, result: resolution.result) { try campaign.apply(event) }
+            self.campaign = campaign
+            recap = campaign.recap
+            canResolveVaultChoice = false
+            srdSummary = "Your decision is recorded. The first arc ends here. Audit seed " + String(seed)
+            statusText = campaign.world.quest.objective
+            try await store.save(campaign)
+        } catch {
+            statusText = "The vault could not resolve that decision: " + error.localizedDescription
         }
     }
 

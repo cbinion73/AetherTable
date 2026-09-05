@@ -186,14 +186,40 @@ import Testing
     var campaign = CampaignState(title: "Archive", rulesPackID: "srd-5.2.1")
     let profile = try SRD521QuickstartCharacter.guardian()
     try campaign.apply(profile.stateEvent(campaignID: campaign.id))
-    let resolution = try LanternBelowFloodedArchive.resolve(campaignID: campaign.id, profile: profile, choiceID: "force-seal", die: 1)
+    let resolution = try LanternBelowFloodedArchive.resolve(campaignID: campaign.id, profile: profile, choiceID: "waterworks", die: 1)
     #expect(resolution.result.outcome == .failure)
     try campaign.apply(resolution.event)
-    for event in try LanternBelowFloodedArchive.consequenceEvents(campaignID: campaign.id, choiceID: "force-seal", result: resolution.result) { try campaign.apply(event) }
+    for event in try LanternBelowFloodedArchive.consequenceEvents(campaignID: campaign.id, choiceID: "waterworks", result: resolution.result) { try campaign.apply(event) }
     #expect(campaign.world.quest.stage == "vault")
     #expect(campaign.world.threatClock.current == 1)
     #expect(campaign.world.facts["lantern-below.archiveAlarm"] == "raised")
+    #expect(campaign.world.facts["town.truth"] == "vaultDebt")
+    #expect(campaign.world.facts["clue.foundingNames"] == "true")
     #expect(campaign.world.sceneProgress[LanternBelowFloodedArchive.sceneID] == .completed)
+}
+
+@Test func lanternVaultChoicePersistsAnIrreversibleEnding() throws {
+    var campaign = CampaignState(title: "Vault", rulesPackID: "srd-5.2.1")
+    let profile = try SRD521QuickstartCharacter.guardian()
+    try campaign.apply(profile.stateEvent(campaignID: campaign.id))
+    try campaign.apply(.init(campaignID: campaign.id, kind: .worldFactSet, payload: ["key": "town.truth", "value": "vaultDebt"]))
+    let resolution = try LanternBelowVault.resolve(campaignID: campaign.id, campaign: campaign, profile: profile, choiceID: "reveal", die: 20)
+    #expect(resolution.result.outcome == .success)
+    try campaign.apply(resolution.event)
+    for event in try LanternBelowVault.consequenceEvents(campaignID: campaign.id, choiceID: "reveal", result: resolution.result) { try campaign.apply(event) }
+    #expect(campaign.world.facts["lantern-below.vaultChoice"] == "reveal")
+    #expect(campaign.world.facts["vault.status"] == "revealed")
+    #expect(campaign.world.facts["lantern.status"] == "dark")
+    #expect(campaign.world.quest.stage == "complete")
+    #expect(campaign.world.sceneProgress[LanternBelowVault.sceneID] == .completed)
+}
+
+@Test func lanternVaultRevealRequiresTheRecordedTruth() throws {
+    let campaign = CampaignState(title: "Vault", rulesPackID: "srd-5.2.1")
+    let profile = try SRD521QuickstartCharacter.guardian()
+    #expect(throws: LanternVaultError.missingPrerequisite) {
+        try LanternBelowVault.resolve(campaignID: campaign.id, campaign: campaign, profile: profile, choiceID: "reveal", die: 20)
+    }
 }
 
 @Test func diceStayWithinBounds() throws {
