@@ -2,7 +2,7 @@ import RulesPacks
 import SwiftUI
 
 private enum CreationStage: String, CaseIterable {
-    case identity = "Identity", abilities = "Abilities", training = "Training", magic = "Magic", equipment = "Equipment", backstory = "Backstory", review = "Review"
+    case identity = "Identity", abilities = "Abilities", training = "Training", magic = "Magic", equipment = "Equipment", backstory = "Backstory", opening = "Opening", review = "Review"
 }
 
 struct CharacterCreationView: View {
@@ -10,9 +10,10 @@ struct CharacterCreationView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var draft = CharacterCreationDraft.suggested(for: .fighter)
     @State private var backstory = ""
+    @State private var opening = AdventureOpening.default
     @State private var stage = CreationStage.identity
     private var index: Int { CreationStage.allCases.firstIndex(of: stage)! }
-    private var errors: [String] { draft.validationErrors + (backstory.count > 4000 ? ["Backstory must be 4,000 characters or fewer."] : []) }
+    private var errors: [String] { draft.validationErrors + (backstory.count > 4000 ? ["Backstory must be 4,000 characters or fewer."] : []) + (!opening.isValid ? ["Complete each part of the opening setup (800 characters maximum per field)."] : []) }
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -30,6 +31,7 @@ struct CharacterCreationView: View {
                         case .magic: magic
                         case .equipment: equipment
                         case .backstory: origin
+                        case .opening: openingSetup
                         case .review: review
                         }
                     }.padding(22).frame(maxWidth: 680, alignment: .leading).frame(maxWidth: .infinity)
@@ -39,7 +41,7 @@ struct CharacterCreationView: View {
                     Spacer()
                     if stage == .review {
                         Button("Create adventure") {
-                            Task { if await model.createAdventure(character: draft, backstory: backstory) { dismiss() } }
+                            Task { if await model.createAdventure(character: draft, backstory: backstory, opening: opening) { dismiss() } }
                         }.buttonStyle(.borderedProminent).disabled(!errors.isEmpty || model.isResolving)
                     } else {
                         Button("Continue") { stage = CreationStage.allCases[index + 1] }.buttonStyle(.borderedProminent)
@@ -200,6 +202,21 @@ struct CharacterCreationView: View {
         }
     }
 
+    private var openingSetup: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text("Set the first scene").font(.system(.title2, design: .serif, weight: .bold))
+            Text("This becomes the campaign's opening truth. The Dungeon Master uses it to establish where you are, what you are doing, who is present, why you came, and the trouble that starts the story.").font(.system(.body, design: .serif))
+            StoryCard {
+                TextField("Where are you?", text: $opening.place, axis: .vertical).lineLimit(2...4)
+                TextField("What are you doing when the story opens?", text: $opening.activity, axis: .vertical).lineLimit(2...4)
+                TextField("Who are you with? (or ‘alone’)", text: $opening.companions, axis: .vertical).lineLimit(2...4)
+                TextField("Why are you here?", text: $opening.reason, axis: .vertical).lineLimit(2...4)
+                TextField("What is the initial campaign story?", text: $opening.premise, axis: .vertical).lineLimit(4...8)
+            }
+            Text("You will still decide every action in your own words. This briefing gives the world a real first moment; it does not put the story on rails.").font(.footnote).foregroundStyle(.secondary)
+        }
+    }
+
     private var review: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text(draft.name.isEmpty ? "Your adventurer" : draft.name).font(.system(.largeTitle, design: .serif, weight: .bold))
@@ -213,6 +230,7 @@ struct CharacterCreationView: View {
                 Text("Feats: \(draft.feats.joined(separator: ", "))").font(.subheadline)
             }
             StoryCard { Text("Creation backstory").font(.headline); Text(backstory.isEmpty ? "No special pre-adventure history established." : backstory).font(.system(.body, design: .serif)); Label("This history is fixed after creation.", systemImage: "lock").font(.caption).foregroundStyle(.secondary) }
+            StoryCard { Text("Opening scene").font(.headline); Text(opening.briefing).font(.system(.body, design: .serif)).lineSpacing(4) }
             if !errors.isEmpty {
                 StoryCard { Label("Finish these choices", systemImage: "exclamationmark.circle").font(.headline); ForEach(errors, id: \.self) { Text($0).font(.subheadline) } }
             }
