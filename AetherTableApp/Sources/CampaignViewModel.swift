@@ -102,6 +102,38 @@ final class CampaignViewModel {
             return true
         } catch { report(error); return false }
     }
+    /// A bright, varied starter for first-edition feedback. It offers hooks and
+    /// equipment to try, but remains an open-world campaign rather than a script.
+    @discardableResult func createShiningRoadPlaytest() async -> Bool {
+        guard !isResolving else { return false }
+        isResolving = true
+        defer { isResolving = false }
+        do {
+            let opening = AdventureOpening(
+                place: "The Sunspire Festival, on the shining road to Larkhaven",
+                activity: "helping hang lanterns before the noon parade",
+                companions: "Captain Elian, an earnest young marshal, and Mira, a clever mapmaker",
+                reason: "to deliver a sealed invitation to the Festival of First Light",
+                premise: "A prism from the old observatory has scattered seven harmless beams of living color across the valley; each reveals a person, place, or small wonder asking to be found."
+            )
+            var hero = OpenWorldHero.preset(.cleric, name: "Liora")
+            hero.equipment += ["Sunstone token", "Festival map", "Silk rope", "Healer’s kit", "Brass lantern"]
+            var world = OpenWorldAdventure(hero: hero, creationBackstory: "Liora serves as a traveling keeper of lights, offering practical help and a steady word wherever the road grows uncertain.", opening: opening)
+            world.memories += [
+                .init(id: "person.captain.elian", category: "person", name: "Captain Elian", detail: "A hopeful marshal coordinating the Sunspire Festival; he wants every guest to feel welcome."),
+                .init(id: "person.mira.mapmaker", category: "person", name: "Mira", detail: "A mapmaker with a dry sense of humor who has marked several bright anomalies on her festival map."),
+                .init(id: "place.observatory", category: "place", name: "Dawnwatch Observatory", detail: "A hilltop observatory whose old prism caused the valley’s colorful light show."),
+                .init(id: "quest.shining.road", category: "quest", name: "The Shining Road", detail: "Follow any beam, help anyone you meet, investigate the observatory, or simply enjoy the festival. The choice of path is Liora’s.")
+            ]
+            for item in hero.equipment.suffix(5) {
+                let id = "inventory.test." + item.lowercased().split(whereSeparator: { !$0.isLetter && !$0.isNumber }).joined(separator: ".")
+                world.memories.append(.init(id: id, category: "inventory", name: item, detail: "Packed for the Sunspire Festival playtest."))
+            }
+            let campaign = CampaignState(title: "The Shining Road · Playtest", rulesPackID: SRD521RulesPack.descriptor.id)
+            try await commit(world.storing(in: campaign)); draft = ""; pending = nil; pendingBase = nil
+            return true
+        } catch { report(error); return false }
+    }
     func resumeAfterAbsence() async {
         guard !isResolving, let campaign, var world = try? OpenWorldAdventure.from(campaign) else { return }
         returnRecap = nil; isShowingReturnRecap = false

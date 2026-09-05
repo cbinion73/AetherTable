@@ -20,6 +20,13 @@ struct CampaignHomeView: View {
                             Text("Four level-one classes · Open-world solo play\n5E-compatible SRD subset · Apple Intelligence required").font(.footnote).foregroundStyle(.secondary)
                             Button("Create your adventurer", systemImage: "plus") { creating = true }.buttonStyle(.borderedProminent).controlSize(.large).disabled(model.isResolving || !model.loaded)
                         }
+                        StoryCard {
+                            Label("Shining Road playtest", systemImage: "sun.max.fill").font(.title3.bold()).foregroundStyle(StoryStyle.copper)
+                            Text("A bright, open starter with festival friends, mystery, humor, romance-ready conversation, exploration hooks, equipment, a cleric’s spells, checks, combat if you invite it, rest, notes, and memory to test.").font(.system(.body, design: .serif))
+                            Text("No required route. Follow a colored beam, speak to anyone, investigate the observatory, or make the day your own.").font(.footnote).foregroundStyle(.secondary)
+                            Button("Start the Shining Road", systemImage: "sparkles") { Task { _ = await model.createShiningRoadPlaytest() } }
+                                .buttonStyle(.bordered).disabled(model.isResolving || !model.loaded)
+                        }
                         ForEach(model.campaigns, id: \.id) { campaign in
                             let world = try? OpenWorldAdventure.from(campaign)
                             StoryAction(title: world?.hero.name ?? campaign.title, detail: "\(world?.hero.characterClass.rawValue ?? "Adventure") · \(world?.location ?? campaign.world.locationID) · \(world?.hero.hitPoints ?? 0) HP\n\((world?.transcript.last?.text ?? campaign.recap).prefix(160))") { model.select(campaign) }

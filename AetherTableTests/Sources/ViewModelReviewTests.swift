@@ -23,6 +23,17 @@ import Testing
     #expect(reopened.adventure?.hero.scores == character.finalScores)
 }
 
+@MainActor @Test func shiningRoadPlaytestCreatesABrightOpenStarterWithTestEquipment() async throws {
+    let model = CampaignViewModel(store: InMemoryCampaignStore())
+    await model.start()
+    #expect(await model.createShiningRoadPlaytest())
+    let world = try #require(model.adventure)
+    #expect(world.location == "The Sunspire Festival, on the shining road to Larkhaven")
+    #expect(world.hero.characterClass == .cleric)
+    #expect(world.hero.equipment.contains("Festival map") && world.hero.equipment.contains("Healer’s kit"))
+    #expect(world.memories.contains { $0.id == "quest.shining.road" })
+}
+
 @MainActor @Test func invalidCharacterAllocationCannotCreateASave() async throws {
     let store = InMemoryCampaignStore()
     let model = CampaignViewModel(store: store)
