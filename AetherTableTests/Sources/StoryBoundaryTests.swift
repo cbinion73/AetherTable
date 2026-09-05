@@ -129,3 +129,14 @@ func finishedStoryRejectsMachineIdentifiersAsMemoryNames(_ name: String) throws 
         ]))
     }
 }
+
+@Test func retryGuidanceMatchesTheActualFailureInsteadOfAGenericReminder() {
+    #expect(AdventureTurn.retryGuidance(for: "The GM repeated recent scene material instead of advancing the conversation.").contains("genuinely new"))
+    #expect(AdventureTurn.retryGuidance(for: "The GM repeated a prior scene instead of answering this turn.").contains("genuinely new"))
+    #expect(AdventureTurn.retryGuidance(for: "The GM did not answer your plain question. Retrying preserves your intent.").contains("Answer the player's question"))
+    #expect(AdventureTurn.retryGuidance(for: "The GM tried to decide your next action. Retry to keep your agency and the same dice result.").contains("Stop the instant"))
+    #expect(AdventureTurn.retryGuidance(for: "The GM narrated your character\u{2019}s next action. Retry to keep control of your character.").contains("Stop the instant"))
+    #expect(AdventureTurn.retryGuidance(for: "The GM offered suggested actions. Retry to continue freely with the same result.").contains("Do not list options"))
+    #expect(AdventureTurn.retryGuidance(for: "The GM did not leave enough of a world-only scene. Retrying preserves your intent.").contains("Write more of the surrounding scene"))
+    #expect(AdventureTurn.retryGuidance(for: "Some other unrecognized failure.").contains("Start with an NPC"))
+}

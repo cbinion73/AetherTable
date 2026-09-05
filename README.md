@@ -20,7 +20,7 @@ The model is generative, not infallible. Agency/format checks reject invalid res
 
 ## Run
 
-Open `AetherTable.xcodeproj` and run the `AetherTable` scheme on an Apple Intelligence-capable iPhone with iOS 26 or later. Enable Apple Intelligence and finish its model download. A simulator can exercise the interface and automated tests, but does not prove live model availability.
+Open `AetherTable.xcodeproj` and run the `AetherTable` scheme on an Apple Intelligence-capable iPhone with iOS 27 or later. Enable Apple Intelligence and finish its model download. A simulator can exercise the interface and automated tests, but does not prove live model availability.
 
 The app uses Apple's on-device Foundation Models. There is no API key, cloud-model fallback or server account. If the model is unavailable, the app explains the problem and preserves the saved campaign and draft.
 
@@ -29,7 +29,7 @@ xcodegen generate
 xcodebuild -project AetherTable.xcodeproj -scheme AetherTableTests -destination 'platform=iOS Simulator,name=iPhone 17' test CODE_SIGNING_ALLOWED=NO
 ```
 
-Use an installed simulator name and Xcode 26 or newer; this checkout is being verified with Xcode 27 beta. Set `DEVELOPER_DIR` when that Xcode is not the active selection. Physical-device builds use automatic development signing.
+Use an installed simulator name and Xcode 27 or newer. Set `DEVELOPER_DIR` when that Xcode is not the active selection. Physical-device builds use automatic development signing.
 
 The same engine and actual model can be exercised on an Apple Intelligence-enabled Mac:
 

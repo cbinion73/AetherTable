@@ -14,6 +14,11 @@ struct AdventureView: View {
                         if let state = model.adventure {
                             StoryHeading(eyebrow: "\(state.hero.name) · \(state.hero.characterClass.rawValue)", title: state.location)
                             HStack { Label("\(state.hero.hitPoints)/\(state.hero.maximumHitPoints) HP", systemImage: "heart"); Text("AC \(state.hero.armorClass)"); if state.hero.spellcastingAbility != nil { Text("\(state.hero.spellSlots) spell slots") } }.font(.caption.bold()).foregroundStyle(.secondary)
+                            if !state.transcript.isEmpty {
+                                DisclosureGroup("Why am I here?") {
+                                    Text(state.opening.briefing).font(.system(.body, design: .serif)).lineSpacing(5).padding(.top, 4)
+                                }.font(.caption.bold()).tint(StoryStyle.copper)
+                            }
                             if let features = state.hero.classFeatures {
                                 Text(featureSummary(features)).font(.caption).foregroundStyle(StoryStyle.copper).frame(maxWidth: .infinity, alignment: .leading)
                             }
