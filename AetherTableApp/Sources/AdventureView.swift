@@ -14,6 +14,7 @@ struct AdventureView: View {
                         if let state = model.adventure {
                             StoryHeading(eyebrow: "\(state.hero.name) · \(state.hero.characterClass.rawValue)", title: state.location)
                             HStack { Label("\(state.hero.hitPoints)/\(state.hero.maximumHitPoints) HP", systemImage: "heart"); Text("AC \(state.hero.armorClass)"); if state.hero.spellcastingAbility != nil { Text("\(state.hero.spellSlots) spell slots") } }.font(.caption.bold()).foregroundStyle(.secondary)
+                            SceneStatusCard(state: state)
                             if let features = state.hero.classFeatures {
                                 Text(featureSummary(features)).font(.caption).foregroundStyle(StoryStyle.copper).frame(maxWidth: .infinity, alignment: .leading)
                             }
@@ -42,6 +43,16 @@ struct AdventureView: View {
             }
             VStack(spacing: 8) {
                 TextField("What do you do or say?", text: $model.draft, axis: .vertical).lineLimit(2...6).focused($composing).padding(12).background(.background, in: RoundedRectangle(cornerRadius: 14)).accessibilityIdentifier("adventureComposer").disabled(model.isResolving)
+                if let state = model.adventure, !state.transcript.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            PromptChip("Ask what changed") { model.draft = "I ask what has changed since I arrived."; composing = true }
+                            PromptChip("Look closer") { model.draft = "I take a closer look at the most interesting detail here."; composing = true }
+                            if let person = state.memories.first(where: { $0.category == "person" && $0.status == "active" }) { PromptChip("Speak to \(person.name)") { model.draft = "I speak to \(person.name)."; composing = true } }
+                            PromptChip("Check journal") { model.draft = "I pause and review what I know so far."; composing = true }
+                        }.padding(.horizontal, 2)
+                    }
+                }
                 HStack {
                     Text("Apple Intelligence · Saved on this device").font(.caption2).foregroundStyle(.secondary)
                     Spacer()
@@ -57,6 +68,29 @@ struct AdventureView: View {
             }
             .sheet(isPresented: Binding(get: { receipt != nil }, set: { if !$0 { receipt = nil } })) { NavigationStack { StoryPage { StoryHeading(eyebrow: "Engine record", title: "Dice & consequences"); Text(receipt ?? "").font(.body.monospaced()).textSelection(.enabled) }.toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { receipt = nil } } } } }
     }
+}
+
+private struct SceneStatusCard: View {
+    let state: OpenWorldAdventure
+    private var people: [WorldMemory] { Array(state.memories.filter { $0.status == "active" && $0.category == "person" }.suffix(3)) }
+    private var threads: [WorldMemory] { Array(state.memories.filter { $0.status == "active" && ["quest", "promise"].contains($0.category) }.suffix(2)) }
+    var body: some View {
+        if !people.isEmpty || !threads.isEmpty {
+            StoryCard {
+                Label("Right now", systemImage: "compass.drawing").font(.headline)
+                if !people.isEmpty { Text("Here: \(people.map(\.name).joined(separator: ", "))").font(.subheadline) }
+                if !threads.isEmpty { Text("Live thread: \(threads.map(\.name).joined(separator: "; "))").font(.subheadline).foregroundStyle(.secondary) }
+                Text("Talk, investigate, travel, improvise—or simply stay in the moment. The story follows your lead.").font(.caption).foregroundStyle(.secondary)
+            }
+        }
+    }
+}
+
+private struct PromptChip: View {
+    let title: String
+    let action: () -> Void
+    init(_ title: String, action: @escaping () -> Void) { self.title = title; self.action = action }
+    var body: some View { Button(title, action: action).buttonStyle(.bordered).controlSize(.small).accessibilityHint("Writes a starting thought you can freely edit before sending") }
 }
 
 private func featureSummary(_ features: ClassFeatureState) -> String {

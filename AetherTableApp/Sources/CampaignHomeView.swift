@@ -17,8 +17,8 @@ struct CampaignHomeView: View {
                             Image(systemName: "flame").font(.largeTitle).foregroundStyle(StoryStyle.copper).accessibilityHidden(true)
                             Text("The world follows your words.").font(.system(.title2, design: .serif, weight: .bold))
                             Text("Meet strangers. Chase a rumor. Leave the road. Your Apple Intelligence Dungeon Master remembers the world you build together.").font(.system(.body, design: .serif)).lineSpacing(5)
-                            Text("Four level-one classes · Open-world solo play\n5E-compatible SRD subset · Apple Intelligence required").font(.footnote).foregroundStyle(.secondary)
-                            Button("Create your adventurer", systemImage: "plus") { creating = true }.buttonStyle(.borderedProminent).controlSize(.large).disabled(model.isResolving || !model.loaded)
+                            Text("Twelve level-one classes · Open-world solo play\n5E-compatible SRD subset · Apple Intelligence required").font(.footnote).foregroundStyle(.secondary)
+                            Button("Create your adventurer", systemImage: "plus") { creating = true }.buttonStyle(TabletopPrimaryButtonStyle()).disabled(model.isResolving || !model.loaded)
                         }
                         StoryCard {
                             Label("Shining Road playtest", systemImage: "sun.max.fill").font(.title3.bold()).foregroundStyle(StoryStyle.copper)
@@ -55,7 +55,7 @@ struct CampaignPlayView: View {
             Tab("Character", systemImage: "person.crop.rectangle") { NavigationStack { CharacterView(model: model) } }
             Tab("Journal", systemImage: "text.book.closed") { NavigationStack { JournalView(model: model) } }
             Tab("Rules", systemImage: "dice") { NavigationStack { RulesView() } }
-        }.alert("Welcome back", isPresented: Binding(get: { model.returnRecap != nil && !model.isShowingReturnRecap }, set: { _ in })) {
+        }.toolbarBackground(StoryStyle.parchment, for: .tabBar).toolbarBackground(.visible, for: .tabBar).alert("Welcome back", isPresented: Binding(get: { model.returnRecap != nil && !model.isShowingReturnRecap }, set: { _ in })) {
             Button("Show recap") { model.showReturnRecap() }
             Button("Continue without recap") { Task { await model.resumeAfterAbsence() } }
         } message: { Text("It has been more than a day since this campaign was played. Would you like a recap first?") }
