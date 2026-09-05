@@ -23,7 +23,14 @@ struct CharacterView: View {
                     LabeledContent("Armor Class", value: String(hero.armorClass))
                     LabeledContent("Proficiency bonus", value: "+2")
                     if hero.characterClass == .fighter { LabeledContent("Second Wind", value: "\(hero.secondWindUses) / 2 uses") }
-                    if hero.characterClass == .wizard || hero.characterClass == .cleric { LabeledContent("Level-one spell slots", value: "\(hero.spellSlots) / 2") }
+                    if hero.spellcastingAbility != nil { LabeledContent("Level-one spell slots", value: "\(hero.spellSlots) / 2") }
+                    if let features = hero.classFeatures {
+                        if features.rageUses > 0 { LabeledContent("Rage", value: "\(features.rageUses) uses") }
+                        if features.bardicInspirationUses > 0 { LabeledContent("Bardic Inspiration", value: "\(features.bardicInspirationUses) uses") }
+                        if features.layOnHandsPool > 0 { LabeledContent("Lay on Hands", value: "\(features.layOnHandsPool) HP") }
+                        if features.huntersMarkUses > 0 { LabeledContent("Hunter’s Mark", value: "\(features.huntersMarkUses) uses") }
+                        if features.innateSorceryUses > 0 { LabeledContent("Innate Sorcery", value: "\(features.innateSorceryUses) uses") }
+                    }
                 }
                 StoryCard {
                     Text("Abilities & training").font(.title2.bold())

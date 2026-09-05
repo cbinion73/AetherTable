@@ -1,7 +1,36 @@
 import AetherTableCore
 import Foundation
 
-public enum AdventurerClass: String, CaseIterable, Codable, Sendable { case fighter = "Fighter", rogue = "Rogue", wizard = "Wizard", cleric = "Cleric" }
+public enum AdventurerClass: String, CaseIterable, Codable, Sendable {
+    case barbarian = "Barbarian", bard = "Bard", cleric = "Cleric", druid = "Druid", fighter = "Fighter", monk = "Monk", paladin = "Paladin", ranger = "Ranger", rogue = "Rogue", sorcerer = "Sorcerer", warlock = "Warlock", wizard = "Wizard"
+}
+
+/// Level-one class state. Optional on the hero so pre-expansion saves decode unchanged.
+public struct ClassFeatureState: Codable, Hashable, Sendable {
+    public var rageUses: Int = 0
+    public var huntersMarkUses: Int = 0
+    public var layOnHandsPool: Int = 0
+    public var bardicInspirationUses: Int = 0
+    public var innateSorceryUses: Int = 0
+    public var rageActive: Bool = false
+    public var innateSorceryActive: Bool = false
+    public var markedTarget: String? = nil
+    public var bardicInspirationTarget: String? = nil
+    public init() {}
+    public static func initial(for characterClass: AdventurerClass, charismaModifier: Int = 0) -> Self {
+        var state = Self()
+        switch characterClass {
+        case .barbarian: state.rageUses = 2
+        case .bard: state.bardicInspirationUses = max(1, charismaModifier)
+        case .paladin: state.layOnHandsPool = 5
+        case .ranger: state.huntersMarkUses = 2
+        case .sorcerer: state.innateSorceryUses = 2
+        default: break
+        }
+        return state
+    }
+    public mutating func recoverLongRest(for characterClass: AdventurerClass, charismaModifier: Int) { self = .initial(for: characterClass, charismaModifier: charismaModifier) }
+}
 public struct OpenWorldHero: Codable, Hashable, Sendable {
     public var name: String
     public var characterClass: AdventurerClass
@@ -21,6 +50,7 @@ public struct OpenWorldHero: Codable, Hashable, Sendable {
     public var magicInitiate: MagicInitiateGrant? = nil
     public var activeUtilitySpells: [String: String]? = nil
     public var concentratingOn: String? = nil
+    public var classFeatures: ClassFeatureState? = nil
     public var proficiencyBonus: Int { 2 }
     public static let supportedWeapons: Set<String> = ["greatsword", "longsword", "shortsword", "shortbow", "quarterstaff", "mace", "flail", "javelin", "scimitar", "longbow", "dagger", "spear"]
     public static func weaponKey(for equipment: String) -> String? {
@@ -35,7 +65,13 @@ public struct OpenWorldHero: Codable, Hashable, Sendable {
         return nil
     }
     public func isProficient(with weapon: String) -> Bool {
-        characterClass == .fighter || (characterClass == .cleric && creation?.divineOrder == .protector) || ["quarterstaff", "mace", "dagger", "javelin", "spear", "shortbow"].contains(weapon) || (characterClass == .rogue && ["shortsword", "scimitar"].contains(weapon))
+        switch characterClass {
+        case .fighter, .barbarian, .paladin, .ranger: return true
+        case .cleric: return creation?.divineOrder == .protector || ["quarterstaff", "mace", "dagger", "javelin", "spear"].contains(weapon)
+        case .rogue: return ["quarterstaff", "mace", "dagger", "javelin", "spear", "shortbow", "shortsword", "scimitar"].contains(weapon)
+        case .monk: return ["quarterstaff", "dagger", "javelin", "spear", "shortbow"].contains(weapon)
+        default: return ["quarterstaff", "mace", "dagger", "javelin", "spear", "shortbow"].contains(weapon)
+        }
     }
     public func modifier(_ ability: SRD521Ability) -> Int { Int(floor(Double(scores[ability, default: 10] - 10) / 2)) }
     public static func preset(_ characterClass: AdventurerClass, name: String) -> Self {
@@ -43,6 +79,12 @@ public struct OpenWorldHero: Codable, Hashable, Sendable {
         let hp: Int, ac: Int
         let skills: [String: Int], weapons: [String], spells: [String], equipment: [String]
         switch characterClass {
+        case .barbarian:
+            scores = [.strength: 17, .dexterity: 13, .constitution: 16, .intelligence: 8, .wisdom: 10, .charisma: 10]; hp = 14; ac = 14
+            skills = ["athletics": 2, "survival": 2]; weapons = ["greatsword", "javelin"]; spells = []; equipment = ["Greatsword", "4 Javelins", "Explorer’s Pack"]
+        case .bard:
+            scores = [.strength: 8, .dexterity: 14, .constitution: 13, .intelligence: 10, .wisdom: 12, .charisma: 17]; hp = 9; ac = 12
+            skills = ["performance": 2, "persuasion": 2, "insight": 2]; weapons = ["shortsword", "dagger"]; spells = ["light", "mending", "healing word", "detect magic"]; equipment = ["Shortsword", "Dagger", "Musical Instrument", "Leather Armor", "Entertainer’s Pack"]
         case .fighter:
             scores = [.strength: 17, .dexterity: 14, .constitution: 14, .intelligence: 8, .wisdom: 10, .charisma: 12]; hp = 12; ac = 17
             skills = ["athletics": 2, "perception": 2]; weapons = ["greatsword"]; spells = []; equipment = ["Greatsword", "Chain mail", "Travel pack"]
@@ -55,9 +97,35 @@ public struct OpenWorldHero: Codable, Hashable, Sendable {
         case .cleric:
             scores = [.strength: 13, .dexterity: 12, .constitution: 14, .intelligence: 10, .wisdom: 17, .charisma: 9]; hp = 10; ac = 16
             skills = ["insight": 2, "religion": 2]; weapons = ["mace"]; spells = ["sacred flame", "light", "cure wounds", "healing word", "guiding bolt"]; equipment = ["Mace", "Chain shirt", "Shield", "Holy symbol", "Travel pack"]
+        case .druid:
+            scores = [.strength: 10, .dexterity: 14, .constitution: 14, .intelligence: 10, .wisdom: 17, .charisma: 8]; hp = 10; ac = 14
+            skills = ["nature": 2, "survival": 2]; weapons = ["quarterstaff", "scimitar"]; spells = ["light", "mending", "cure wounds", "detect magic"]; equipment = ["Quarterstaff", "Scimitar", "Leather Armor", "Druidic Focus", "Explorer’s Pack"]
+        case .monk:
+            scores = [.strength: 10, .dexterity: 17, .constitution: 14, .intelligence: 10, .wisdom: 14, .charisma: 8]; hp = 10; ac = 15
+            skills = ["acrobatics": 2, "insight": 2]; weapons = ["quarterstaff", "dagger"]; spells = []; equipment = ["Quarterstaff", "2 Daggers", "Explorer’s Pack"]
+        case .paladin:
+            scores = [.strength: 17, .dexterity: 10, .constitution: 14, .intelligence: 8, .wisdom: 10, .charisma: 14]; hp = 12; ac = 16
+            skills = ["athletics": 2, "persuasion": 2]; weapons = ["longsword", "javelin"]; spells = ["cure wounds", "detect magic"]; equipment = ["Chain Mail", "Longsword", "Shield", "Holy Symbol", "Priest’s Pack"]
+        case .ranger:
+            scores = [.strength: 12, .dexterity: 17, .constitution: 14, .intelligence: 10, .wisdom: 14, .charisma: 8]; hp = 12; ac = 15
+            skills = ["survival": 2, "perception": 2]; weapons = ["shortsword", "longbow"]; spells = ["cure wounds", "detect magic"]; equipment = ["Studded Leather Armor", "Shortsword", "Longbow", "20 Arrows", "Explorer’s Pack"]
+        case .sorcerer:
+            scores = [.strength: 8, .dexterity: 14, .constitution: 14, .intelligence: 10, .wisdom: 10, .charisma: 17]; hp = 8; ac = 12
+            skills = ["arcana": 2, "persuasion": 2]; weapons = ["dagger"]; spells = ["fire bolt", "light", "mage hand", "magic missile", "detect magic"]; equipment = ["2 Daggers", "Arcane Focus", "Explorer’s Pack"]
+        case .warlock:
+            scores = [.strength: 8, .dexterity: 14, .constitution: 14, .intelligence: 10, .wisdom: 10, .charisma: 17]; hp = 10; ac = 12
+            skills = ["arcana": 2, "deception": 2]; weapons = ["dagger", "shortbow"]; spells = ["fire bolt", "mage hand", "magic missile", "detect magic"]; equipment = ["Dagger", "Arcane Focus", "Leather Armor", "Scholar’s Pack"]
         }
-        return .init(name: name.trimmingCharacters(in: .whitespacesAndNewlines), characterClass: characterClass, scores: scores, skills: skills, hitPoints: hp, maximumHitPoints: hp, armorClass: ac, spellSlots: characterClass == .wizard || characterClass == .cleric ? 2 : 0, secondWindUses: characterClass == .fighter ? 2 : 0, weapons: weapons, spells: spells, equipment: equipment)
+        var hero = Self(name: name.trimmingCharacters(in: .whitespacesAndNewlines), characterClass: characterClass, scores: scores, skills: skills, hitPoints: hp, maximumHitPoints: hp, armorClass: ac, spellSlots: characterClass == .warlock ? 1 : AdventurerClass.levelOneSpellcasters.contains(characterClass) ? 2 : 0, secondWindUses: characterClass == .fighter ? 2 : 0, weapons: weapons, spells: spells, equipment: equipment)
+        hero.classFeatures = .initial(for: characterClass, charismaModifier: hero.modifier(.charisma))
+        return hero
     }
+}
+
+public extension AdventurerClass {
+    static let levelOneSpellcasters: Set<AdventurerClass> = [.bard, .cleric, .druid, .paladin, .ranger, .sorcerer, .warlock, .wizard]
+    var hitDie: Int { switch self { case .barbarian: 12; case .fighter, .paladin, .ranger: 10; case .bard, .cleric, .druid, .monk, .rogue, .warlock: 8; case .sorcerer, .wizard: 6 } }
+    static func hitDie(for characterClass: AdventurerClass) -> Int { characterClass.hitDie }
 }
 public struct WorldMemory: Codable, Hashable, Identifiable, Sendable {
     public var id: String
@@ -287,6 +355,31 @@ public struct OpenWorldAdventure: Codable, Hashable, Sendable {
         let ritualAccess = hero.characterClass == .wizard ? "Wizard Ritual Adept book entries: \((hero.spellbook ?? []).filter { CreationSpellCatalog.ritualSpells.contains($0) }.joined(separator: ", ")). Reading the carried spellbook permits these unprepared rituals." : "Only prepared Ritual-tagged spells can be cast as rituals."
         let background = "OPENING BRIEF (established campaign canon): \(opening.briefing)\nHero: \(hero.name.prefix(100)), level 1 \(hero.characterClass.rawValue), HP \(hero.hitPoints)/\(hero.maximumHitPoints), AC \(hero.armorClass), spell slots \(hero.spellSlots), Second Wind \(hero.secondWindUses). Weapons: \(hero.weapons.joined(separator: ", ")); class cantrips/prepared spells: \(hero.spells.joined(separator: ", ")).\n\(initiate)\nRitual=true adds10minutes and uses no slot/free casting; requires uninterrupted concentration and normal components. \(ritualAccess) Unprepared nonrituals cannot be cast. Concentration: \(hero.concentratingOn ?? "none"). Utility spell records (honor elapsed duration): \(utility.prefix(600))\nCarried equipment: \(hero.equipment.joined(separator: ", ").prefix(500))\nLocation: \(location.prefix(150))\nEstablished actors (reuse bracketed actor IDs): \(actors.prefix(900))\nActive quests: \(quests.prefix(300))\nMEMORIES:\n\(ranked)\nOLDER RELEVANT RECORDS:\n\(retrieved)"
         return originSection + String((creationRecord + background).prefix(max(0, 6500 - originSection.count - current.count - 1))) + "\n" + current
+    }
+
+    /// A narrator needs a playable present tense, not a giant lore dump. This
+    /// deliberately reserves space for scene, people, and recent exchange.
+    public func narrationContext(for playerText: String) -> String {
+        let currentPeople = memories.filter { $0.status == "active" && $0.category == "person" }.suffix(10)
+        let people = currentPeople.map { memory in
+            "[\(memory.id)] \(memory.name): \(memory.detail.prefix(240))"
+        }.joined(separator: "\n")
+        let liveFacts = memories.filter { $0.status == "active" && ["quest", "promise", "fact", "place"].contains($0.category) }.suffix(12).map { memory in
+            "[\(memory.id)] \(memory.category) \(memory.name): \(memory.detail.prefix(180))"
+        }.joined(separator: "\n")
+        let recent = transcript.filter { ["player", "gm"].contains($0.role) }.suffix(8).map { message in
+            "\(message.role.uppercased()): \(message.text.prefix(700))"
+        }.joined(separator: "\n")
+        return """
+        SCENE CARD — binding current state
+        WHERE: \(location)
+        PLAYER'S NEW TURN: \(playerText)
+        WHO IS ESTABLISHED: \(people.isEmpty ? "No named NPC is currently established; introduce one only if the scene needs it." : people)
+        LIVE FACTS AND THREADS: \(liveFacts.isEmpty ? "No additional live fact is required." : liveFacts)
+        RECENT EXCHANGE (do not repeat it; respond to it):
+        \(recent)
+        END SCENE CARD
+        """
     }
 
     public var returnRecap: String {

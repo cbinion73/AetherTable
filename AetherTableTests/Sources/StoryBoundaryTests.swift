@@ -7,6 +7,29 @@ import Testing
     #expect(WorldIntentGrounding.location(after: "I walk to the village square.", current: "Bakery", proposed: "Village square") == "Village square")
 }
 
+@Test func qualityGuardRejectsTheCapturedFestivalCatchphraseAndLeavesStateUntouched() throws {
+    var state = OpenWorldAdventure(hero: .preset(.cleric, name: "Liora"))
+    state.location = "Festival tavern"
+    state.transcript.append(.init(role: "gm", text: "The barkeep frowns. \"The festival's too loud for secrets.\""))
+    let resolution = try OpenWorldEngine.resolve(.init(), in: state, seed: 19)
+    let echo = WorldStory(prose: "The cartographer looks toward the bottles. \"The festival's too loud for secrets,\" he repeats.", location: "Festival tavern", memories: [])
+    #expect(AdventureTurn.repeatsRecentMaterial(echo.prose, transcript: state.transcript))
+    #expect(throws: OpenWorldError.self) { try AdventureTurn.finish(playerText: "Why do you keep saying that?", resolution: resolution, story: echo) }
+    #expect(resolution.adventure == state)
+}
+
+@Test func qualityGuardRequiresAConcreteWhyAnswerButAllowsAGroundedRefusal() {
+    #expect(!AdventureTurn.answersPlainQuestion("Why do you keep saying that?", prose: "The barkeep stares into his mug. \"The bottles remember.\""))
+    #expect(AdventureTurn.answersPlainQuestion("Why do you keep saying that?", prose: "The barkeep lowers his voice. \"Because the marshal is listening, and she arrested my brother for saying it.\""))
+    #expect(AdventureTurn.answersPlainQuestion("I inspect the bottles.", prose: "The nearest bottle holds a curled silver fish scale."))
+}
+
+@Test func qualityGuardDetectsRepeatedMaterialOutsideTheOpeningSentence() {
+    let prior = AdventureMessage(role: "gm", text: "Warm cinnamon fills the bakery. Iven says, \"Captain Elian bought six loaves before breakfast.\"")
+    let candidate = "A pigeon rattles the eaves. Iven laughs. \"Captain Elian bought six loaves before breakfast.\""
+    #expect(AdventureTurn.repeatsRecentMaterial(candidate, transcript: [prior]))
+}
+
 @Test func explicitSpellUseCannotBeDowngradedToFreeNarration() throws {
     let hero = OpenWorldHero.preset(.wizard, name: "Rowan")
     let plan = WorldIntentGrounding.apply(to: .init(), playerText: "I use Mage Hand to lift the tray.", hero: hero)

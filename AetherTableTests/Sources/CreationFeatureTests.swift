@@ -1,5 +1,48 @@
+import Foundation
 import RulesPacks
 import Testing
+
+@Test func expandedClassesAndAncestriesPersistOnlyImplementedState() throws {
+    for characterClass in [AdventurerClass.barbarian, .bard, .druid, .monk, .paladin, .ranger, .sorcerer, .warlock] {
+        var draft = CharacterCreationDraft.suggested(for: characterClass, name: "Ari")
+        for species in [CharacterSpecies.elf, .gnome, .tiefling, .dragonborn] {
+            draft.species = species
+            let hero = try draft.build()
+            #expect(hero.classFeatures != nil)
+            #expect(hero.creation?.species == species)
+            #expect(try JSONDecoder().decode(OpenWorldHero.self, from: JSONEncoder().encode(hero)) == hero)
+        }
+    }
+}
+
+@Test func expandedFeatureResourcesResolveAndRecoverDeterministically() throws {
+    let barbarian = OpenWorldAdventure(hero: .preset(.barbarian, name: "B"))
+    let rage = try OpenWorldEngine.resolve(.init(kind: "feature", tool: "rage"), in: barbarian, seed: 1)
+    #expect(rage.adventure.hero.classFeatures?.rageUses == 1)
+    let restored = try OpenWorldEngine.resolve(.init(kind: "rest", tool: "long rest"), in: rage.adventure, seed: 2)
+    #expect(restored.adventure.hero.classFeatures?.rageUses == 2)
+
+    var paladin = OpenWorldAdventure(hero: .preset(.paladin, name: "P")); paladin.hero.hitPoints = 1
+    let hands = try OpenWorldEngine.resolve(.init(kind: "feature", tool: "lay on hands"), in: paladin, seed: 1)
+    #expect(hands.adventure.hero.hitPoints == 6)
+    #expect(hands.adventure.hero.classFeatures?.layOnHandsPool == 0)
+}
+
+@Test func levelOneFeaturesApplyConcretePersistedEffects() throws {
+    let ranger = OpenWorldAdventure(hero: .preset(.ranger, name: "R"))
+    let marked = try OpenWorldEngine.resolve(.init(kind: "feature", tool: "hunter's mark", target: "wolf", targetArmorClass: 10, targetHitPoints: 20), in: ranger, seed: 3)
+    #expect(marked.adventure.hero.classFeatures?.markedTarget == "wolf")
+    #expect(marked.adventure.hero.classFeatures?.huntersMarkUses == 1)
+
+    let sorcerer = OpenWorldAdventure(hero: .preset(.sorcerer, name: "S"))
+    let innate = try OpenWorldEngine.resolve(.init(kind: "feature", tool: "innate sorcery"), in: sorcerer, seed: 4)
+    #expect(innate.adventure.hero.classFeatures?.innateSorceryActive == true)
+    #expect(innate.adventure.hero.classFeatures?.innateSorceryUses == 1)
+
+    let monk = OpenWorldAdventure(hero: .preset(.monk, name: "M"))
+    let strike = try OpenWorldEngine.resolve(.init(kind: "feature", tool: "martial arts", target: "goblin", targetArmorClass: 5, targetHitPoints: 20), in: monk, seed: 5, playerD20: 20)
+    #expect(strike.adventure.opponents["goblin"]!.hitPoints < 20)
+}
 
 @Test func halflingLuckUsesReplacementEvenWhenItIsAnotherOne() throws {
     let result = try CreationFeatureRules.d20(dice: [1], mode: .normal, halflingLuck: true, replacementDie: 1)

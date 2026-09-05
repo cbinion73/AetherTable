@@ -31,15 +31,25 @@ public enum CreationSpellCatalog {
     }
     public static func cantrips(for characterClass: AdventurerClass) -> [String] {
         switch characterClass {
+        case .bard: ["light", "mending", "prestidigitation"]
         case .wizard: ["fire bolt", "light", "mage hand", "mending", "prestidigitation"]
         case .cleric: ["light", "mending", "sacred flame", "thaumaturgy"]
+        case .druid: ["light", "mending"]
+        case .sorcerer: ["fire bolt", "light", "mage hand", "mending", "prestidigitation"]
+        case .warlock: ["fire bolt", "mage hand", "prestidigitation"]
         default: []
         }
     }
     public static func levelOneSpells(for characterClass: AdventurerClass) -> [String] {
         switch characterClass {
+        case .bard: ["cure wounds", "detect magic", "disguise self", "healing word"]
         case .wizard: ["alarm", "comprehend languages", "detect magic", "disguise self", "identify", "illusory script", "magic missile", "unseen servant"]
         case .cleric: ["create or destroy water", "cure wounds", "detect magic", "detect poison and disease", "guiding bolt", "healing word", "purify food and drink"]
+        case .druid: ["cure wounds", "detect magic", "detect poison and disease", "purify food and drink"]
+        case .paladin: ["cure wounds", "detect magic"]
+        case .ranger: ["cure wounds", "detect magic"]
+        case .sorcerer: ["detect magic", "magic missile"]
+        case .warlock: ["detect magic", "magic missile"]
         default: []
         }
     }

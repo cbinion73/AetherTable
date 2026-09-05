@@ -116,6 +116,19 @@ import Testing
     let encoded = try JSONEncoder().encode(state)
     #expect(try JSONDecoder().decode(OpenWorldAdventure.self, from: encoded) == state)
 }
+
+@Test func narrationContextReservesTheCurrentScenePeopleAndRecentExchange() {
+    var state = OpenWorldAdventure(hero: .preset(.cleric, name: "Liora"))
+    state.location = "Sunspire tavern"
+    state.memories.append(.init(id: "person.iven", category: "person", name: "Iven", detail: "The practical barkeep wants the festival to stay cheerful."))
+    state.memories.append(.init(id: "quest.prism", category: "quest", name: "The scattered prism", detail: "Seven beams reveal people and small wonders asking to be found."))
+    state.transcript = [.init(role: "player", text: "Why do you keep warning me about the bottles?"), .init(role: "gm", text: "Iven sets down a clean glass and glances toward the parade." )]
+    let card = state.narrationContext(for: "Why do you keep saying that?")
+    #expect(card.contains("WHERE: Sunspire tavern"))
+    #expect(card.contains("Iven"))
+    #expect(card.contains("scattered prism"))
+    #expect(card.contains("do not repeat it; respond to it"))
+}
 @Test func memoryUpdatePreservesPreviousDetailAndRejectsInvalidCategory() throws {
     var state = OpenWorldAdventure(hero: .preset(.wizard, name: "W"))
     state.memories.append(.init(id: "person.iven", category: "person", name: "Iven", detail: "Owes Lysa three coins."))

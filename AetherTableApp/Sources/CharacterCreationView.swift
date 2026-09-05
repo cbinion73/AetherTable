@@ -277,15 +277,27 @@ struct CharacterCreationView: View {
     case .strength: "Physical power"; case .dexterity: "Agility and reflexes"; case .constitution: "Endurance and health"; case .intelligence: "Reasoning and knowledge"; case .wisdom: "Awareness and intuition"; case .charisma: "Presence and influence"
     } }
     private var classDescription: String { switch draft.characterClass {
+    case .barbarian: "A durable frontline adventurer with a finite Rage resource. Strength and Constitution lead the charge."
+    case .bard: "Charisma-based magic and Bardic Inspiration. Your words can sustain an ally without taking their choices away."
     case .fighter: "Weapon mastery, a Fighting Style and Second Wind. Strength or Dexterity can lead your approach."
     case .rogue: "Four class skills, Expertise and conditional Sneak Attack. Dexterity supports precision and stealth."
     case .wizard: "Intelligence-based magic: three cantrips, six spellbook spells and four prepared spells."
     case .cleric: "Wisdom-based magic, prepared spells and a Divine Order. Your origin defines your relationship to faith."
+    case .druid: "Wisdom-based nature magic and a Primal Order foundation. Wild Shape arrives at level two, rather than being invented early."
+    case .monk: "Dexterity and Wisdom support unarmored discipline and a d6 Martial Arts bonus strike."
+    case .paladin: "A durable Charisma-based knight with a five-point Lay on Hands pool. Divine Smite arrives at level two."
+    case .ranger: "A Dexterity/Wisdom explorer with two long-rest Hunter’s Mark castings through Favored Enemy."
+    case .sorcerer: "Charisma-based magic with a finite Innate Sorcery focus resource; only supported spells are selectable."
+    case .warlock: "Charisma-based magic with one Pact Magic slot that returns on a short or long rest. Invocations arrive at level two."
     } }
     private var speciesDescription: String { switch draft.species {
     case .human: "Choose a skill and an additional Origin feat. Humans also have Resourceful."
     case .dwarf: "Dwarven Toughness adds one hit point at level one; dwarven traits include poison resilience and darkvision."
     case .halfling: "Small, resourceful adventurers whose Luck can reroll a natural 1 on a D20 Test."
     case .orc: "Resilient adventurers with darkvision, Adrenaline Rush and Relentless Endurance."
+    case .elf: "Elves bring Elvish language and ancestry identity to the campaign. No unimplemented sensory or trance bonus is silently granted."
+    case .gnome: "Gnomes are Small adventurers whose Gnomish identity and language persist without invented magical resistance."
+    case .tiefling: "Tieflings establish an infernal heritage in story context. Resistance and legacy spells are not silently granted outside the implemented subset."
+    case .dragonborn: "Dragonborn establish draconic heritage in story context. Breath weapons and resistance are not invented without an explicit resolver."
     } }
 }

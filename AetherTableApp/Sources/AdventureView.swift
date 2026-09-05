@@ -13,7 +13,10 @@ struct AdventureView: View {
                     LazyVStack(alignment: .leading, spacing: 24) {
                         if let state = model.adventure {
                             StoryHeading(eyebrow: "\(state.hero.name) · \(state.hero.characterClass.rawValue)", title: state.location)
-                            HStack { Label("\(state.hero.hitPoints)/\(state.hero.maximumHitPoints) HP", systemImage: "heart"); Text("AC \(state.hero.armorClass)"); if state.hero.characterClass == .wizard || state.hero.characterClass == .cleric { Text("\(state.hero.spellSlots) spell slots") } }.font(.caption.bold()).foregroundStyle(.secondary)
+                            HStack { Label("\(state.hero.hitPoints)/\(state.hero.maximumHitPoints) HP", systemImage: "heart"); Text("AC \(state.hero.armorClass)"); if state.hero.spellcastingAbility != nil { Text("\(state.hero.spellSlots) spell slots") } }.font(.caption.bold()).foregroundStyle(.secondary)
+                            if let features = state.hero.classFeatures {
+                                Text(featureSummary(features)).font(.caption).foregroundStyle(StoryStyle.copper).frame(maxWidth: .infinity, alignment: .leading)
+                            }
                             if state.transcript.isEmpty {
                                 StoryCard {
                                     Label("The opening scene", systemImage: "theatermasks").font(.headline)
@@ -54,6 +57,19 @@ struct AdventureView: View {
             }
             .sheet(isPresented: Binding(get: { receipt != nil }, set: { if !$0 { receipt = nil } })) { NavigationStack { StoryPage { StoryHeading(eyebrow: "Engine record", title: "Dice & consequences"); Text(receipt ?? "").font(.body.monospaced()).textSelection(.enabled) }.toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { receipt = nil } } } } }
     }
+}
+
+private func featureSummary(_ features: ClassFeatureState) -> String {
+    let entries = [
+        features.rageUses > 0 ? "Rage \(features.rageUses)" : nil,
+        features.bardicInspirationUses > 0 ? "Inspiration \(features.bardicInspirationUses)" : nil,
+        features.layOnHandsPool > 0 ? "Lay on Hands \(features.layOnHandsPool)" : nil,
+        features.huntersMarkUses > 0 ? "Hunter’s Mark \(features.huntersMarkUses)" : nil,
+        features.innateSorceryUses > 0 ? "Innate Sorcery \(features.innateSorceryUses)" : nil,
+        features.rageActive ? "Raging" : nil, features.innateSorceryActive ? "Innate Sorcery active" : nil,
+        features.markedTarget.map { "Marked: \($0)" }, features.bardicInspirationTarget.map { "Inspired: \($0)" }
+    ].compactMap { $0 }
+    return entries.isEmpty ? "No class resources remaining" : entries.joined(separator: " · ")
 }
 
 private struct DiceRollView: View {

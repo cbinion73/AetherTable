@@ -80,7 +80,7 @@ public enum OpenWorldEngine {
         let namedTargets = state.opponents.filter { $0.value.name.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) == targetName }
         guard explicitTargetID?.isEmpty == false || namedTargets.count <= 1 else { throw OpenWorldError.invalidPlan("Several people share that name. The GM must identify the intended actor before resolving the turn.") }
         let targetID = explicitTargetID?.isEmpty == false ? explicitTargetID! : namedTargets.first?.key ?? targetName
-        guard ["narrative", "check", "weapon", "spell", "secondWind", "rest"].contains(plan.kind) else { throw OpenWorldError.invalidPlan("The GM proposed an unsupported action. Try describing your intent again.") }
+        guard ["narrative", "check", "weapon", "spell", "secondWind", "feature", "rest"].contains(plan.kind) else { throw OpenWorldError.invalidPlan("The GM proposed an unsupported action. Try describing your intent again.") }
         guard (5...25).contains(plan.difficulty), (5...22).contains(plan.targetArmorClass), (1...60).contains(plan.targetHitPoints), (-2...8).contains(plan.targetSaveModifier), (0...8).contains(plan.enemyAttackBonus), [4, 6, 8, 10, 12].contains(plan.enemyDamageSides) else { throw OpenWorldError.invalidPlan("The GM proposed circumstances outside this level-one rules range. Please retry.") }
         guard state.hero.hitPoints > 0 || ["rest", "narrative"].contains(plan.kind) else { throw OpenWorldError.invalidPlan("Your adventurer is down. Describe seeking help or recovering before taking a strenuous action.") }
         func check(modifier: Int, target: Int, attack: Bool, advantage: Bool, disadvantage: Bool) throws -> (Bool, Bool) {
@@ -101,7 +101,7 @@ public enum OpenWorldEngine {
             guard !targetName.isEmpty, ![state.hero.name.lowercased(), "self", "player"].contains(targetName) else { throw OpenWorldError.invalidPlan("An attack needs a distinct target.") }
             if state.opponents[targetID] == nil { state.opponents[targetID] = .init(name: plan.target, armorClass: plan.targetArmorClass, hitPoints: plan.targetHitPoints, maximumHitPoints: plan.targetHitPoints, saveModifier: plan.targetSaveModifier, attackBonus: plan.enemyAttackBonus, damageSides: plan.enemyDamageSides, hostile: true) }
             guard state.opponents[targetID]!.hitPoints > 0 else { throw OpenWorldError.invalidPlan("That target is already defeated.") }
-            if plan.kind == "weapon" || ["magic missile", "sacred flame", "fire bolt", "guiding bolt"].contains(tool) { state.opponents[targetID]!.hostile = true }
+            if plan.kind == "weapon" || tool == "martial arts" || ["magic missile", "sacred flame", "fire bolt", "guiding bolt"].contains(tool) { state.opponents[targetID]!.hostile = true }
         }
         func damage(_ count: Int, _ sides: Int, modifier: Int, critical: Bool) throws {
             let dice = try roll(count * (critical ? 2 : 1), sides)
@@ -123,7 +123,8 @@ public enum OpenWorldEngine {
             let ranged = ["shortbow", "longbow"].contains(tool)
             let finesse = ["shortsword", "scimitar", "dagger"].contains(tool)
             let sneakEligible = ranged || finesse
-            let modifier = ranged ? state.hero.modifier(.dexterity) : finesse ? max(state.hero.modifier(.dexterity), state.hero.modifier(.strength)) : state.hero.modifier(.strength)
+            let monkWeapon = state.hero.characterClass == .monk && !ranged
+            let modifier = monkWeapon ? state.hero.modifier(.dexterity) : ranged ? state.hero.modifier(.dexterity) : finesse ? max(state.hero.modifier(.dexterity), state.hero.modifier(.strength)) : state.hero.modifier(.strength)
             let guided = state.guidingBoltTarget == targetID
             let archery = CreationFeatureRules.rangedAttackBonus(archery: state.hero.characterClass == .fighter && state.hero.creation?.fightingStyle == .archery, isRanged: ranged)
             if archery > 0 { receipt.append("Archery fighting style: +2 to ranged weapon attack.") }
@@ -132,15 +133,21 @@ public enum OpenWorldEngine {
             if result.0 {
                 let versatile = ["longsword", "quarterstaff", "spear"].contains(tool)
                 let twoHanded = tool == "greatsword" || (versatile && plan.weaponTwoHanded == true)
-                let sides = tool == "dagger" ? 4 : tool == "longsword" && twoHanded ? 10 : (["quarterstaff", "spear"].contains(tool) && twoHanded) || ["longsword", "flail", "longbow"].contains(tool) ? 8 : 6
+                let sides = monkWeapon ? 6 : tool == "dagger" ? 4 : tool == "longsword" && twoHanded ? 10 : (["quarterstaff", "spear"].contains(tool) && twoHanded) || ["longsword", "flail", "longbow"].contains(tool) ? 8 : 6
                 let count = (tool == "greatsword" ? 2 : 1) * (result.1 ? 2 : 1)
                 let first = try roll(count, sides)
                 let savage = state.hero.creation?.feats.contains("Savage Attacker") == true
                 let second = savage ? try roll(count, sides) : nil
                 let greatWeapon = state.hero.characterClass == .fighter && state.hero.creation?.fightingStyle == .greatWeaponFighting && twoHanded
                 let weaponDamage = try CreationFeatureRules.weaponDamage(first: first, second: second, sides: sides, modifier: modifier, greatWeaponFighting: greatWeapon, savageAttackerAvailable: savage)
-                state.opponents[targetID]!.hitPoints = max(0, state.opponents[targetID]!.hitPoints - weaponDamage.total)
-                receipt.append("Weapon damage d\(sides): original \(first)\(second.map { ", Savage Attacker alternate \($0)" } ?? ""), used \(weaponDamage.dice) + \(modifier) = \(weaponDamage.total). \(plan.target) HP \(state.opponents[targetID]!.hitPoints)/\(state.opponents[targetID]!.maximumHitPoints).")
+                var totalDamage = weaponDamage.total
+                let features = state.hero.classFeatures ?? .initial(for: state.hero.characterClass, charismaModifier: state.hero.modifier(.charisma))
+                if features.rageActive && !ranged && state.hero.characterClass == .barbarian { totalDamage += 2; receipt.append("Rage: +2 damage on this Strength-based melee weapon hit.") }
+                if features.markedTarget == targetID && state.hero.characterClass == .ranger {
+                    let markDie = try roll(1, 6)[0]; totalDamage += markDie; receipt.append("Hunter’s Mark: d6 \(markDie) extra damage to the marked target.")
+                }
+                state.opponents[targetID]!.hitPoints = max(0, state.opponents[targetID]!.hitPoints - totalDamage)
+                receipt.append("Weapon damage d\(sides): original \(first)\(second.map { ", Savage Attacker alternate \($0)" } ?? ""), used \(weaponDamage.dice) + \(modifier) = \(totalDamage). \(plan.target) HP \(state.opponents[targetID]!.hitPoints)/\(state.opponents[targetID]!.maximumHitPoints).")
                 if greatWeapon { receipt.append("Great Weapon Fighting: weapon damage dice1 or2 count as3 while wielded two-handed.") }
                 if savage { receipt.append("Savage Attacker: higher weapon dice set used once this turn; extra Sneak Attack dice excluded.") }
                 let mode = SRD521RollMode.effective(hasAdvantage: plan.advantage || guided, hasDisadvantage: plan.disadvantage)
@@ -155,6 +162,49 @@ public enum OpenWorldEngine {
             state.hero.hitPoints = min(state.hero.maximumHitPoints, before + die + 1); state.hero.secondWindUses -= 1
             receipt.append("Second Wind d10 \(die) + 1: healed \(state.hero.hitPoints - before) HP, \(state.hero.secondWindUses) uses remain. Bonus action; no weapon attack included in this intent.")
             outcome = "Recovered"
+        case "feature":
+            var features = state.hero.classFeatures ?? .initial(for: state.hero.characterClass, charismaModifier: state.hero.modifier(.charisma))
+            switch tool {
+            case "rage":
+                guard state.hero.characterClass == .barbarian, features.rageUses > 0 else { throw OpenWorldError.invalidPlan("No Rage uses remain.") }
+                features.rageUses -= 1; state.hero.classFeatures = features
+                features.rageActive = true; state.hero.classFeatures = features
+                receipt.append("Rage begins: \(features.rageUses) uses remain. Strength-based melee weapon hits gain +2 damage until your next rest; the active state is saved."); outcome = "Rage active"
+            case "martial arts":
+                guard state.hero.characterClass == .monk else { throw OpenWorldError.invalidPlan("Martial Arts is a Monk feature.") }
+                try establishTarget()
+                let modifier = state.hero.modifier(.dexterity) + state.hero.proficiencyBonus
+                let result = try check(modifier: modifier, target: state.opponents[targetID]!.armorClass, attack: true, advantage: plan.advantage, disadvantage: plan.disadvantage)
+                if result.0 { try damage(1, 6, modifier: state.hero.modifier(.dexterity), critical: result.1) }
+                receipt.append("Martial Arts: a level-one bonus Unarmed Strike using Dexterity and a d6 Martial Arts die; no resource is spent."); outcome = result.0 ? "Martial Arts strikes" : "Martial Arts misses"
+            case "hunter's mark", "hunters mark":
+                guard state.hero.characterClass == .ranger, features.huntersMarkUses > 0, !targetName.isEmpty else { throw OpenWorldError.invalidPlan("Hunter’s Mark needs a target and an available use.") }
+                features.huntersMarkUses -= 1; features.markedTarget = targetID; state.hero.classFeatures = features
+                receipt.append("Favored Enemy: cast Hunter’s Mark without a spell slot on \(plan.target); \(features.huntersMarkUses) free castings remain. The marked target and extra d6 weapon damage are saved."); outcome = "Hunter’s Mark active"
+            case "lay on hands":
+                guard state.hero.characterClass == .paladin, features.layOnHandsPool > 0 else { throw OpenWorldError.invalidPlan("Your Lay on Hands pool is empty.") }
+                let amount = min(5, features.layOnHandsPool)
+                if targetName.isEmpty || ["self", "player", state.hero.name.lowercased()].contains(targetName) {
+                    let before = state.hero.hitPoints; state.hero.hitPoints = min(state.hero.maximumHitPoints, before + amount)
+                    features.layOnHandsPool -= amount; state.hero.classFeatures = features
+                    receipt.append("Lay on Hands: restored \(state.hero.hitPoints - before) HP; \(features.layOnHandsPool) points remain in the saved pool.")
+                } else {
+                    if state.opponents[targetID] == nil { state.opponents[targetID] = .init(name: plan.target, armorClass: plan.targetArmorClass, hitPoints: plan.targetCurrentHitPoints, maximumHitPoints: plan.targetHitPoints, saveModifier: plan.targetSaveModifier, attackBonus: plan.enemyAttackBonus, damageSides: plan.enemyDamageSides) }
+                    let before = state.opponents[targetID]!.hitPoints; state.opponents[targetID]!.hitPoints = min(state.opponents[targetID]!.maximumHitPoints, before + amount)
+                    features.layOnHandsPool -= amount; state.hero.classFeatures = features
+                    receipt.append("Lay on Hands: restored \(state.opponents[targetID]!.hitPoints - before) HP to \(plan.target); \(features.layOnHandsPool) points remain in the saved pool.")
+                }
+                outcome = "Healed"
+            case "bardic inspiration":
+                guard state.hero.characterClass == .bard, features.bardicInspirationUses > 0, !targetName.isEmpty, !["self", "player", state.hero.name.lowercased()].contains(targetName) else { throw OpenWorldError.invalidPlan("Bardic Inspiration needs another named creature and an available use.") }
+                features.bardicInspirationUses -= 1; features.bardicInspirationTarget = targetID; state.hero.classFeatures = features
+                receipt.append("Bardic Inspiration: \(plan.target) receives one saved d6 for a failed D20 Test within one hour; \(features.bardicInspirationUses) uses remain."); outcome = "Inspiration granted"
+            case "innate sorcery":
+                guard state.hero.characterClass == .sorcerer, features.innateSorceryUses > 0 else { throw OpenWorldError.invalidPlan("No Innate Sorcery uses remain.") }
+                features.innateSorceryUses -= 1; features.innateSorceryActive = true; state.hero.classFeatures = features
+                receipt.append("Innate Sorcery begins: \(features.innateSorceryUses) uses remain. Your Sorcerer spell save DC is +1 and your Sorcerer spell attacks have Advantage until your next rest."); outcome = "Innate Sorcery active"
+            default: throw OpenWorldError.invalidPlan("That class feature is not in this level-one rules subset.")
+            }
         case "spell":
             let ritual = plan.ritual == true
             if ritual {
@@ -169,7 +219,8 @@ public enum OpenWorldEngine {
             let useInitiate = plan.spellSource == "magicInitiate" || (!classKnown && !bookKnown && initiateKnown && plan.spellSource != "class")
             guard useInitiate ? initiateKnown : classKnown || bookKnown else { throw OpenWorldError.invalidPlan("That spell is not prepared from the selected source. Wizard Ritual Adept also requires a ritual in your spellbook and the book in your possession.") }
             guard let level = CreationSpellCatalog.level(of: tool) else { throw OpenWorldError.invalidPlan("That spell’s mechanics are not implemented in this beta.") }
-            let spellAbility = useInitiate ? state.hero.magicInitiate!.ability : state.hero.characterClass == .wizard ? SRD521Ability.intelligence : .wisdom
+            let spellAbility = useInitiate ? state.hero.magicInitiate!.ability : state.hero.spellcastingAbility ?? .wisdom
+            let innateSorcery = state.hero.characterClass == .sorcerer && state.hero.classFeatures?.innateSorceryActive == true
             if let item = CreationSpellCatalog.utilities[tool]?.requiredItem {
                 guard state.hero.equipment.contains(where: { $0.caseInsensitiveCompare(item) == .orderedSame }) else { throw OpenWorldError.invalidPlan("\(tool.capitalized) requires \(item). Your resources are unchanged.") }
             }
@@ -190,7 +241,7 @@ public enum OpenWorldEngine {
                     state.hero.spellSlots -= 1; receipt.append("Spent one level-one spell slot; \(state.hero.spellSlots) remain.")
                 }
             }
-            receipt.append("Spellcasting source: \(useInitiate ? "Magic Initiate" : "class"), \(spellAbility.rawValue), spell save DC \(8 + state.hero.proficiencyBonus + state.hero.modifier(spellAbility)). \(ritual ? "Ritual casting; components and effect duration unchanged." : "Normal casting; no ritual discount.")")
+            receipt.append("Spellcasting source: \(useInitiate ? "Magic Initiate" : "class"), \(spellAbility.rawValue), spell save DC \(8 + state.hero.proficiencyBonus + state.hero.modifier(spellAbility) + (innateSorcery ? 1 : 0)). \(ritual ? "Ritual casting; components and effect duration unchanged." : "Normal casting; no ritual discount.")")
             if let definition = CreationSpellCatalog.utilities[tool] {
                 if definition.concentration {
                     if let previous = state.hero.concentratingOn { state.hero.activeUtilitySpells?.removeValue(forKey: previous); receipt.append("Concentration on \(previous) ends.") }
@@ -230,7 +281,7 @@ public enum OpenWorldEngine {
                 outcome = "Magic missiles hit"
             case "sacred flame":
                 try establishTarget()
-                let save = try roll(1, 20)[0], dc = 8 + state.hero.proficiencyBonus + state.hero.modifier(spellAbility)
+                let save = try roll(1, 20)[0], dc = 8 + state.hero.proficiencyBonus + state.hero.modifier(spellAbility) + (innateSorcery ? 1 : 0)
                 let saveModifier = state.opponents[targetID]!.saveModifier
                 receipt.append("Target Dexterity save d20 \(save) + \(saveModifier) versus DC \(dc).")
                 if save + saveModifier < dc { try damage(1, 8, modifier: 0, critical: false); outcome = "Target fails its save" } else { outcome = "Target saves; no damage" }
@@ -238,7 +289,7 @@ public enum OpenWorldEngine {
                 try establishTarget()
                 let modifier = state.hero.proficiencyBonus + state.hero.modifier(spellAbility)
                 let guided = state.guidingBoltTarget == targetID
-                let hit = try check(modifier: modifier, target: state.opponents[targetID]!.armorClass, attack: true, advantage: plan.advantage || guided, disadvantage: plan.disadvantage)
+                let hit = try check(modifier: modifier, target: state.opponents[targetID]!.armorClass, attack: true, advantage: plan.advantage || guided || innateSorcery, disadvantage: plan.disadvantage)
                 if guided { state.guidingBoltTarget = nil }
                 if hit.0 { try damage(tool == "guiding bolt" ? 4 : 1, tool == "guiding bolt" ? 6 : 10, modifier: 0, critical: hit.1); if tool == "guiding bolt" { state.guidingBoltTarget = targetID; state.guidingBoltExpires = state.turn + 1 } }
             default: throw OpenWorldError.invalidPlan("No resolver exists for that spell.")
@@ -248,17 +299,19 @@ public enum OpenWorldEngine {
             guard ["short rest", "long rest"].contains(tool) else { throw OpenWorldError.invalidPlan("Specify a one-hour short rest or eight-hour long rest.") }
             if tool == "short rest" {
                 if state.hitDieSpent != true && state.hero.hitPoints < state.hero.maximumHitPoints {
-                    let sides = state.hero.characterClass == .fighter ? 10 : state.hero.characterClass == .wizard ? 6 : 8
+                let sides = state.hero.characterClass.hitDie
                     let die = try roll(1, sides)[0], before = state.hero.hitPoints
                     state.hero.hitPoints = min(state.hero.maximumHitPoints, before + max(0, die + state.hero.modifier(.constitution)))
                     state.hitDieSpent = true; receipt.append("Short rest: spent one Hit Die, d\(sides) \(die) + CON \(state.hero.modifier(.constitution)); restored \(state.hero.hitPoints - before) HP.")
                 } else { receipt.append(state.hitDieSpent == true ? "Short rest: no Hit Dice remain to heal." : "Short rest: already at full health; Hit Die preserved.") }
                 if state.hero.characterClass == .fighter { state.hero.secondWindUses = min(2, state.hero.secondWindUses + 1); receipt.append("Recovered one Second Wind use, capped at two.") }
                 if state.hero.characterClass == .wizard && state.arcaneRecoverySpent != true && state.hero.spellSlots < 2 { state.hero.spellSlots += 1; state.arcaneRecoverySpent = true; receipt.append("Arcane Recovery restores one level-one slot; used until long rest.") }
+                if state.hero.characterClass == .warlock && state.hero.spellSlots < 1 { state.hero.spellSlots = 1; receipt.append("Pact Magic: recovered the level-one Pact slot on the short rest.") }
             } else {
                 state.hero.hitPoints = state.hero.maximumHitPoints
-                state.hero.spellSlots = [.wizard, .cleric].contains(state.hero.characterClass) ? 2 : 0
+                state.hero.spellSlots = state.hero.characterClass == .warlock ? 1 : AdventurerClass.levelOneSpellcasters.contains(state.hero.characterClass) ? 2 : 0
                 state.hero.secondWindUses = state.hero.characterClass == .fighter ? 2 : 0
+                var features = state.hero.classFeatures ?? .initial(for: state.hero.characterClass, charismaModifier: state.hero.modifier(.charisma)); features.recoverLongRest(for: state.hero.characterClass, charismaModifier: state.hero.modifier(.charisma)); state.hero.classFeatures = features
                 state.hitDieSpent = false; state.arcaneRecoverySpent = false
                 state.hero.magicInitiate?.freeUsesRemaining = 1
                 state.hero.concentratingOn = nil
