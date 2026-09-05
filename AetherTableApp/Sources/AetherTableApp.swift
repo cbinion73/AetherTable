@@ -2,7 +2,6 @@ import AetherTableCore
 import AIGM
 import DiceEngine
 import Persistence
-import RulesEngine
 import RulesPacks
 import SwiftUI
 
@@ -14,116 +13,125 @@ struct CampaignHomeView: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section("One platform. Many worlds.") {
-                    Text("AetherTable keeps the campaign truth in the engine. The AI Game Master brings it to life.")
-                }
-                Section("Rules Pack") {
-                    Picker("Prototype", selection: $model.selectedPackID) {
-                        ForEach(BuiltInRulesPacks.all, id: \.descriptor.id) { pack in
-                            Text(pack.descriptor.displayName).tag(pack.descriptor.id)
+            ZStack {
+                Color(uiColor: .systemGroupedBackground).ignoresSafeArea()
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 22) {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("AETHERTABLE").font(.caption.weight(.bold)).tracking(2).foregroundStyle(.tint)
+                            Text(model.hasCampaign ? "The Lantern Below" : "Your next story is waiting")
+                                .font(.largeTitle.bold())
+                        }
+
+                        if model.hasCampaign {
+                            StoryCard(title: model.sceneTitle, body: model.scenePrompt)
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("THE GM SAYS").font(.caption.weight(.bold)).tracking(1.2).foregroundStyle(.secondary)
+                                Text(model.gmNarration).font(.title3).fixedSize(horizontal: false, vertical: true)
+                            }
+                            .padding(20)
+                            .background(.background, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+
+                            if !model.lastRoll.isEmpty {
+                                Label(model.lastRoll, systemImage: "dice.fill")
+                                    .font(.footnote).foregroundStyle(.secondary).padding(.horizontal, 4)
+                            }
+
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("WHAT DO YOU DO?").font(.caption.weight(.bold)).tracking(1.2).foregroundStyle(.secondary)
+                                if model.canResolveSRDAttack {
+                                    StoryAction(title: "Strike with your longsword", detail: "Roll to drive the River Shade back.") { Task { await model.resolveSRDAttack() } }
+                                }
+                                if model.canResolveRiverShadeTurn {
+                                    StoryAction(title: "Continue", detail: "Let the River Shade answer your move.") { Task { await model.resolveRiverShadeTurn() } }
+                                }
+                                if model.canResolveArchiveChoice {
+                                    ForEach(LanternBelowFloodedArchive.choices) { choice in
+                                        StoryAction(title: choice.title, detail: choice.prompt) { Task { await model.resolveArchive(choiceID: choice.id) } }
+                                    }
+                                }
+                                if model.canResolveVaultChoice {
+                                    ForEach(LanternBelowVault.choices) { choice in
+                                        StoryAction(title: choice.title, detail: choice.prompt) { Task { await model.resolveVault(choiceID: choice.id) } }
+                                    }
+                                }
+                            }
+                            if model.isResolving { ProgressView("The story is moving…").frame(maxWidth: .infinity).padding(.top, 4) }
+                        } else {
+                            StoryCard(title: "The Lantern Below", body: "Emberwake’s river has begun to flow upstream. Beneath the old bridge, something waits in the dark—and it knows your name.")
+                            Text("A short, persistent fantasy campaign. Open it, make a choice, and come back whenever you have time.")
+                                .font(.title3).foregroundStyle(.secondary)
+                            Button("Begin the story") { Task { await model.startSRDQuickstart() } }
+                                .buttonStyle(.borderedProminent).controlSize(.large).frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
-                    let pack = BuiltInRulesPacks.all.first { $0.descriptor.id == model.selectedPackID }!
-                    Text("\(pack.descriptor.mechanicFamily) • \(pack.descriptor.actionVerbs.joined(separator: ", "))")
-                        .foregroundStyle(.secondary)
+                    .padding(20)
+                    .frame(maxWidth: 620, alignment: .leading)
                 }
-                Section("Deterministic Dice") {
-                    Text(model.resultText).monospacedDigit()
-                    TextField("What do you do?", text: $model.playerText, axis: .vertical)
-                    Button(model.isResolving ? "Resolving…" : "Resolve action") { Task { await model.resolveAction() } }
-                        .disabled(model.playerText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || model.isResolving)
-                }
-                Section("Campaign Journal") { Text(model.recap) }
-                Section("Apple Intelligence GM") {
-                    Text(model.gmNarration).foregroundStyle(.secondary)
-                }
-                Section("SRD 5.2.1 Encounter Preview") {
-                    Text(model.srdSummary).foregroundStyle(.secondary)
-                    Button("Create level-one guardian") { Task { await model.startSRDQuickstart() } }
-                    Button("Roll guardian attack") { Task { await model.resolveSRDAttack() } }
-                        .disabled(!model.canResolveSRDAttack || model.isResolving)
-                    Button("Resolve River Shade turn") { Task { await model.resolveRiverShadeTurn() } }
-                        .disabled(!model.canResolveRiverShadeTurn || model.isResolving)
-                }
-                if model.canResolveArchiveChoice {
-                    Section("Flooded Archive") {
-                        Text("The Brass Tide-Key fits a lock beneath the waterline. How do you enter?")
-                        ForEach(LanternBelowFloodedArchive.choices) { choice in
-                            Button(choice.title) { Task { await model.resolveArchive(choiceID: choice.id) } }
-                        }
-                    }
-                }
-                if model.canResolveVaultChoice {
-                    Section("The Lantern Vault") {
-                        Text("Nym-of-the-Reed waits at the threshold. The engine records your decision; the GM never chooses it for you.")
-                        ForEach(LanternBelowVault.choices) { choice in
-                            Button(choice.title) { Task { await model.resolveVault(choiceID: choice.id) } }
-                        }
-                    }
-                }
-                Section("Status") { Text(model.statusText).foregroundStyle(.secondary) }
             }
-            .navigationTitle("AetherTable")
             .task { await model.start() }
         }
     }
 }
 
+private struct StoryCard: View {
+    let title: String
+    let bodyText: String
+    init(title: String, body: String) { self.title = title; self.bodyText = body }
+    var bodyView: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(title).font(.title2.bold())
+            Text(bodyText).font(.body).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(20)
+        .background(.background, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+    }
+    var body: some View { bodyView }
+}
+
+private struct StoryAction: View {
+    let title: String
+    let detail: String
+    let action: () -> Void
+    var body: some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 5) {
+                Text(title).font(.headline)
+                Text(detail).font(.subheadline).foregroundStyle(.secondary).multilineTextAlignment(.leading)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading).padding(16)
+        }
+        .buttonStyle(.plain)
+        .background(.background, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+    }
+}
+
 @MainActor @Observable
 final class CampaignViewModel {
-    var selectedPackID: RulesPackID = BuiltInRulesPacks.all[0].descriptor.id
-    var playerText = "I investigate the strange signal."
-    var resultText = "Awaiting an action"
-    var recap = "Loading campaign…"
-    var gmNarration = "Apple Intelligence will narrate resolved outcomes when it is available on this device."
-    var statusText = "Local solo campaign"
+    var hasCampaign = false
+    var sceneTitle = "The Lantern Below"
+    var scenePrompt = "Emberwake’s river has begun to flow upstream."
+    var gmNarration = "The river is quiet for now."
+    var lastRoll = ""
     var isResolving = false
-    var srdSummary = "Create a source-cited level-one character and enter a persistent encounter."
     var canResolveSRDAttack = false
     var canResolveRiverShadeTurn = false
     var canResolveArchiveChoice = false
     var canResolveVaultChoice = false
 
     private var campaign: CampaignState?
-    private let rules = RulesEngine()
     private let gm = FoundationModelsGM()
     private let store: any CampaignStore
+    private let lastCampaignIDKey = "AetherTable.lastCampaignID"
 
     init() { store = (try? FileCampaignStore()) ?? InMemoryCampaignStore() }
 
     func start() async {
-        let newCampaign = CampaignState(title: "The First Thread", rulesPackID: selectedPackID, recap: "A strange signal reaches your party. What do you do?")
-        campaign = newCampaign
-        recap = newCampaign.recap
-        try? await store.save(newCampaign)
-    }
-
-    func resolveAction() async {
-        guard var campaign, let pack = BuiltInRulesPacks.all.first(where: { $0.descriptor.id == selectedPackID }) else { return }
-        isResolving = true
-        defer { isResolving = false }
-        let proposal: GMIntentProposal
-        do {
-            proposal = try await gm.proposeIntent(from: playerText, campaign: campaign)
-            statusText = "Apple Intelligence proposed intent; the engine resolved it."
-        } catch {
-            proposal = GMIntentProposal(verb: "attempt", detail: playerText, narrationPrompt: "Narrate the consequence from the resolved roll.")
-            statusText = "Apple Intelligence unavailable; direct intent went to the rules engine."
-        }
-        let seed = UInt64.random(in: .min ... .max)
-        switch rules.resolve(intent: .init(verb: proposal.verb, detail: proposal.detail), in: campaign, using: pack, seed: seed) {
-        case .accepted(let event):
-            do {
-                try campaign.apply(event)
-                self.campaign = campaign
-                recap = campaign.recap
-                resultText = "\(pack.descriptor.mechanicFamily): \(event.payload["total"] ?? "?") • audit seed \(seed)"
-                try? await store.save(campaign)
-                await refreshGMNarration(for: event, in: campaign)
-            } catch { resultText = "The campaign state rejected that event: \(error.localizedDescription)" }
-        case .rejected(let reason): resultText = reason
-        }
+        guard let rawID = UserDefaults.standard.string(forKey: lastCampaignIDKey), let uuid = UUID(uuidString: rawID), let restored = try? await store.load(id: .init(rawValue: uuid)) else { return }
+        campaign = restored
+        hasCampaign = true
+        updatePresentation(from: restored)
+        gmNarration = restored.recap
     }
 
     func startSRDQuickstart() async {
@@ -139,17 +147,13 @@ final class CampaignViewModel {
                 try newCampaign.apply(event)
             }
             campaign = newCampaign
-            recap = newCampaign.recap
-            canResolveSRDAttack = true
-            canResolveRiverShadeTurn = false
-            canResolveArchiveChoice = false
-            canResolveVaultChoice = false
-            srdSummary = profile.name + ", level 1 " + profile.characterClass + " • HP " + String(profile.maximumHitPoints) + " • AC " + String(profile.armorClass) + " • Your turn against the River Shade."
-            statusText = "SRD 5.2.1 character and encounter saved locally."
-            gmNarration = "The rules engine has set the scene. Apple Intelligence will narrate the first resolved action."
-            try await store.save(newCampaign)
+            hasCampaign = true
+            lastRoll = ""
+            gmNarration = "The water beneath Old Bridge stirs. A pale shape lifts itself from the current."
+            updatePresentation(from: newCampaign)
+            try await persist(newCampaign)
         } catch {
-            statusText = "Could not start the SRD encounter: " + error.localizedDescription
+            gmNarration = "The story could not begin. Please try again."
         }
     }
 
@@ -166,18 +170,13 @@ final class CampaignViewModel {
             let completion = try applyEncounterCompletion(to: &campaign)
             if completion == nil, let next = try? SRD521EncounterEngine.nextTurnEvent(campaignID: campaign.id, encounter: campaign.world.encounter!) { try campaign.apply(next) }
             self.campaign = campaign
-            recap = campaign.recap
             let targetHP = campaign.world.encounter?.combatants.first(where: { $0.id == "river-shade" })?.hitPoints ?? 0
-            srdSummary = completion?.narration ?? ("Attack " + resolution.attack.outcome.rawValue + " • " + String(resolution.damage) + " damage • River Shade: " + String(targetHP) + " HP • audit seed " + String(seed))
-            canResolveSRDAttack = false
-            canResolveRiverShadeTurn = completion == nil && campaign.world.encounter?.activeCombatantID == LanternBelowEncounter.riverShadeID
-            statusText = completion == nil ? "Your attack is recorded. The River Shade acts next." : "Encounter complete. " + campaign.world.quest.objective
-            canResolveArchiveChoice = campaign.world.locationID == "emberwake.flooded-archive"
-            canResolveVaultChoice = campaign.world.quest.stage == "vault" && campaign.world.sceneProgress[LanternBelowFloodedArchive.sceneID] == .completed
-            try await store.save(campaign)
+            lastRoll = resolution.attack.outcome == .criticalHit ? "Critical hit — " + String(resolution.damage) + " damage." : "River Shade: " + String(targetHP) + " vitality remaining."
+            updatePresentation(from: campaign)
+            try await persist(campaign)
             if let event = resolution.events.first(where: { $0.kind == .actionResolved }) { await refreshGMNarration(for: event, in: campaign) }
         } catch {
-            statusText = "The SRD engine rejected that attack: " + error.localizedDescription
+            gmNarration = "The strike could not be resolved. Try again."
         }
     }
 
@@ -192,18 +191,13 @@ final class CampaignViewModel {
             let completion = try applyEncounterCompletion(to: &campaign)
             if completion == nil, let next = try? SRD521EncounterEngine.nextTurnEvent(campaignID: campaign.id, encounter: campaign.world.encounter!) { try campaign.apply(next) }
             self.campaign = campaign
-            recap = campaign.recap
             let playerHP = campaign.world.encounter?.combatants.first(where: { $0.id == LanternBelowEncounter.playerID })?.hitPoints ?? 0
-            srdSummary = completion?.narration ?? ("River Shade: " + resolution.attack.outcome.rawValue + " • " + String(resolution.damage) + " damage • " + LanternBelowEncounter.playerID + " HP: " + String(playerHP) + " • audit seed " + String(seed))
-            canResolveRiverShadeTurn = false
-            canResolveSRDAttack = completion == nil && campaign.world.encounter?.activeCombatantID == LanternBelowEncounter.playerID && playerHP > 0
-            statusText = completion == nil ? "The River Shade’s turn is recorded. Your turn." : "Encounter complete. " + campaign.world.quest.objective
-            canResolveArchiveChoice = campaign.world.locationID == "emberwake.flooded-archive"
-            canResolveVaultChoice = campaign.world.quest.stage == "vault" && campaign.world.sceneProgress[LanternBelowFloodedArchive.sceneID] == .completed
-            try await store.save(campaign)
+            lastRoll = playerHP > 0 ? "You have " + String(playerHP) + " vitality remaining." : "The current pulls you under."
+            updatePresentation(from: campaign)
+            try await persist(campaign)
             if let event = resolution.events.first(where: { $0.kind == .actionResolved }) { await refreshGMNarration(for: event, in: campaign) }
         } catch {
-            statusText = "The SRD engine rejected the River Shade’s turn: " + error.localizedDescription
+            gmNarration = "The river’s answer could not be resolved. Try again."
         }
     }
 
@@ -219,15 +213,12 @@ final class CampaignViewModel {
             try campaign.apply(resolution.event)
             for event in try LanternBelowFloodedArchive.consequenceEvents(campaignID: campaign.id, choiceID: choiceID, result: resolution.result) { try campaign.apply(event) }
             self.campaign = campaign
-            recap = campaign.recap
-            canResolveArchiveChoice = false
-            canResolveVaultChoice = campaign.world.quest.stage == "vault"
-            srdSummary = resolution.result.outcome == .success ? "The archive yields. A stairway spirals toward the sealed vault. Audit seed " + String(seed) : "The archive fights you, but the stairway opens amid rising alarms. Audit seed " + String(seed)
-            statusText = campaign.world.quest.objective
-            try await store.save(campaign)
+            lastRoll = resolution.result.outcome == .success ? "The archive yields." : "The archive yields—but the alarm is raised."
+            updatePresentation(from: campaign)
+            try await persist(campaign)
             await refreshGMNarration(for: resolution.event, in: campaign)
         } catch {
-            statusText = "The archive could not resolve that choice: " + error.localizedDescription
+            gmNarration = "The archive will not answer yet. Try again."
         }
     }
 
@@ -243,14 +234,12 @@ final class CampaignViewModel {
             try campaign.apply(resolution.event)
             for event in try LanternBelowVault.consequenceEvents(campaignID: campaign.id, choiceID: choiceID, result: resolution.result) { try campaign.apply(event) }
             self.campaign = campaign
-            recap = campaign.recap
-            canResolveVaultChoice = false
-            srdSummary = "Your decision is recorded. The first arc ends here. Audit seed " + String(seed)
-            statusText = campaign.world.quest.objective
-            try await store.save(campaign)
+            lastRoll = "Your choice has changed Emberwake."
+            updatePresentation(from: campaign)
+            try await persist(campaign)
             await refreshGMNarration(for: resolution.event, in: campaign)
         } catch {
-            statusText = "The vault could not resolve that decision: " + error.localizedDescription
+            gmNarration = "The vault cannot answer that choice yet."
         }
     }
 
@@ -258,6 +247,43 @@ final class CampaignViewModel {
         guard let encounter = campaign.world.encounter, let result = LanternBelowEncounter.completionEvents(campaignID: campaign.id, encounter: encounter) else { return nil }
         for event in result.events { try campaign.apply(event) }
         return result.completion
+    }
+
+    private func persist(_ campaign: CampaignState) async throws {
+        try await store.save(campaign)
+        UserDefaults.standard.set(campaign.id.rawValue.uuidString, forKey: lastCampaignIDKey)
+    }
+
+    private func updatePresentation(from campaign: CampaignState) {
+        canResolveSRDAttack = false
+        canResolveRiverShadeTurn = false
+        canResolveArchiveChoice = false
+        canResolveVaultChoice = false
+
+        if let encounter = campaign.world.encounter, encounter.status == .active {
+            sceneTitle = "Dark Beneath the Bridge"
+            scenePrompt = "The River Shade bars the path beneath Old Bridge. The current presses close, waiting for your next move."
+            canResolveSRDAttack = encounter.activeCombatantID == LanternBelowEncounter.playerID
+            canResolveRiverShadeTurn = encounter.activeCombatantID == LanternBelowEncounter.riverShadeID
+            return
+        }
+
+        switch campaign.world.quest.stage {
+        case "archive":
+            sceneTitle = "The Flooded Archive"
+            scenePrompt = "The brass tide-key opens a lock beneath the waterline. Emberwake buried something here—and the water remembers."
+            canResolveArchiveChoice = true
+        case "vault":
+            sceneTitle = "The Lantern Vault"
+            scenePrompt = "Nym-of-the-Reed waits at the threshold: not a monster, not a saint, and not free. What Emberwake owes is now yours to decide."
+            canResolveVaultChoice = true
+        case "complete":
+            sceneTitle = "A Choice Remembered"
+            scenePrompt = campaign.world.quest.objective
+        default:
+            sceneTitle = "The Lantern Below"
+            scenePrompt = campaign.world.quest.objective
+        }
     }
 
     private func refreshGMNarration(for event: CampaignEvent, in campaign: CampaignState) async {
