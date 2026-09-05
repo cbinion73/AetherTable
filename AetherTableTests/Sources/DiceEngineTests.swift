@@ -92,6 +92,15 @@ import Testing
     #expect(D20SourceAccessPolicy.externalReferenceURL.host == "www.dndbeyond.com")
 }
 
+@Test func phoneRuleCatalogSearchesBundledCitedRecordsOffline() throws {
+    let catalog = try SRD521RuleCatalog.loadBundled()
+    let matches = catalog.search("does a natural twenty hit armor class")
+    #expect(matches.first?.rule.id == "srd-5.2.1.playing-the-game.attack-rolls")
+    #expect(matches.first?.rule.sourcePage == 7)
+    #expect(matches.first?.rule.enforcementStatus == .enforced)
+    #expect(catalog.search("", limit: 8).isEmpty)
+}
+
 @Test func diceStayWithinBounds() throws {
     let roll = try DiceEngine.roll(DiceExpression(count: 3, sides: 6, modifier: 0), seed: 9)
     #expect(roll.values.allSatisfy { (1...6).contains($0) })

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00FD247D51A0D4283FC901B2 /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0B4A381AFF67E8E65DDA2300 /* SRD_CC_v5.1.pdf in Resources */ = {isa = PBXBuildFile; fileRef = F2285E740822A1F216F788A1 /* SRD_CC_v5.1.pdf */; };
 		0C71F5A00197E38CB426F166 /* SRD521CoreMechanics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C364377810AC3E817264E01 /* SRD521CoreMechanics.swift */; };
 		13063DDAF1672D91BAF94F6A /* DiceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1026CE731153F14BE439BC5 /* DiceEngine.swift */; };
 		173918AC64BD6637C65490E5 /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
@@ -29,6 +30,8 @@
 		68C9AF1EA3D40B3E5B0505E2 /* RulesEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; };
 		7344A828EEF6EEAA645C2D33 /* RulesEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; };
 		76C06EE6B2B68CFEAC04D202 /* Domain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA6F82EF172B8D8F2863444 /* Domain.swift */; };
+		7A9E4809D5D6830C0FD43454 /* SRD_CC_v5.2.1.pdf in Resources */ = {isa = PBXBuildFile; fileRef = AB08F3E53FD3665E1D791DC9 /* SRD_CC_v5.2.1.pdf */; };
+		86A1CE84D0FB3C5D339F3449 /* RuleCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D547FE55DD0B90D553D5CD /* RuleCatalog.swift */; };
 		8E6BABDB28FEB181DBF01CCF /* Persistence.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		94455743C360D96AA9EF6268 /* Persistence.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CE0433A3F73148B823FCE96 /* Persistence.framework */; };
 		9BCAA510D6DD3833F10DAD4C /* CampaignReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3739AFFC1CC9EBCE52DD7A5B /* CampaignReducer.swift */; };
@@ -51,6 +54,7 @@
 		E854D2733F2142BA8237926F /* AetherTableCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FEA55027F02101F9035B23 /* AetherTableCore.framework */; };
 		F15D58E720573BC2E3AB6C52 /* RulesEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F3E7E9C72F0A2C9FCFDD267D /* RulesEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 66536B383FC649FBA913E2CC /* RulesEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F469554EC8C7D48EE49026B8 /* Rules.srd-5.2.1.json in Resources */ = {isa = PBXBuildFile; fileRef = 92CC1A7D1C98B14A3EF60B6F /* Rules.srd-5.2.1.json */; };
 		FDD9D31241AF747715CF06A4 /* LanternBelowSceneOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5047E2653ED1144CB9EF722 /* LanternBelowSceneOne.swift */; };
 /* End PBXBuildFile section */
 
@@ -236,6 +240,7 @@
 		0C364377810AC3E817264E01 /* SRD521CoreMechanics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SRD521CoreMechanics.swift; sourceTree = "<group>"; };
 		184F6C6CEDB51EAE72C4C165 /* AIGM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIGM.swift; sourceTree = "<group>"; };
 		25EDB530CEDC843874C6558F /* AetherTableApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AetherTableApp.swift; sourceTree = "<group>"; };
+		36D547FE55DD0B90D553D5CD /* RuleCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuleCatalog.swift; sourceTree = "<group>"; };
 		3739AFFC1CC9EBCE52DD7A5B /* CampaignReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignReducer.swift; sourceTree = "<group>"; };
 		38FEA55027F02101F9035B23 /* AetherTableCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AetherTableCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3ECD545DCF4FF0741A08BF77 /* Sync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sync.swift; sourceTree = "<group>"; };
@@ -243,9 +248,11 @@
 		5CDE643BAC394DF45B3B10D4 /* AetherTableTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AetherTableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		66536B383FC649FBA913E2CC /* RulesEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RulesEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CE0433A3F73148B823FCE96 /* Persistence.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Persistence.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		92CC1A7D1C98B14A3EF60B6F /* Rules.srd-5.2.1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Rules.srd-5.2.1.json"; sourceTree = "<group>"; };
 		9BA6F82EF172B8D8F2863444 /* Domain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain.swift; sourceTree = "<group>"; };
 		9C44DB3695D5584B8139C380 /* RulesPacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesPacks.swift; sourceTree = "<group>"; };
 		A877D0B22B698F5E367C32BB /* DiceEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DiceEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AB08F3E53FD3665E1D791DC9 /* SRD_CC_v5.2.1.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = SRD_CC_v5.2.1.pdf; sourceTree = "<group>"; };
 		B390AFE6D1EA54727752FFFD /* RulesPacks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RulesPacks.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B45B31AF3828ED24E93DDA24 /* RulesEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesEngine.swift; sourceTree = "<group>"; };
 		B5047E2653ED1144CB9EF722 /* LanternBelowSceneOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanternBelowSceneOne.swift; sourceTree = "<group>"; };
@@ -253,6 +260,7 @@
 		CEC553D23E52A4774FEAA4D6 /* CampaignStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignStore.swift; sourceTree = "<group>"; };
 		D1026CE731153F14BE439BC5 /* DiceEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceEngine.swift; sourceTree = "<group>"; };
 		D6DC8478EAC3C46C0C5E7670 /* Multiplayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Multiplayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F2285E740822A1F216F788A1 /* SRD_CC_v5.1.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = SRD_CC_v5.1.pdf; sourceTree = "<group>"; };
 		F56842A0DDD821FCABC92D57 /* AetherTable.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AetherTable.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD52EB3EEAAD783282440F12 /* DiceEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceEngineTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -341,6 +349,7 @@
 		073FDA239BAF3C4840EAB597 = {
 			isa = PBXGroup;
 			children = (
+				E1A3D72DD9E8D77564091A3E /* Resources */,
 				1126C782460FDA5F2CE4EAD0 /* Sources */,
 				7D0829A1122BDA55B1C24DDF /* Sources */,
 				6D5B46C969418A89734C591A /* Sources */,
@@ -391,6 +400,15 @@
 			path = AetherTableTests/Sources;
 			sourceTree = "<group>";
 		};
+		719D15AF0C18EFAC8F0BD999 /* SRD521 */ = {
+			isa = PBXGroup;
+			children = (
+				92CC1A7D1C98B14A3EF60B6F /* Rules.srd-5.2.1.json */,
+				AB08F3E53FD3665E1D791DC9 /* SRD_CC_v5.2.1.pdf */,
+			);
+			path = SRD521;
+			sourceTree = "<group>";
+		};
 		7D0829A1122BDA55B1C24DDF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -401,10 +419,19 @@
 			path = AetherTableCore/Sources;
 			sourceTree = "<group>";
 		};
+		8C5CA72ED5B81BF191465B81 /* SRD51 */ = {
+			isa = PBXGroup;
+			children = (
+				F2285E740822A1F216F788A1 /* SRD_CC_v5.1.pdf */,
+			);
+			path = SRD51;
+			sourceTree = "<group>";
+		};
 		9098C4401B3C971AD1E9A036 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				B5047E2653ED1144CB9EF722 /* LanternBelowSceneOne.swift */,
+				36D547FE55DD0B90D553D5CD /* RuleCatalog.swift */,
 				9C44DB3695D5584B8139C380 /* RulesPacks.swift */,
 				0C364377810AC3E817264E01 /* SRD521CoreMechanics.swift */,
 				08DC82BCD9BA5EE0D286D19E /* SRD521RulesPack.swift */,
@@ -462,6 +489,16 @@
 			);
 			name = Sources;
 			path = DiceEngine/Sources;
+			sourceTree = "<group>";
+		};
+		E1A3D72DD9E8D77564091A3E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8C5CA72ED5B81BF191465B81 /* SRD51 */,
+				719D15AF0C18EFAC8F0BD999 /* SRD521 */,
+			);
+			name = Resources;
+			path = RulesPacks/Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -616,6 +653,7 @@
 			buildConfigurationList = 479A71FC220CAA42CE11494D /* Build configuration list for PBXNativeTarget "RulesPacks" */;
 			buildPhases = (
 				00EF4BD6EFD1DB6527C9B998 /* Sources */,
+				665B4A983809744D0E709C85 /* Resources */,
 				4B68DE4DD661586999196EED /* Frameworks */,
 			);
 			buildRules = (
@@ -688,12 +726,26 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		665B4A983809744D0E709C85 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F469554EC8C7D48EE49026B8 /* Rules.srd-5.2.1.json in Resources */,
+				0B4A381AFF67E8E65DDA2300 /* SRD_CC_v5.1.pdf in Resources */,
+				7A9E4809D5D6830C0FD43454 /* SRD_CC_v5.2.1.pdf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		00EF4BD6EFD1DB6527C9B998 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				FDD9D31241AF747715CF06A4 /* LanternBelowSceneOne.swift in Sources */,
+				86A1CE84D0FB3C5D339F3449 /* RuleCatalog.swift in Sources */,
 				C145D936E07CD5461778552E /* RulesPacks.swift in Sources */,
 				0C71F5A00197E38CB426F166 /* SRD521CoreMechanics.swift in Sources */,
 				C327F443AE706F3AB00787BF /* SRD521RulesPack.swift in Sources */,

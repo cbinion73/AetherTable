@@ -45,6 +45,8 @@ The official SRD 5.2.1 source is isolated in a separately attributed package. It
 
 The repository also preserves the separately licensed SRD 5.1 for a future 2014-compatible adapter. It does not copy free-to-read D&D Beyond Basic Rules or paid D&D content without an explicit redistribution license. Full source policy: [Docs/RulesPacks/Permitted-D20-Sources.md](Docs/RulesPacks/Permitted-D20-Sources.md).
 
+On the phone, rules are structured, source-cited records with deterministic offline search—not a vector database. The engine resolves by stable rule ID; the AI may only use retrieved records to explain an already-grounded ruling.
+
 ## Open in Xcode 27
 
 ```sh

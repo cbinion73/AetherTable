@@ -27,6 +27,10 @@ Every pack identifies itself by an owned identifier and version. It supplies a m
 
 Rules Packs must only contain material we own or are licensed to distribute. A “compatible with” claim is a legal/product decision, not an engineering convenience; do not add publisher marks, setting names, protected stat blocks, or rule text to a pack without rights review.
 
+### Phone-native rules retrieval
+
+Rules packs ship as compact structured records plus an offline deterministic search index. The Rules Engine addresses records by stable identifier and never delegates adjudication to retrieval. Full-text search serves the player and AI GM only when a rule needs to be located or explained; every result includes its rules version, source section, and source page. Semantic/vector retrieval is deferred until campaign-memory evidence shows it improves player questions beyond this local, source-cited path.
+
 ## Apple Intelligence
 
 `FoundationModelsGM` is conditionally compiled for Apple platforms that provide Foundation Models. Its output must decode into an owned, small Swift type such as `GMIntentProposal`. Tool calls should be the only route from a model proposal to platform behavior. The first implementation is a safe unavailable fallback so the project builds before the full Apple Intelligence integration is added.
