@@ -135,6 +135,12 @@ public enum AdventureTurn {
         if message.contains("did not leave enough of a world-only scene") {
             return "Write more of the surrounding scene before any line that would need the hero's name or action."
         }
+        if message.contains("declined that specific phrasing") {
+            return "Write this same moment again in different, plainer words. Keep the same engine outcome and location; nothing about the actual events needs to change, only the phrasing."
+        }
+        if message.contains("safety guardrails flagged") {
+            return "Write this moment in a more ordinary, understated register: less graphic detail, calmer language, the same events and outcome."
+        }
         return "Start with an NPC or environmental detail. Keep the hero entirely out of narration except as the listener inside an NPC quote."
     }
     /// A plain "why" question may be refused, but an accepted scene must state
@@ -342,6 +348,14 @@ public struct AppleDungeonMaster: DungeonMaster {
                 // instead and let the next attempt actually have headroom.
                 if historyLimit > 0 { historyLimit = max(0, historyLimit - 2) } else { factsBudget = max(300, factsBudget - 600) }
                 lastFailure = OpenWorldError.invalidPlan("The GM's memory of this scene grew too large for one turn. Retrying with a trimmed context; your saved story and draft are unchanged.")
+            } else if case LanguageModelError.refusal = error {
+                // Not a quality rejection either: the model declined the exact
+                // phrasing it was about to write, most often over an ambiguous
+                // or garbled player line. A near-identical retry usually lands
+                // fine once the model tries different wording for the same turn.
+                lastFailure = OpenWorldError.invalidPlan("The GM declined that specific phrasing. Retrying preserves your intent and the same engine outcome.")
+            } else if case LanguageModelError.guardrailViolation = error {
+                lastFailure = OpenWorldError.invalidPlan("The GM's safety guardrails flagged that reply. Retrying preserves your intent and the same engine outcome.")
             } else {
                 lastFailure = error
             }
